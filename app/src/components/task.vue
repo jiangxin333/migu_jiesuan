@@ -224,6 +224,9 @@
 							that.$toast(res.err_msg);
 							that.today_money = res.data.today_money;
 							that.balance = res.data.balance;
+							console.log(that.signDay,"签到天数1");
+							that.signDay+=1;
+							console.log(that.signDay,"签到天数2");
 							that.signed = 1;
 						} else {
 							that.$toast(res.err_msg);

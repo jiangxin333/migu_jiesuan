@@ -224,6 +224,9 @@
 							that.$toast(res.err_msg);
 							that.today_money = res.data.today_money;
 							that.balance = res.data.balance;
+							console.log(that.signDay,"签到天数1");
+							that.signDay+=1;
+							console.log(that.signDay,"签到天数2");
 							that.signed = 1;
 						} else {
 							that.$toast(res.err_msg);
@@ -294,7 +297,6 @@
 						that.$http.get(common.host + '/article/list?type=1&page=1&task=task')
 						.then(({ data }) => {
 							if (data.err_code == 0) {
-								that.$toast(data.err_msg);
 								that.articleList = data.data;
 							} else {
 								that.$toast(data.err_msg);
