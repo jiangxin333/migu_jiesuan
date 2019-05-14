@@ -1,0 +1,248 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #f6f6f6;
+}
+a {
+  color: #000000;
+  text-decoration: none;
+}
+a:active {
+  color: #000000;
+}
+.van-tabbar {
+  border-top: 2px solid #f2f2f2;
+}
+.border-line {
+  width: 96%;
+  margin: auto 2%;
+  height: 1px;
+  background: #f2f2f2;
+}
+.border-line.border-line-bold {
+  height: 10px;
+}
+#top-green {
+  width: 100%;
+  height: 160px;
+  background: #5da968;
+  padding-top: 20px;
+}
+.van-nav-bar {
+  z-index: 999999999 !important;
+}
+.van-nav-bar__left > .van-nav-bar__text {
+  color: #000000 !important;
+}
+.van-nav-bar__right .van-nav-bar__text {
+  color: #000000 !important;
+}
+.van-nav-bar .van-icon {
+  color: #000000 !important;
+  font-size: 24px;
+}
+.van-hairline--bottom::after {
+  border-bottom-width: 0;
+}
+.detailsList .van-tab.van-tab--active .van-ellipsis {
+  color: #ffffff !important;
+}
+.detailsList .van-tab .van-ellipsis {
+  color: #000000 !important;
+}
+.userImg {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  display: block;
+  margin: 0 auto;
+}
+#top-green .van-col,
+#btnGroup .van-col {
+  text-align: center;
+}
+#top-green .userInfo img {
+  width: 34px;
+  height: 34px;
+  display: inline-block;
+  vertical-align: middle;
+}
+#top-green .userInfo span {
+  display: inline-block;
+  vertical-align: middle;
+  color: #ffffff;
+}
+#top-green .userInfo p {
+  color: #ffffff;
+}
+.balance,
+.balance-txt {
+  color: #ffffff;
+}
+.balance {
+  font-size: 26px;
+  margin: 22px auto 10px;
+}
+.balance-txt {
+  font-size: 14px;
+}
+#btnGroup .van-col {
+  height: 100px !important;
+  background: #ffffff !important;
+  border: 1px solid #f6f6f6;
+  position: relative;
+}
+#btnGroup .van-col .van-col-dot {
+  top: 10%;
+  right: 20%;
+  width: 0.210526rem;
+  height: 0.210526rem;
+  content: ' ';
+  position: absolute;
+  border-radius: 100%;
+  background-color: #f44;
+}
+#btnGroup .van-col img {
+  -webkit-transform: scale(0.4);
+  -moz-transform: scale(0.4);
+  -ms-transform: scale(0.4);
+  -o-transform: scale(0.4);
+  transform: scale(0.4);
+}
+#btnGroup .van-col p {
+  position: absolute;
+  bottom: 18%;
+  text-align: center;
+  width: 100%;
+}
+.redTxt {
+  color: #ff5b56 !important;
+}
+.greenTxt {
+  color: #5da968 !important;
+}
+.grayTxt {
+  color: #8a8a8a !important;
+}
+.orangeTxt {
+  color: #f0be43 !important;
+}
+.titleTxt {
+  color: #da6e51 !important;
+  display: inline-block;
+  vertical-align: middle;
+  margin: auto 20px;
+}
+.line {
+  width: 40px;
+  height: 2px;
+  background: -webkit-linear-gradient(left, #ffffff 1%, #F18551 50%, #da6e51 100%);
+  display: inline-block;
+  vertical-align: middle;
+}
+.line.right_line {
+  background: -webkit-linear-gradient(left, #da6e51 1%, #F18551 50%, #ffffff 100%);
+}
+.btn {
+  width: 90%;
+  height: 60px;
+  margin: 10% auto;
+}
+.incomeShow {
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+}
+.incomeShow p {
+  font-size: 16px;
+  margin: 10px auto;
+}
+.incomeShow p:last-child {
+  font-size: 14px;
+}
+.articleList {
+  margin: 2% 0;
+  width: 100%;
+}
+.articleList p {
+  padding: 2%;
+}
+.articleList .articleCard {
+  background: #ffffff;
+}
+.articleList .articleCard img {
+  margin: 2%;
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.articleList .articleCard .card-right {
+  font-size: 12px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 78%;
+  height: 60px;
+}
+.articleList .articleCard .card-right .articleinfo-title {
+  height: 24px !important;
+  line-height: 24px !important;
+  font-size: 12px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.articleList .articleCard .card-right .card-right-bottom {
+  height: 40px;
+  font-size: 12px;
+  position: relative;
+}
+.articleList .articleCard .card-right .card-right-bottom p {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+.articleList .articleCard .card-right .card-right-bottom p.bottom-left {
+  text-align: left;
+}
+.articleList .articleCard .card-right .card-right-bottom p.bottom-middle {
+  text-align: left;
+}
+.articleList .articleCard .card-right .card-right-bottom p.bottom-middle.top {
+  bottom: 7px;
+}
+.articleList .articleCard .card-right .card-right-bottom p.bottom-middle.bottom {
+  bottom: -7px;
+}
+.articleList .articleCard .card-right .card-right-bottom p.bottom-right {
+  text-align: right;
+}
+.navTop {
+  padding-top: 45px;
+}
+.navTop.myTop {
+  padding-bottom: 60px;
+}
+.navTop.myTop .van-nav-bar__title {
+  color: #ffffff !important;
+}
+.span2 {
+  height: 40px !important;
+  font-size: 10px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.gb-turntable-item {
+  overflow: hidden;
+}
