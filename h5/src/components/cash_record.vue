@@ -4,7 +4,7 @@
 
 		<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
 			<div :style="style" class="cashList">
-				<van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="false">
+				<van-list v-model="loading" :finished="finished" finished-text="提现记录仅供最近3天记录查询" @load="onLoad" :immediate-check="false">
 					<van-collapse v-model="activeNames" :accordion="true">
 						<van-collapse-item :name="index" v-for="(item, index) in list" :key="index" :disabled="item.status!=2" :is-link="item.status==2">
 							<van-row type="flex" justify="space-between" align="center" slot="title" :style="item.status!=2?'margin-right:25px;color:#323232':''">
@@ -49,7 +49,8 @@ export default {
 			spanWidth: window.innerWidth / 3 + 'px',
 			pageNum: 1,
 			isRequest: true,
-			activeNames: []
+			activeNames: [],
+			lastid: 0
 		};
 	},
 	methods: {
@@ -62,7 +63,7 @@ export default {
 			// 异步更新数据
 			if (that.isRequest) {
 				that.isRequest = false;
-				common.toAjax(common.host + '/getcashs/userlog', { page: that.pageNum }, function(res) {
+				common.toAjax(common.host + '/getcashs/userlog', { lastid: that.lastid }, function(res) {
 					// 加载状态结束
 					that.loading = false;
 					that.isRequest = true;
@@ -76,7 +77,7 @@ export default {
 								console.log('data', res.data.data);
 								that.list = that.list.concat(res.data.data);
 								console.log('list', that.list);
-								that.pageNum++;
+								that.lastid = res.data.lastid;
 							}
 						} else {
 							that.$toast(res.err_msg);
@@ -95,7 +96,7 @@ export default {
 			console.log('refresh');
 			var that = this;
 			that.list = [];
-			that.pageNum = 1;
+			that.lastid = 0;
 			that.finished = false;
 			that.loading = false;
 			setTimeout(function() {
@@ -106,7 +107,7 @@ export default {
 	},
 	activated() {
 		this.checkRoute();
-		this.pageNum=1;
+		this.lastid = 0;
 		this.list=[];
 		this.onLoad();
 		// $('.navTop').css({

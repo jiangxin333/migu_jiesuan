@@ -226,6 +226,13 @@
 							that.balance = res.data.balance;
 							console.log(that.signDay,"签到天数1");
 							that.signDay+=1;
+							if (that.signDay >= 7) {
+								that.signMoney = that.signList[that.signList.length - 1].value;
+								console.log(that.signMoney,112233);
+							} else {
+								that.signMoney = that.signList[that.signDay].value;
+								console.log(that.signMoney,223344);
+							};
 							console.log(that.signDay,"签到天数2");
 							that.signed = 1;
 						} else {
@@ -309,7 +316,7 @@
 					that.signed = res.data.sign.signed;
 					//已签到天数
 					that.signDay = res.data.sign.day;
-					if (res.data.sign.day >= 7) {
+					if (that.signDay >= 7) {
 						that.signMoney = that.signList[that.signList.length - 1].value;
 					} else {
 						that.signMoney = that.signList[that.signDay].value;

@@ -1,25 +1,30 @@
 <template>
 	<div class="navTop">
 		<van-nav-bar title="提现" left-arrow right-text="提现记录" @click-left="onClickLeft" @click-right="onClickRight" fixed />
-		<div :style="balanceBox">
-			<p :style="balanceTitle">我的余额（元）</p>
-			<p :style="balanceVal">{{ userInfo.balance / 100 }}</p>
-		</div>
-		<div :style="cashBox" v-if="userInfo.balance >= userInfo.lower_money">
-			<p :style="balanceTitle">提现金额（元）</p>
-			<div :style="btnGroup">
-				<input
-					type="button"
-					:style="cashBtn"
-					:class="index == chooseIndex ? 'cashBtn choosed' : 'cashBtn'"
-					:value="item.text"
-					v-for="(item, index) in columns"
-					:key="index"
-					@click="chooseCash(item, index)"
-				/>
-			</div>
-		</div>
+		<p class="cash_p" style="text-align: left;padding:4% 10%;color:#333333;">我的余额</p>
+		<p class="cash_p" style="color: #999999;padding:0 10%;margin-bottom: 20px;">
+			<span class="redTxt cashNum">{{ userInfo.balance / 100 }}</span>
+			<span class="cashNum" style="margin-left: 5px;">元</span>
+		</p>
 
+		<div v-if="userInfo.balance >= userInfo.lower_money">
+			<van-cell-group>
+				<van-field
+					v-model="cashMoney"
+					placeholder="请输入要提现的金额"
+					:clearable="true"
+					:border="false"
+					:readonly="userInfo.en_getcash_num == 0"
+					type="number"
+					input-align="center"
+					@blur="showPicker"
+				>
+					<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/rmb.png" alt="" slot="left-icon" class="leftIco" />
+					<span style="color:lightblue;" slot="button" @click="showPicker" v-if="columns.length > 0">选择金额</span>
+					<span style="color:lightblue;margin-left: 10px;" slot="button" @click="getCash" v-if="userInfo.en_getcash_num == 1">全部提现</span>
+				</van-field>
+			</van-cell-group>
+		</div>
 		<!-- <van-cell-group>
 			<van-cell>
 				<van-row>
@@ -46,9 +51,10 @@
 				</div>
 			</van-panel>
 		</div>
-		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance < userInfo.lower_money">去赚余额</van-button>
-		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance >= userInfo.lower_money && showMoney">去赚余额</van-button>
-		<van-button size="large" type="primary" square block @click="drawCash" :style="drawBtn" v-if="userInfo.balance >= userInfo.lower_money&& !showMoney">提现</van-button>
+		<div class="btn">
+			<van-button size="large" type="primary" square block @click="toArticle" v-if="userInfo.balance < userInfo.lower_money">去赚余额</van-button>
+			<van-button size="large" type="primary" square block @click="drawCash" v-if="userInfo.balance >= userInfo.lower_money">提现</van-button>
+		</div>
 		<div class="getCoin">
 			<h3>如何赚取奖励</h3>
 			<h4>1.邀请好友阅读热门文章可获得奖励；</h4>
@@ -61,6 +67,16 @@
 		<van-popup v-model="ermShow">
 			<img :src="ermUrl" class="qr_img" alt />
 			<input type="button" class="ermBtn shareBtn" value="分享图片给朋友" @click="ermShare()" />
+		</van-popup>
+		<van-popup v-model="bindShow" :close-on-click-overlay="false">
+			<img :src="bindurl" class="qr_img" alt />
+			<input
+				type="button"
+				class="ermBtn shareBtn"
+				style="background:#FF4444;color:#FFFFFF;top:91%;width:auto;padding:0 2%;margin:0;transform: translate3d(-50%,8%,0);"
+				value="发送图片到微信长按识别"
+				@click="bindShare()"
+			/>
 		</van-popup>
 	</div>
 </template>
@@ -84,56 +100,7 @@ export default {
 			ermShow: false,
 			ermUrl: '',
 			bindurl: '',
-			bindShow: false,
-			balanceBox: {
-				width: '100%',
-				height: (window.innerHeight * 200) / 1334 + 'px',
-				background: '#ffffff',
-				'margin-top': (window.innerHeight * 20) / 1334 + 'px',
-				'padding-top': (window.innerHeight * 40) / 1334 + 'px'
-			},
-			balanceTitle: {
-				'font-size': '20px',
-				color: '#666666',
-				'padding-left': '20px'
-			},
-			balanceVal: {
-				'margin-top': (window.innerHeight * 50) / 1334 + 'px',
-				'font-size': '30px',
-				color: '#333333',
-				'padding-left': '20px'
-			},
-			cashBox: {
-				width: '100%',
-				height: (window.innerHeight * 260) / 1334 + 'px',
-				background: '#ffffff',
-				'margin-top': (window.innerHeight * 20) / 1334 + 'px',
-				'padding-top': (window.innerHeight * 40) / 1334 + 'px'
-			},
-			btnGroup: {
-				width: '100%',
-				'margin-top': (window.innerHeight * 60) / 1334 + 'px'
-			},
-			cashBtn: {
-				width: window.innerWidth / 4 - (window.innerWidth * 26 * 2) / 750 - (window.innerWidth * 4) / 750 + 'px',
-				height: (window.innerHeight * 90) / 1334 + 'px',
-				margin: 'auto ' + (window.innerWidth * 26) / 750 + 'px',
-				border: '2px solid #db1e1e',
-				'border-radius': '5px',
-				'font-size': '21px',
-				color: '#db1e1e',
-				background: '#ffffff'
-			},
-			chooseIndex: 0,
-			drawBtn: {
-				border: 'none',
-				background: '#db1e1e',
-				width: (window.innerWidth * 690) / 750 + 'px',
-				height: (window.innerHeight * 96) / 1334 + 'px',
-				margin: (window.innerHeight * 50) / 1334 + 'px auto',
-				'border-radius': '5px'
-			},
-			showMoney: false
+			bindShow: false
 		};
 	},
 	methods: {
@@ -141,7 +108,33 @@ export default {
 			this.shareShow = false;
 			this.ermShow = false;
 			// 分享图片
-			Native.shareImg(this.ermUrl, false);
+			api.sendEvent({
+				name: 'share',
+				extra: {
+					type: 'image',
+					timeline: false, // false表示发送给还有，true表示分享朋友圈
+					pic: this.ermUrl // 图片地址
+				}
+			});
+		},
+		bindShare() {
+			this.bindShow = false;
+			// 分享图片
+			api.sendEvent({
+				name: 'share',
+				extra: {
+					type: 'image',
+					timeline: false,
+					pic: this.bindurl // 图片地址
+				}
+			});
+		},
+		onCopy() {
+			this.$toast('复制成功');
+			this.bindShow = false;
+		},
+		onError() {
+			this.$toast('复制失败');
 		},
 		drawCash: function() {
 			var that = this;
@@ -171,21 +164,11 @@ export default {
 				},
 				function(res) {
 					if (res.err_code != 800) {
-						if (res.err_code == 20051) {
-							that.$dialog
-								.alert({
-									title: '温馨提示',
-									message: res.err_msg
-									// confirmButtonText:'去下载'
-								})
-								.then(() => {
-									that.$dialog.close();
-									// on close
-									// var url="https://zhuanzl.qiucool.cn/appdownload"
-									var url = 'http://' + location.host + '/appdownload';
-									location.href = url;
-								});
+						that.$toast(res.err_msg);
+						if (res.err_code == 2005) {
+							that.bindShow = true;
 						} else if (res.err_code == 20052) {
+							that.$toast.clear();
 							that.$dialog
 								.confirm({
 									title: '温馨提示',
@@ -198,13 +181,13 @@ export default {
 									that.$router.replace('/article');
 								});
 						} else {
-							that.$toast(res.err_msg);
+							that.bindShow = false;
 							if (res.err_code == 0) {
 								var userInfo = common.getVal('userInfo');
 								userInfo.balance = res.data.balance;
 								that.userInfo.balance = res.data.balance;
 								common.setVal('userInfo', userInfo);
-								// that.shareShow = true;
+								that.shareShow = true;
 							}
 							common.toAjax(common.host + '/getcashs/cashing', {}, function(res) {
 								if (res.err_code != 800) {
@@ -292,23 +275,6 @@ export default {
 				btnsArr.push(btnArr);
 			}
 			this.columns = btnsArr;
-		},
-		chooseCash(obj, index) {
-			console.log(obj);
-			var that = this;
-			that.chooseIndex = index;
-			if (obj.text > that.userInfo.balance / 100) {
-				that.$toast({
-					message: '你的可提现余额不足，请继续分享赚取收益后再提现',
-					onClose: function() {
-						that.chooseIndex = 0;
-						that.showMoney=true;
-					}
-				});
-			} else {
-				that.showMoney=false;
-				that.cashMoney = obj.text;
-			}
 		}
 	},
 	activated() {
@@ -335,9 +301,15 @@ export default {
 			if (res.err_code != 800) {
 				if (res.err_code == 0) {
 					that.myBalance = res.data.cashing / 100;
-					// 					if (res.data.need_st == true) {
-					// 						that.shareShow = true;
-					// 					}
+					that.bindurl = res.data.bindurl;
+					if (res.data.bindurl != '') {
+						that.bindShow = true;
+					} else {
+						that.bindShow = false;
+					}
+					if (res.data.need_st == true) {
+						that.shareShow = true;
+					}
 					// that.columns = res.data.getcashes_btn;
 					that.getCashBtn(res.data.getcashes_btn);
 				} else {
@@ -404,9 +376,5 @@ export default {
 
 .ermBtn.shareBtn {
 	left: 50%;
-}
-.choosed {
-	color: #ffffff !important;
-	background: #db1e1e !important;
 }
 </style>

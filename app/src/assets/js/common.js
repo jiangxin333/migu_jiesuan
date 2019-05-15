@@ -590,7 +590,7 @@ export default {
 	host: "", //打包域名
 	// host:"http://test.itbsdtbsz.cn",	
 	// host: "http://migutest.zmr016.com", //结算测试域名
-	// host: "http://migu.zmr016.com", //结算测试域名
+	host: "http://migu.zmr016.com", //结算测试域名
 	// host: "http://app.qiucool.cn",//正式域名
 	// host:"http://test.baichengiu.cn",
 	// host:"http://midd.qiucool.cn",//测试域名

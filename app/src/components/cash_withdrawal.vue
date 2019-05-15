@@ -1,30 +1,25 @@
 <template>
 	<div class="navTop">
 		<van-nav-bar title="提现" left-arrow right-text="提现记录" @click-left="onClickLeft" @click-right="onClickRight" fixed />
-		<p class="cash_p" style="text-align: left;padding:4% 10%;color:#333333;">我的余额</p>
-		<p class="cash_p" style="color: #999999;padding:0 10%;margin-bottom: 20px;">
-			<span class="redTxt cashNum">{{ userInfo.balance / 100 }}</span>
-			<span class="cashNum" style="margin-left: 5px;">元</span>
-		</p>
-
-		<div v-if="userInfo.balance >= userInfo.lower_money">
-			<van-cell-group>
-				<van-field
-					v-model="cashMoney"
-					placeholder="请输入要提现的金额"
-					:clearable="true"
-					:border="false"
-					:readonly="userInfo.en_getcash_num == 0"
-					type="number"
-					input-align="center"
-					@blur="showPicker"
-				>
-					<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/rmb.png" alt="" slot="left-icon" class="leftIco" />
-					<span style="color:lightblue;" slot="button" @click="showPicker" v-if="columns.length > 0">选择金额</span>
-					<span style="color:lightblue;margin-left: 10px;" slot="button" @click="getCash" v-if="userInfo.en_getcash_num == 1">全部提现</span>
-				</van-field>
-			</van-cell-group>
+		<div :style="balanceBox">
+			<p :style="balanceTitle">我的余额（元）</p>
+			<p :style="balanceVal">{{ userInfo.balance / 100 }}</p>
 		</div>
+		<div :style="cashBox" v-if="userInfo.balance >= userInfo.lower_money">
+			<p :style="balanceTitle">提现金额（元）</p>
+			<div :style="btnGroup">
+				<input
+					type="button"
+					:style="cashBtn"
+					:class="index == chooseIndex ? 'cashBtn choosed' : 'cashBtn'"
+					:value="item.text"
+					v-for="(item, index) in columns"
+					:key="index"
+					@click="chooseCash(item, index)"
+				/>
+			</div>
+		</div>
+
 		<!-- <van-cell-group>
 			<van-cell>
 				<van-row>
@@ -51,10 +46,9 @@
 				</div>
 			</van-panel>
 		</div>
-		<div class="btn">
-			<van-button size="large" type="primary" square block @click="toArticle" v-if="userInfo.balance < userInfo.lower_money">去赚余额</van-button>
-			<van-button size="large" type="primary" square block @click="drawCash" v-if="userInfo.balance >= userInfo.lower_money">提现</van-button>
-		</div>
+		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance < userInfo.lower_money">去赚余额</van-button>
+		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance >= userInfo.lower_money && showMoney">去赚余额</van-button>
+		<van-button size="large" type="primary" square block @click="drawCash" :style="drawBtn" v-if="userInfo.balance >= userInfo.lower_money&& !showMoney">提现</van-button>
 		<div class="getCoin">
 			<h3>如何赚取奖励</h3>
 			<h4>1.邀请好友阅读热门文章可获得奖励；</h4>
@@ -100,7 +94,56 @@ export default {
 			ermShow: false,
 			ermUrl: '',
 			bindurl: '',
-			bindShow: false
+			bindShow: false,
+			balanceBox: {
+				width: '100%',
+				height: (window.innerHeight * 200) / 1334 + 'px',
+				background: '#ffffff',
+				'margin-top': (window.innerHeight * 20) / 1334 + 'px',
+				'padding-top': (window.innerHeight * 40) / 1334 + 'px'
+			},
+			balanceTitle: {
+				'font-size': '20px',
+				color: '#666666',
+				'padding-left': '20px'
+			},
+			balanceVal: {
+				'margin-top': (window.innerHeight * 50) / 1334 + 'px',
+				'font-size': '30px',
+				color: '#333333',
+				'padding-left': '20px'
+			},
+			cashBox: {
+				width: '100%',
+				height: (window.innerHeight * 260) / 1334 + 'px',
+				background: '#ffffff',
+				'margin-top': (window.innerHeight * 20) / 1334 + 'px',
+				'padding-top': (window.innerHeight * 40) / 1334 + 'px'
+			},
+			btnGroup: {
+				width: '100%',
+				'margin-top': (window.innerHeight * 60) / 1334 + 'px'
+			},
+			cashBtn: {
+				width: window.innerWidth / 4 - (window.innerWidth * 26 * 2) / 750 - (window.innerWidth * 4) / 750 + 'px',
+				height: (window.innerHeight * 90) / 1334 + 'px',
+				margin: 'auto ' + (window.innerWidth * 26) / 750 + 'px',
+				border: '2px solid #db1e1e',
+				'border-radius': '5px',
+				'font-size': '21px',
+				color: '#db1e1e',
+				background: '#ffffff'
+			},
+			chooseIndex: 0,
+			drawBtn: {
+				border: 'none',
+				background: '#db1e1e',
+				width: (window.innerWidth * 690) / 750 + 'px',
+				height: (window.innerHeight * 96) / 1334 + 'px',
+				margin: (window.innerHeight * 50) / 1334 + 'px auto',
+				'border-radius': '5px'
+			},
+			showMoney: false
 		};
 	},
 	methods: {
@@ -275,6 +318,24 @@ export default {
 				btnsArr.push(btnArr);
 			}
 			this.columns = btnsArr;
+			console.log(this.columns);
+		},
+		chooseCash(obj, index) {
+			console.log(obj);
+			var that = this;
+			that.chooseIndex = index;
+			if (obj.text > that.userInfo.balance / 100) {
+				that.$toast({
+					message: '你的可提现余额不足，请继续分享赚取收益后再提现',
+					onClose: function() {
+						that.chooseIndex = 0;
+						that.showMoney=true;
+					}
+				});
+			} else {
+				that.showMoney=false;
+				that.cashMoney = obj.text;
+			}
 		}
 	},
 	activated() {
@@ -376,5 +437,9 @@ export default {
 
 .ermBtn.shareBtn {
 	left: 50%;
+}
+.choosed {
+	color: #ffffff !important;
+	background: #db1e1e !important;
 }
 </style>
