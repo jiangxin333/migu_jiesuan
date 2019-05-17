@@ -1,7 +1,7 @@
 <template>
 	<div class="navTop" :style="bodyH">
 		<van-nav-bar :title="isPassword ? '登录' : '注册/重置密码'" left-arrow @click-left="onClickLeft" fixed style="background: transparent; color:#FFFFFF" />
-		<img src="https://qiniustore.zmr016.com/quzhuan/imgs/bac2.png" alt="" style="width: 100%;" />
+		<img src="https://qiniustore.zmr016.com/quzhuan/imgs/bac1.png" alt="" style="width: 100%;" />
 		<div class="loginBox box1" :style="loginBoxStyle">
 			<p :style="logoP"><img :src="'http://quzhuan.oss-cn-beijing.aliyuncs.com/img/logo/' + logo_pre + '_logo.png'" alt="" :style="logoStyle" /></p>
 			<p :style="inputP" v-if="passwordShow">
@@ -413,7 +413,8 @@ export default {
 							common.host + '/users/pwdLogin',
 							{
 								tel: that.phone,
-								password: that.password
+								password: that.password,
+								from: 'app'
 							},
 							function(res) {
 								if (res.err_code == 0) {
@@ -736,16 +737,17 @@ export default {
 	border: none;
 	color: #ffffff;
 	/* 橙色主题*/
-	/* background: -webkit-linear-gradient(#fe8542, #ec5c43); /* Safari 5.1 - 6.0 */
-	/* background: -o-linear-gradient(#fe8542, #ec5c43); /* Opera 11.1 - 12.0 */
-	/* background: -moz-linear-gradient(#fe8542, #ec5c43); /* Firefox 3.6 - 15 */
-	/* background: linear-gradient(#fe8542, #ec5c43); /* 标准的语法 */
+	background: -webkit-linear-gradient(#fe8542, #ec5c43); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(#fe8542, #ec5c43); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(#fe8542, #ec5c43); /* Firefox 3.6 - 15 */
+	background: linear-gradient(#fe8542, #ec5c43); /* 标准的语法 */
+	box-shadow: 1px 1px 10px #ff4500;
 	/* 绿色主题*/
-	background: -webkit-linear-gradient(#7acc7e, #3fba45); /* Safari 5.1 - 6.0 */
-	background: -o-linear-gradient(#7acc7e, #3fba45); /* Opera 11.1 - 12.0 */
-	background: -moz-linear-gradient(#7acc7e, #3fba45); /* Firefox 3.6 - 15 */
-	background: linear-gradient(#7acc7e, #3fba45); /* 标准的语法 */
-	box-shadow: 1px 1px 10px #3eb944;
+	/* background: -webkit-linear-gradient(#7acc7e, #3fba45); /* Safari 5.1 - 6.0 */
+	/* background: -o-linear-gradient(#7acc7e, #3fba45); /* Opera 11.1 - 12.0 */
+	/* background: -moz-linear-gradient(#7acc7e, #3fba45); /* Firefox 3.6 - 15 */
+	/* background: linear-gradient(#7acc7e, #3fba45); /* 标准的语法 */
+	/* box-shadow: 1px 1px 10px #3eb944; */
 }
 .inputLabel {
 	position: absolute;

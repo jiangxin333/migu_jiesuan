@@ -182,7 +182,7 @@ export default {
 		},
 		goArticle(id, $video) {
 			if ($video == 1) {
-				var url = 'http://' + location.host + '/article/article_share.html?article_id=' + id;
+				var url = '/article/article_share.html?article_id=' + id;
 				location.href = url;
 			} else {
 				this.$router.push({ path: '/money_article/' + id });
@@ -234,6 +234,16 @@ export default {
 		this.checkRoute();
 		if (window.localStorage.index != undefined) {
 			this.changeActive(window.localStorage.index);
+		}
+	},
+	beforeRouteEnter(to, from, next) {
+		if ( from.path == "/task"	 ) {
+			next(vm => {
+				vm.listArr = [];
+				vm.onRefresh();
+			});
+		} else {
+			next();
 		}
 	}
 };

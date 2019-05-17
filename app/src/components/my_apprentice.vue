@@ -3,109 +3,82 @@
 		<van-nav-bar title="徒弟详情" left-arrow @click-left="onClickLeft" fixed />
 
 		<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-			<div class="mainBody">
+			<div class="mainBody" :style="mainBody">
 				<div class="redTop"></div>
-				<div class="whiteCard">
-					<van-row>
-						<van-col span="5">
-							<img v-lazy="td_img" class="apprenticeImg" alt="" />
-						</van-col>
-						<van-col span="19">
-							<p style="margin-top: 20px;">转转号：{{ tel }}</p>
-							<p>注册时间：{{ reg_time }}</p>
-						</van-col>
-					</van-row>
-				</div>
-				<div class="whiteCard">
-					<div class="bc">
-						<van-row type="flex" justify="space-between">
-							<van-col span="9"><span class="taskList-title">任务列表</span></van-col>
-							<van-col span="7">
-								<span class="taskList-title">奖励金（元）</span>
-							</van-col>
-							<van-col span="5"><span class="taskList-title">完成状态</span></van-col>
-						</van-row>
-					</div>
-					<div
-						:class="{ bc2: index % 2 == 0, bc: index % 2 == 1 }"
-						id="taskitem"
-						v-for="(item, index) in taskList"
-						:key="index"
-					>
-						<van-row type="flex" justify="space-between">
-							<van-col span="9">
-								<span class="span2">{{ item.name }}</span>
-							</van-col>
-							<van-col span="7">
-								<span class="redTxt">+{{ item.prize_money / 100 }}</span>
-								<img src="../assets/img/price.png" alt="" />
-							</van-col>
-							<van-col span="5">
-								<img
-									:src="item.finish_status == 1 ? completeImg : not_completeImg"
-									alt=""
-									class="statusImg"
-								/>
-							</van-col>
-						</van-row>
-					</div>
-				</div>
-				<div class="whiteCard">
-					<div style="font-size: 14px" solt="header">
-						<p style="width: 100%;text-align: center;">
-							联系徒弟完成剩余任务，可获得剩余奖励金
-						</p>
-						<p class="redTxt" style="width: 100%;text-align: center;">{{ tel }}</p>
-					</div>
-					<div class="inputGroup">
+				<div style="width: 100%;height: 100%;position: absolute;top:15px;left:0;z-index: 9999;">
+					<div class="whiteCard">
 						<van-row>
-							<van-col span="16">
-								<van-field
-									v-model="weixin"
-									center
-									readonly
-									border
-									left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/weixin.png"
-									:placeholder="weixinNum"
-								></van-field>
-							</van-col>
-							<van-col span="8">
-								<van-button
-									size="small"
-									type="primary"
-									v-clipboard:copy="weixin"
-									v-clipboard:success="onCopy"
-									v-clipboard:error="onError"
-								>
-									复制微信联系师傅
-								</van-button>
+							<van-col span="5"><img v-lazy="td_img" class="apprenticeImg" alt="" /></van-col>
+							<van-col span="19">
+								<p style="margin-top: 20px;">转转号：{{ tel }}</p>
+								<p>注册时间：{{ reg_time }}</p>
 							</van-col>
 						</van-row>
 					</div>
-					<div class="inputGroup">
-						<van-row>
-							<van-col span="16">
-								<van-field
-									v-model="QQ"
-									center
-									readonly
-									border
-									left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/qq.png"
-									:placeholder="qqNum"
-								></van-field>
-							</van-col>
-							<van-col span="8">
-								<van-button
-									size="small"
-									type="primary"
-									v-clipboard:copy="QQ"
-									v-clipboard:success="onCopy"
-									v-clipboard:error="onError"
-								>
-									复制QQ联系师傅
-								</van-button>
-							</van-col>
-						</van-row>
+					<div class="whiteCard">
+						<div class="bc">
+							<van-row type="flex" justify="space-between">
+								<van-col span="9"><span class="taskList-title">任务列表</span></van-col>
+								<van-col span="7"><span class="taskList-title">奖励金（元）</span></van-col>
+								<van-col span="5"><span class="taskList-title">完成状态</span></van-col>
+							</van-row>
+						</div>
+						<div :class="{ bc2: index % 2 == 0, bc: index % 2 == 1 }" id="taskitem" v-for="(item, index) in taskList" :key="index">
+							<van-row type="flex" justify="space-between">
+								<van-col span="9">
+									<span class="span2">{{ item.name }}</span>
+								</van-col>
+								<van-col span="7">
+									<span class="redTxt">+{{ item.prize_money / 100 }}</span>
+									<img src="../assets/img/price.png" alt="" />
+								</van-col>
+								<van-col span="5"><img :src="item.finish_status == 1 ? completeImg : not_completeImg" alt="" class="statusImg" /></van-col>
+							</van-row>
+						</div>
+					</div>
+					<div class="whiteCard">
+						<div style="font-size: 14px" solt="header">
+							<p style="width: 100%;text-align: center;">联系徒弟完成剩余任务，可获得剩余奖励金</p>
+							<p class="redTxt" style="width: 100%;text-align: center;">{{ tel }}</p>
+						</div>
+						<div class="inputGroup">
+							<van-row>
+								<van-col span="16">
+									<van-field
+										v-model="weixin"
+										center
+										readonly
+										border
+										left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/weixin.png"
+										:placeholder="weixinNum"
+									></van-field>
+								</van-col>
+								<van-col span="8">
+									<van-button size="small" type="primary" v-clipboard:copy="weixin" v-clipboard:success="onCopy" v-clipboard:error="onError">
+										复制微信联系师傅
+									</van-button>
+								</van-col>
+							</van-row>
+						</div>
+						<div class="inputGroup">
+							<van-row>
+								<van-col span="16">
+									<van-field
+										v-model="QQ"
+										center
+										readonly
+										border
+										left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/qq.png"
+										:placeholder="qqNum"
+									></van-field>
+								</van-col>
+								<van-col span="8">
+									<van-button size="small" type="primary" v-clipboard:copy="QQ" v-clipboard:success="onCopy" v-clipboard:error="onError">
+										复制QQ联系师傅
+									</van-button>
+								</van-col>
+							</van-row>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -135,7 +108,12 @@ export default {
 			completeImg: require('../assets/img/complete.png'),
 			not_completeImg: require('../assets/img/not_complete.png'),
 			tel: '13800000000',
-			reg_time: '1900-00-00'
+			reg_time: '1900-00-00',
+			mainBody:{
+				'position': 'relative',
+				'min-height': window.innerHeight-30+'px',
+				'overflow':'auto'
+			}
 		};
 	},
 	methods: {
@@ -173,7 +151,7 @@ export default {
 						that.reg_time = res.data.reg_time;
 						that.QQ = res.data.qq;
 						that.weixin = res.data.weixin;
-						that.td_img=res.data.img;
+						that.td_img = res.data.img;
 					} else {
 						that.$toast(res.err_msg);
 					}
@@ -190,16 +168,11 @@ export default {
 </script>
 
 <style scoped>
-.mainBody {
-	position: relative;
-	padding-top: 10px;
-}
-
 .redTop {
 	background: #ff4444;
 	width: 100%;
 	height: 80px;
-	z-index: -1;
+	z-index: 0;
 	position: absolute;
 	top: 0;
 }

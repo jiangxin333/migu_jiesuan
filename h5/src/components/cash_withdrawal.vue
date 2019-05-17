@@ -182,7 +182,7 @@ export default {
 									that.$dialog.close();
 									// on close
 									// var url="https://zhuanzl.qiucool.cn/appdownload"
-									var url = 'http://' + location.host + '/appdownload';
+									var url = '/appdownload';
 									location.href = url;
 								});
 						} else if (res.err_code == 20052) {

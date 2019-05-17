@@ -200,8 +200,7 @@ export default {
 		},
 		goArticle(id, $video) {
 			if ($video == 1) {
-				var url =
-					'http://' + location.host + '/article/article_share_app.html?article_id=' + id;
+				var url ='/article/article_share_app.html?article_id=' + id;
 				Native.openOtherWindow(url)
 			} else {
 // 				var url = location.href + '/money_article/' + id;

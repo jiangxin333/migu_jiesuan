@@ -206,7 +206,7 @@
 			},
 			goArticle(id, $video) {
 				if ($video == 1) {
-					var url = 'http://' + location.host + '/article/article_share_app.html?article_id=' + id;
+					var url = '/article/article_share_app.html?article_id=' + id;
 					location.href = url;
 				} else {
 					this.$router.push({

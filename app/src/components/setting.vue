@@ -16,7 +16,7 @@
 				<van-switch-cell
 					v-model="checked"
 					title="使用系统分享"
-					active-color="#5da968"
+					active-color="#ff3131"
 					inactive-color="#ffffff"
 				/>
 			</van-cell-group>
@@ -73,7 +73,7 @@ export default {
 			common.toAjax(common.host + '/users/signout', {}, function(res) {
 				if (res.err_code == 0) {
 					that.$toast(res.err_msg);
-					that.$router.replace({ path: '/my' });
+					that.$router.replace({ path: '/article' });
 				} else {
 					that.$toast(res.err_msg);
 					return false;
@@ -85,6 +85,11 @@ export default {
 		var that = this;
 		that.checkRoute();
 		this.isClear = false;
+		common.toAjax(common.host+'/api/getabout',{},function(res){
+			if(res.err_code==0){
+				common.setVal('commonInfo',res.data)
+			}
+		})
 	}
 };
 </script>

@@ -69,7 +69,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item1.title[1]}}</p>
 					</template>
 					<img :src="item1.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :style="" :id="item1.name" @click="newGet(item1.name,item1.value)"
+					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(item1.name,item1.title[4])"
 					 v-if="item1.is == 0">{{getMst}}</van-button>
 					<van-button round type="danger" size="small" :id="item1.name" :style="styleBtn" v-else>已领取</van-button>
 				</van-cell>
@@ -89,9 +89,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item2.title[1]}}</p>
 					</template>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :style="" :id="item2.name" @click="dayGet(item2.name,item2.value)"
-					 v-if="item2.is == 0">{{getMst}}</van-button>
-					<van-button round type="danger" size="small" :style="styleBtn" :id="item2.name" v-else>已领取</van-button>
+					<van-button round type="danger" size="small" @click="dayGet(item2.name,item2.value)" >{{getMst}}</van-button>
 				</van-cell>
 
 			</div>
@@ -165,8 +163,8 @@
 					"background-color": "#d6d6d6"
 				},
 				date: ["第一天", "第二天", "第三天", "第四天", "第五天", "第六天", "第七天"],
-				balance: '', //今日收益
-				today_money: '', //当前余额
+				balance: 0, //今日收益
+				today_money: 0, //当前余额
 				newTaskList: '', //新手任务数据
 				everydayTaskList: '', //每日任务数据
 				taskOk: true, //是否完成新手全部任务
@@ -178,7 +176,8 @@
 				signList: '', //签到数据
 				signed: 0, //是否签到，
 				signMoney: 0, //签到金额
-				articleList: ''//推荐列表数据
+				articleList: '',//推荐列表数据
+				isFrame: true,//控制新开webview个数
 			}
 		},
 		methods: {
@@ -196,8 +195,16 @@
 					"background-color": "#d6d6d6"
 				})
 			},
-			newGet(name, value) {
+			newGet(name,type) {
 				var that = this;
+				if(type=='shoutu'||type=='article'){
+					that.$dialog.alert({
+						title:'温馨提醒',
+						message:'分享任务请在APP里完成',
+						confirmButtonText:'好的'
+					})
+					return;
+				}
 				common.toAjax(common.host + '/task/getnewpriz', {
 					name: name
 				}, function(res) {
@@ -251,7 +258,7 @@
 						setTimeout(function() {
 							that.isFrame = true;
 						}, 1000);
-						var url = 'http://' + location.host + '/article/article_share_app.html?article_id=' + id;
+						var url = location.protocol + '//' + location.host + '/article/article_share_app.html?article_id=' + id;
 						api.sendEvent({
 							name: 'openWin',
 							extra: {

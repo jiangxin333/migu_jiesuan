@@ -2,7 +2,7 @@
 	<div class="navTop" style="background: #FFFFFF;padding-bottom: 60px;">
 		<van-nav-bar title="师徒" fixed style="border-bottom: 1px solid #F2F2F2;" />
 		<p style="width: 100%;color: #FFA77C;background: #FFFFF0;text-align: center;margin-top: 1px;font-size: 16px;" v-if="isMsg">
-			{{ msg.name }}刚邀请{{ msg.child_num }}位好友获得{{ msg.total_money }}元
+			{{ msg.name }}刚邀请{{ msg.child_num }}位好友获得{{ msg.total_money /100}}元
 		</p>
 		<img src="https://qiniustore.zmr016.com/quzhuan/imgs/news.jpg" alt class="mentor-adImg" />
 		<van-row v-if="!showAll" style="text-align: center;">

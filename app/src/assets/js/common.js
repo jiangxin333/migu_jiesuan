@@ -233,8 +233,8 @@ export default {
 				from: 'app'
 			}, function(res) {
 				if (res.err_code == 2001) {
-					var regUrl = 'http://' + location.host + '/userlogin/bindtel?data=' + res.data.data + '&img=' + res.data.img;
-					window.localStorage.backUrl = "http://" + location.host + "/apparticle#/my";
+					var regUrl = '/userlogin/bindtel?data=' + res.data.data + '&img=' + res.data.img;
+					window.localStorage.backUrl = location.protocol+'//' + location.host + "/apparticle#/my";
 					// document.write(regUrl)
 					location.href = regUrl;
 				} else {
@@ -321,8 +321,8 @@ export default {
 				from: 'app'
 			}, function(res) {
 				if (res.err_code == 2001) {
-					var regUrl = 'http://' + location.host + '/userlogin/bindtel?data=' + res.data.data + '&img=' + res.data.img;
-					window.localStorage.backUrl = "http://" + location.host + "/apparticle#/my";
+					var regUrl = '/userlogin/bindtel?data=' + res.data.data + '&img=' + res.data.img;
+					window.localStorage.backUrl = location.protocol+'//' + location.host + "/apparticle#/my";
 					// document.write(regUrl)
 					location.href = regUrl;
 				} else {

@@ -29,6 +29,7 @@ export default {
 		var that = this;
 		common.toAjax(common.host + '/common/pubmsgs', {}, function(res) {
 			that.pubmsgs = res.data.msgs;
+			common.setVal('pubmsgs',res.data.msgs)
 		});
 	},
 	methods: {

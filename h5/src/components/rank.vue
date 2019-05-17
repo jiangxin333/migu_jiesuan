@@ -34,7 +34,7 @@
 						</van-col>
 					</van-row>
 			</van-tab>
-			<van-tab title="师徒今日收益">
+			<van-tab title="今日收益">
 				<van-row class="rankCard" v-for="(mentor, index) in mentorList" :key="index">
 					<van-col span="6">
 						<span>{{ index + 1 }}</span>
@@ -75,7 +75,7 @@
 					<span class="bottomInfo">你当前的排名&nbsp;{{ today_money_rank }}</span>
 				</van-col>
 				<van-col span="12">
-					<span class="bottomInfo infoRight">总收益&nbsp;{{ today_money }}&nbsp;元</span>
+					<span class="bottomInfo infoRight">今日收益&nbsp;{{ today_money }}&nbsp;元</span>
 				</van-col>
 			</van-row>
 		</div>

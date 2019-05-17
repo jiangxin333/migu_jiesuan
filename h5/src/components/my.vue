@@ -156,7 +156,6 @@
 			<van-cell title="VIP会员" is-link value="" :icon="icon11" to="/vip" />
 			<van-cell title="新手课堂" is-link value="" :icon="icon22" to="/course" />
 			<van-cell title="幸运抽奖" is-link value="" :icon="icon33" to="/luck_draw" />
-			<van-cell title="签到" is-link value="" :icon="icon44" to="/sign" />
 			<van-cell title="联系客服" is-link value="" :icon="icon55" to="/services" />
 			<!-- <van-cell v-if="isReg" @click="toReg()" is-link title="预注册" :icon="icon66" value="" /> -->
 		</van-cell-group>

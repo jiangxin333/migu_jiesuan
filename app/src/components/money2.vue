@@ -346,7 +346,7 @@
 		//    next();
 		//  }
 		beforeRouteEnter(to, from, next) {
-			if ( from.path == "/video_list"	 ) {
+			if ( from.path == "/task"	 ) {
 				next(vm => {
 					vm.listArr = [];
 					vm.onRefresh();

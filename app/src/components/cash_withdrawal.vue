@@ -143,7 +143,8 @@ export default {
 				margin: (window.innerHeight * 50) / 1334 + 'px auto',
 				'border-radius': '5px'
 			},
-			showMoney: false
+			showMoney: false,
+			shareType: 'share'
 		};
 	},
 	methods: {
@@ -152,7 +153,7 @@ export default {
 			this.ermShow = false;
 			// 分享图片
 			api.sendEvent({
-				name: 'share',
+				name: this.shareType,
 				extra: {
 					type: 'image',
 					timeline: false, // false表示发送给还有，true表示分享朋友圈
@@ -164,7 +165,7 @@ export default {
 			this.bindShow = false;
 			// 分享图片
 			api.sendEvent({
-				name: 'share',
+				name: this.shareType,
 				extra: {
 					type: 'image',
 					timeline: false,
@@ -344,6 +345,9 @@ export default {
 		that.cashMoney = 0;
 		that.showTool = true;
 		that.userInfo = common.getVal('userInfo');
+		if (common.getVal('loginData').app_share_type != 'share') {
+			this.shareType = 'fakeShare';
+		}
 		if (that.$store.state.qrcode_img != '') {
 			that.ermUrl = that.$store.state.qrcode_img;
 		} else {

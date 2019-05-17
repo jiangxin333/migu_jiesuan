@@ -3,58 +3,74 @@
 		<van-nav-bar title="我的师傅" left-arrow @click-left="onClickLeft" fixed />
 
 		<van-pull-refresh v-model="isLoading" @refresh="onRefresh" :disabled="true">
-			<div class="mainBody">
+			<div class="mainBody" :style="mainBody">
 				<div class="redTop"></div>
-				<div class="whiteCard">
-					<p>
-						<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/master-1.png" alt="" />
-						<span>你的师傅：</span>
-						<span style="max-width:30%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{ user_name }}</span>
-						<span>({{ phone }})</span>
-					</p>
-					<p>
-						<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/master-2.png" alt="" />
-						<span>师傅徒弟数：</span>
-						<span class="redTxt">{{ personNum }}人</span>
-					</p>
-					<p>
-						<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/master-3.png" alt="" />
-						<span>师傅累计收益：</span>
-						<span class="redTxt">{{ totoalPrice }}元</span>
-					</p>
-				</div>
-				<div class="whiteCard">
-					<p style="font-size: 14px" solt="header">联系方式</p>
-					<div class="inputGroup">
-						<van-row>
-							<van-col span="16">
-								<van-field
-									v-model="weixin"
-									center
-									readonly
-									border
-									left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/weixin.png"
-									:placeholder="weixinNum"
-								></van-field>
-							</van-col>
-							<van-col span="8">
-								<van-button size="small" type="primary" :disabled="weixin == ''" v-clipboard:copy="weixin" v-clipboard:success="onCopy" v-clipboard:error="onError">
-									复制微信联系师傅
-								</van-button>
-							</van-col>
-						</van-row>
+				<div style="width: 100%;height: 100%;position: absolute;top:15px;left:0;z-index: 9999;">
+					<div class="whiteCard">
+						<p>
+							<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/master-1.png" alt="" />
+							<span>你的师傅：</span>
+							<span style="max-width:30%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{ user_name }}</span>
+							<span>({{ phone }})</span>
+						</p>
+						<p>
+							<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/master-2.png" alt="" />
+							<span>师傅徒弟数：</span>
+							<span class="redTxt">{{ personNum }}人</span>
+						</p>
+						<p>
+							<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/master-3.png" alt="" />
+							<span>师傅累计收益：</span>
+							<span class="redTxt">{{ totoalPrice }}元</span>
+						</p>
 					</div>
-					<div class="inputGroup">
-						<van-row>
-							<van-col span="16">
-								<van-field v-model="QQ" center readonly border left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/qq.png" :placeholder="qqNum"></van-field>
-							</van-col>
-							<van-col span="8">
-								<van-button size="small" type="primary" :disabled="QQ == ''" v-clipboard:copy="QQ" v-clipboard:success="onCopy" v-clipboard:error="onError">
-									复制QQ联系师傅
-								</van-button>
-							</van-col>
-						</van-row>
+					<div class="whiteCard">
+						<p style="font-size: 14px" solt="header">联系方式</p>
+						<div class="inputGroup">
+							<van-row>
+								<van-col span="16">
+									<van-field
+										v-model="weixin"
+										center
+										readonly
+										border
+										left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/weixin.png"
+										:placeholder="weixinNum"
+									></van-field>
+								</van-col>
+								<van-col span="8">
+									<van-button
+										size="small"
+										type="primary"
+										:disabled="weixin == ''"
+										v-clipboard:copy="weixin"
+										v-clipboard:success="onCopy"
+										v-clipboard:error="onError"
+									>
+										复制微信联系师傅
+									</van-button>
+								</van-col>
+							</van-row>
+						</div>
+						<div class="inputGroup">
+							<van-row>
+								<van-col span="16">
+									<van-field
+										v-model="QQ"
+										center
+										readonly
+										border
+										left-icon="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/qq.png"
+										:placeholder="qqNum"
+									></van-field>
+								</van-col>
+								<van-col span="8">
+									<van-button size="small" type="primary" :disabled="QQ == ''" v-clipboard:copy="QQ" v-clipboard:success="onCopy" v-clipboard:error="onError">
+										复制QQ联系师傅
+									</van-button>
+								</van-col>
+							</van-row>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -82,7 +98,11 @@ export default {
 			weixin: '',
 			weixinNum: '暂无师傅微信信息',
 			QQ: '',
-			qqNum: '暂无师傅QQ信息'
+			qqNum: '暂无师傅QQ信息',
+			mainBody:{
+				'position': 'relative',
+				'min-height': window.innerHeight*0.9+'px'
+			}
 		};
 	},
 	methods: {
@@ -141,17 +161,11 @@ export default {
 </script>
 
 <style scoped>
-.mainBody {
-	position: relative;
-	height: 500px;
-	padding-top: 10px;
-}
-
 .redTop {
 	background: #ff4444;
 	width: 100%;
 	height: 80px;
-	z-index: -1;
+	z-index: 0;
 	position: absolute;
 	top: 0;
 }

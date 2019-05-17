@@ -291,7 +291,7 @@ export default {
 			//h5
 			console.log('weixin')
 			var backUrl = location.href
-			window.open('http://'+location.host+'/userlogin?type=appLogin&backUrl=' + encodeURIComponent(backUrl), '_self')
+			window.open('/userlogin?type=appLogin&backUrl=' + encodeURIComponent(backUrl), '_self')
 		} else {
 			//app
 			console.log('not weixin')

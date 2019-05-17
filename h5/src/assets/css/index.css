@@ -55,6 +55,10 @@ a:active {
 .detailsList .van-tab .van-ellipsis {
   color: #000000 !important;
 }
+.van-button--primary {
+  background-color: #ff3131 !important;
+  border-color: #ff3131 !important;
+}
 .userImg {
   width: 60px;
   height: 60px;

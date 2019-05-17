@@ -172,7 +172,8 @@ export default {
 							title: that.shareTitle,
 							img: that.shareImg,
 							link: encodeURIComponent(that.shareLink),
-							login_key: that.login_key
+							login_key: that.login_key,
+							type: 'scene'
 						},
 						function(res) {
 							that.show = false;
@@ -182,7 +183,8 @@ export default {
 							common.toAjax(
 								common.host + '/api/outapi/mcrypturl',
 								{
-									url: encodeURIComponent(that.shareLink + '&rand_no=' + rand_no)
+									url: encodeURIComponent(that.shareLink + '&rand_no=' + rand_no),
+									type: 'scene'
 								},
 								function(res) {
 									shortLink = res.data.url;
@@ -229,7 +231,8 @@ export default {
 							title: that.shareTitle,
 							img: that.shareImg,
 							link: encodeURI(that.shareLink),
-							login_key: that.login_key
+							login_key: that.login_key,
+							type: 'timeline'
 						},
 						function(res) {
 							that.show = false;
@@ -239,7 +242,8 @@ export default {
 							common.toAjax(
 								common.host + '/api/outapi/mcrypturl',
 								{
-									url: encodeURIComponent(that.shareLink + '&rand_no=' + rand_no)
+									url: encodeURIComponent(that.shareLink + '&rand_no=' + rand_no),
+									type: 'timeline'
 								},
 								function(res) {
 									shortLink = res.data.url;
@@ -295,7 +299,7 @@ export default {
 						},
 						success: function(res) {
 							var url =
-								'http://' +
+								location.protocol+'//' +
 								location.host +
 								'/c/akai.html?url=' +
 								encodeURIComponent(that.shareLink) +
