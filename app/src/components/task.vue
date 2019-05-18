@@ -239,7 +239,7 @@ export default {
 							that.$dialog.alert({
 								message: res.err_msg
 							});
-						},2000)
+						},5000)
 					} else {
 						that.$toast(res.err_msg);
 					}
@@ -432,7 +432,7 @@ export default {
 							that.balance = res.data.balance;
 							console.log(that.signDay, '签到天数1');
 							that.signDay += 1;
-							if (that.signDay >= 7) {
+							if (that.signDay >= that.signList.length) {
 								that.signMoney = that.signList[that.signList.length - 1].value;
 								console.log(that.signMoney, 112233);
 							} else {
@@ -516,13 +516,27 @@ export default {
 						}
 					});
 				}
+				//判断到有驳回信息，并且新手任务未完成则提示驳回信息
+				if (res.data.apply_fail_tip != undefined && res.data.apply_fail_tip != ''&&that.taskOk) {
+					that.$dialog
+						.confirm({
+							title: '温馨提示',
+							message: res.data.apply_fail_tip,
+							showConfirmButton: true,
+							showCancelButton: false,
+							confirmButtonText: '去分享'
+						})
+						.then(() => {
+							that.$router.replace('/mentor');
+						});
+				}
 				//签到列表数据
 				that.signList = res.data.sign.money;
 				//今日是否签到
 				that.signed = res.data.sign.signed;
 				//已签到天数
 				that.signDay = res.data.sign.day;
-				if (that.signDay >= 7) {
+				if (that.signDay >= that.signList.length) {
 					that.signMoney = that.signList[that.signList.length - 1].value;
 				} else {
 					that.signMoney = that.signList[that.signDay].value;
@@ -530,7 +544,7 @@ export default {
 				//测试签到天数
 				// var i = 6
 				// that.signDay = i;
-				// if (i >= 7) {
+				// if (i >= that.signList.length) {
 				// 	console.log(i,222);
 				// 	console.log(that.signList.length -1,333333333);
 				// 	that.signMoney = that.signList[that.signList.length -1].value;

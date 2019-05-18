@@ -408,6 +408,7 @@ export default {
 		this.getData_mentorList(false);
 		this.getData_otherList(false);
 		this.getData_income();
+		this.activeNames = [];
 	},
 	mounted() {
 		this.listH = window.innerHeight - $('.van-nav-bar').height() - $('.van-row').height() - $('.van-tabs__wrap').height() + 'px';

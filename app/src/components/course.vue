@@ -138,6 +138,12 @@ export default {
 	},
 	activated() {
 		this.checkRoute();
+		this.activeNames = [];
+		this.activeNames1 = [];
+		this.activeNames2 = [];
+		this.activeNames3 = [];
+		this.activeNames4 = [];
+		this.activeNames5 = [];
 	}
 };
 </script>

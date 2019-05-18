@@ -69,8 +69,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item1.title[1]}}</p>
 					</template>
 					<img :src="item1.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(item1.name,item1.title[4])"
-					 v-if="item1.is == 0">{{getMst}}</van-button>
+					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(item1.name,item1.title[4])" v-if="item1.is == 0">{{getMst}}</van-button>
 					<van-button round type="danger" size="small" :id="item1.name" :style="styleBtn" v-else>已领取</van-button>
 				</van-cell>
 			</div>
@@ -89,7 +88,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item2.title[1]}}</p>
 					</template>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" @click="dayGet(item2.name,item2.value)" >{{getMst}}</van-button>
+					<van-button round type="danger" size="small" @click="dayGet(item2.name,item2.value)">{{getMst}}</van-button>
 				</van-cell>
 
 			</div>
@@ -97,8 +96,7 @@
 		<!-- 推荐分享 -->
 		<div class="share" v-if="!taskOk">
 			<p class="title" style="padding-bottom: 10px;">推荐分享</p>
-			<div class="listCard" v-for="(listitem, listIndex) in articleList" :key="listIndex" :id="listitem.article_id"
-			 @click="goArticle(listitem.article_id, listitem.is_video)">
+			<div class="listCard" v-for="(listitem, listIndex) in articleList" :key="listIndex" :id="listitem.article_id" @click="goArticle(listitem.article_id, listitem.is_video)">
 				<van-row>
 					<van-col span="24">
 						<van-row type="flex" justify="space-between">
@@ -106,10 +104,7 @@
 								<van-row>
 									<van-col span="24">
 										<div style="height:40px;margin-bottom: 30px;">
-											<span
-												class="articleTitle"
-												:style="'font-weight:' + listitem.list_title_bold + ';color:' + listitem.list_title_color + ';'"
-											>
+											<span class="articleTitle" :style="'font-weight:' + listitem.list_title_bold + ';color:' + listitem.list_title_color + ';'">
 												{{ listitem.title }}
 											</span>
 										</div>
@@ -176,8 +171,7 @@
 				signList: '', //签到数据
 				signed: 0, //是否签到，
 				signMoney: 0, //签到金额
-				articleList: '',//推荐列表数据
-				isFrame: true,//控制新开webview个数
+				articleList: '', //推荐列表数据
 			}
 		},
 		methods: {
@@ -195,13 +189,13 @@
 					"background-color": "#d6d6d6"
 				})
 			},
-			newGet(name,type) {
+			newGet(name, type) {
 				var that = this;
-				if(type=='shoutu'||type=='article'){
+				if (type == 'shoutu' || type == 'article') {
 					that.$dialog.alert({
-						title:'温馨提醒',
-						message:'分享任务请在APP里完成',
-						confirmButtonText:'好的'
+						title: '温馨提醒',
+						message: '分享任务请在APP里完成',
+						confirmButtonText: '好的'
 					})
 					return;
 				}
@@ -231,16 +225,16 @@
 							that.$toast(res.err_msg);
 							that.today_money = res.data.today_money;
 							that.balance = res.data.balance;
-							console.log(that.signDay,"签到天数1");
-							that.signDay+=1;
-							if (that.signDay >= 7) {
+							console.log(that.signDay, "签到天数1");
+							that.signDay += 1;
+							if (that.signDay >= that.signList.length) {
 								that.signMoney = that.signList[that.signList.length - 1].value;
-								console.log(that.signMoney,112233);
+								console.log(that.signMoney, 112233);
 							} else {
 								that.signMoney = that.signList[that.signDay].value;
-								console.log(that.signMoney,223344);
+								console.log(that.signMoney, 223344);
 							};
-							console.log(that.signDay,"签到天数2");
+							console.log(that.signDay, "签到天数2");
 							that.signed = 1;
 						} else {
 							that.$toast(res.err_msg);
@@ -251,21 +245,9 @@
 				}
 			},
 			goArticle(id, $video) {
-				var that = this;
 				if ($video == 1) {
-					if (that.isFrame) {
-						that.isFrame = false;
-						setTimeout(function() {
-							that.isFrame = true;
-						}, 1000);
-						var url = location.protocol + '//' + location.host + '/article/article_share_app.html?article_id=' + id;
-						api.sendEvent({
-							name: 'openWin',
-							extra: {
-								url: url // 需要http开头的完整url
-							}
-						});
-					}
+					var url = '/article/article_share.html?article_id=' + id;
+					location.href = url;
 				} else {
 					this.$router.push({
 						path: '/money_article/' + id
@@ -309,21 +291,38 @@
 					//判断新手任务完成显示推荐分享
 					if (!that.taskOk) {
 						that.$http.get(common.host + '/article/list?type=1&page=1&task=task')
-						.then(({ data }) => {
-							if (data.err_code == 0) {
-								that.articleList = data.data;
-							} else {
-								that.$toast(data.err_msg);
-							}
-						})
+							.then(({
+								data
+							}) => {
+								if (data.err_code == 0) {
+									that.articleList = data.data;
+									console.log(that.articleList, 123321222);
+								} else {
+									that.$toast(data.err_msg);
+								}
+							})
 					};
+					//判断到有驳回信息，并且新手任务未完成则提示驳回信息
+					if (res.data.apply_fail_tip != undefined && res.data.apply_fail_tip != '' && that.taskOk) {
+						that.$dialog
+							.confirm({
+								title: '温馨提示',
+								message: res.data.apply_fail_tip,
+								showConfirmButton: true,
+								showCancelButton: false,
+								confirmButtonText: '去分享'
+							})
+							.then(() => {
+								that.$router.replace('/mentor');
+							});
+					}
 					//签到列表数据
 					that.signList = res.data.sign.money;
 					//今日是否签到
 					that.signed = res.data.sign.signed;
 					//已签到天数
 					that.signDay = res.data.sign.day;
-					if (that.signDay >= 7) {
+					if (that.signDay >= that.signList.length) {
 						that.signMoney = that.signList[that.signList.length - 1].value;
 					} else {
 						that.signMoney = that.signList[that.signDay].value;
@@ -331,7 +330,7 @@
 					//测试签到天数
 					// var i = 6
 					// that.signDay = i;
-					// if (i >= 7) {
+					// if (i >= that.siginList.length) {
 					// 	console.log(i,222);
 					// 	console.log(that.signList.length -1,333333333);
 					// 	that.signMoney = that.signList[that.signList.length -1].value;
@@ -496,6 +495,7 @@
 		color: #fff;
 		font-size: 20px;
 	}
+
 	/*  推荐分享*/
 	.share {
 		width: 94%;
@@ -503,11 +503,13 @@
 		background-color: #fff;
 		border-radius: 8px;
 	}
+
 	.listCard {
 		display: inline-block;
 		margin: 5px 3% 0;
 		width: 94%;
 	}
+
 	.articleTitle {
 		font-size: 16px;
 		width: 100%;
@@ -517,29 +519,34 @@
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 2;
 	}
+
 	.articleType {
 		width: 12px;
 		height: 12px;
 		display: inline-block;
 		vertical-align: middle;
 	}
+
 	.articleType_txt {
 		font-size: 12px;
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0 2px;
 	}
+
 	.articleType_price {
 		font-size: 12px;
 		float: right;
 		margin-top: 2px;
 	}
+
 	.listitemImg {
 		width: 100%;
 		height: 90px;
 		border-radius: 6px;
 		background: #000;
 	}
+
 	.more {
 		padding: 30px 0 10px;
 		text-align: center;

@@ -5,7 +5,7 @@
 			<p :style="balanceTitle">我的余额（元）</p>
 			<p :style="balanceVal">{{ userInfo.balance / 100 }}</p>
 		</div>
-		<div :style="cashBox" v-if="userInfo.balance >= userInfo.lower_money">
+		<div :style="cashBox" v-if="userInfo.balance >= columns[0].text*100">
 			<p :style="balanceTitle">提现金额（元）</p>
 			<div :style="btnGroup">
 				<input
@@ -33,22 +33,22 @@
 			</van-cell>
 		</van-cell-group> -->
 
-		<div v-if="userInfo.balance < userInfo.lower_money">
+		<div v-if="userInfo.balance < columns[0].text*100">
 			<van-panel>
 				<div slot="header" class="cash_p" style="display: block;height:40px;line-height: 40px;">微信提现</div>
 				<div slot="footer">
 					<p class="cash_p redTxt cashNum">你的提现余额不足</p>
 					<p class="cash_p" style="font-size: 12px;margin:10px auto">
 						余额达到
-						<span class="redTxt">{{ userInfo.lower_money / 100 }}元</span>
+						<span class="redTxt">{{ columns[0].text*100 / 100 }}元</span>
 						就可以进行提现哦！
 					</p>
 				</div>
 			</van-panel>
 		</div>
-		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance < userInfo.lower_money">去赚余额</van-button>
-		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance >= userInfo.lower_money && showMoney">去赚余额</van-button>
-		<van-button size="large" type="primary" square block @click="drawCash" :style="drawBtn" v-if="userInfo.balance >= userInfo.lower_money&& !showMoney">提现</van-button>
+		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance < columns[0].text*100">去赚余额</van-button>
+		<van-button size="large" type="primary" square block @click="toArticle" :style="drawBtn" v-if="userInfo.balance >= columns[0].text*100 && showMoney">去赚余额</van-button>
+		<van-button size="large" type="primary" square block @click="drawCash" :style="drawBtn" v-if="userInfo.balance >= columns[0].text*100&& !showMoney">提现</van-button>
 		<div class="getCoin">
 			<h3>如何赚取奖励</h3>
 			<h4>1.邀请好友阅读热门文章可获得奖励；</h4>
@@ -273,11 +273,7 @@ export default {
 		getCash() {
 			this.cashMoney = this.userInfo.balance / 100;
 		},
-		tolowerCash(money) {
-			if (money < this.userInfo.lower_money / 100 && this.userInfo.en_getcash_num == 1) {
-				this.$toast('最低提现金额为' + this.userInfo.lower_money / 100 + '元');
-			}
-		},
+		
 		toArticle() {
 			common.goLink('/article', this);
 			this.money();
@@ -292,14 +288,13 @@ export default {
 		showPicker() {
 			this.show_picker = true;
 		},
+		init_chooseBtn(){
+			this.chooseIndex=0;
+			this.cashMoney=this.columns[0].text;
+		},
 		getCashBtn(data) {
 			var btnsArr = [];
 			this.cashMoney = data[0];
-			if (data[0] > this.userInfo.balance / 100) {
-				this.showTool = false;
-			} else {
-				this.showTool = true;
-			}
 			for (var i = 0; i < data.length; i++) {
 				var btnArr = {
 					text: '',
@@ -319,6 +314,7 @@ export default {
 				btnsArr.push(btnArr);
 			}
 			this.columns = btnsArr;
+			this.init_chooseBtn();
 			console.log(this.columns);
 		},
 		chooseCash(obj, index) {
@@ -374,6 +370,19 @@ export default {
 					}
 					if (res.data.need_st == true) {
 						that.shareShow = true;
+					}
+					if (res.data.apply_fail_tip != undefined && res.data.apply_fail_tip != '') {
+						that.$dialog
+							.confirm({
+								title: '温馨提示',
+								message: res.data.apply_fail_tip,
+								showConfirmButton: true,
+								showCancelButton: false,
+								confirmButtonText: '去分享'
+							})
+							.then(() => {
+								that.$router.replace('/mentor');
+							});
 					}
 					// that.columns = res.data.getcashes_btn;
 					that.getCashBtn(res.data.getcashes_btn);

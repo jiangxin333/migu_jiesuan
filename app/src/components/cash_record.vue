@@ -62,7 +62,7 @@ export default {
 			// 异步更新数据
 			if (that.isRequest) {
 				that.isRequest = false;
-				common.toAjax(common.host + '/getcashs/userlog', { lastid: that.lastid }, function(res) {
+				common.toAjax(common.host + '/getcashs/userlog', { page: that.pageNum }, function(res) {
 					// 加载状态结束
 					that.loading = false;
 					that.isRequest = true;
@@ -76,7 +76,7 @@ export default {
 								console.log('data', res.data.data);
 								that.list = that.list.concat(res.data.data);
 								console.log('list', that.list);
-								that.lastid = res.data.lastid;
+								that.pageNum++;
 							}
 						} else {
 							that.$toast(res.err_msg);
@@ -95,7 +95,7 @@ export default {
 			console.log('refresh');
 			var that = this;
 			that.list = [];
-			that.lastid = 0;
+			that.pageNum = 1;
 			that.finished = false;
 			that.loading = false;
 			setTimeout(function() {
@@ -106,9 +106,10 @@ export default {
 	},
 	activated() {
 		this.checkRoute();
-		this.lastid = 0;
+		this.pageNum = 1;
 		this.list = [];
 		this.onLoad();
+		this.activeNames = [];
 		// $('.navTop').css({
 		// 	'min-height': window.innerHeight - 60 + 'px',
 		// });

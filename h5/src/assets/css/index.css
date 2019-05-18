@@ -15,6 +15,15 @@ a {
 a:active {
   color: #000000;
 }
+/*<!---->去掉苹果短的样式*/
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-appearance: none;
+}
+textarea {
+  -webkit-appearance: none;
+}
 .van-tabbar {
   border-top: 2px solid #f2f2f2;
 }
