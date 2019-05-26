@@ -4,7 +4,7 @@
 		<div :class="'danmu plane' + (index + 1)" :style="{ top: item.top }" v-for="(item, index) in planeList" :key="index">
 			<div class="planeContent" v-if="index == 0">
 				<img src="https://qiniustore.zmr016.com/quzhuan/imgs/wheel-plane.gif" alt />
-				<div style="font-size:14px;color:#000000;position: absolute; left:150px;top:50%;height: 30px;margin-top: -15px;" id="plane1"></div>
+				<div style="font-size:14px;color:#000000;position: absolute; left:28%;top:50%;height: 30px;margin-top: -10px;" id="plane1"></div>
 			</div>
 			<div class="normalContent" v-if="index != 0">
 				<img src="https://qiniustore.zmr016.com/quzhuan/imgs/news.jpg" alt id="plane2Img" />
@@ -196,7 +196,8 @@ export default {
 				height: window.innerWidth * 0.81 + 'px!important'
 			},
 			prizeIndex: '',
-			shareType: 'share'
+			shareType: 'share',
+			ermUrl_timeline:''
 		};
 	},
 	methods: {
@@ -237,6 +238,7 @@ export default {
 									pic: that.ermImg // 图片地址
 								}
 							});
+							that.show = false;
 						}
 					} else {
 						// 分享网页
@@ -252,11 +254,12 @@ export default {
 								timeline: false // false表示发送给还有，true表示分享朋友圈
 							}
 						});
+						that.show = false;
 					}
 					break;
 				case '微信分享到朋友圈':
 					if (st_use_type == 'img') {
-						if (this.ermImg != '') {
+						if (this.ermUrl_timeline != '') {
 							// 分享图片
 							api.sendEvent({
 								name: that.shareType,
@@ -264,9 +267,10 @@ export default {
 									type: 'image',
 									scene: 'timeline',
 									timeline: true, // false表示发送给还有，true表示分享朋友圈
-									pic: that.ermImg // 图片地址
+									pic: that.ermUrl_timeline // 图片地址
 								}
 							});
+							that.show = false;
 						}
 					} else {
 						// 分享网页
@@ -282,6 +286,7 @@ export default {
 								timeline: true // false表示发送给还有，true表示分享朋友圈
 							}
 						});
+						that.show = false;
 					}
 					break;
 				// case '分享二维码':
@@ -347,6 +352,22 @@ export default {
 		this.tipsShow = false;
 		this.left_chances = common.getVal('userInfo').prize_chance;
 		var that = this;
+		if (that.$store.state.qrcode_img != ''&&that.$store.state.timeline_qrcode_img) {
+			that.ermImg = that.$store.state.qrcode_img;
+			that.ermUrl_timeline=that.$store.state.timeline_qrcode_img;
+		} else {
+			common.toAjax(common.host + '/user_st/st_img', { type: 'mentor' }, function(res) {
+				if (res.err_code==0) {
+					that.ermImg = res.data.qrcode_img;
+					that.ermUrl_timeline=res.data.timeline_qrcode_img;
+					that.$store.commit('SETIMG', res.data.qrcode_img);
+					that.$store.commit('SETIMG_TIMELINE', res.data.timeline_qrcode_img);
+					// this.show = true;
+				} else {
+					that.$toast(res.info);
+				}
+			});
+		}
 		if (common.getVal('loginData').app_share_type != 'share') {
 			this.shareType = 'fakeShare';
 		}
@@ -402,7 +423,6 @@ export default {
 						if (res.err_code == 0) {
 							that.activity_id = res.data.id;
 							that.share_host = res.data.share_host;
-							that.ermImg = res.data.qrcode_img;
 							$('.ruleContent').html(res.data.activity.rule);
 							common.toAjax(common.host + '/prizes/list', { activity_id: that.activity_id }, function(res) {
 								if (res.err_code != 800) {
@@ -455,22 +475,22 @@ export default {
 					var count = 0;
 					plane();
 					function plane() {
-						var name1 = that.prizedList[count].name ? that.prizedList[count].name : that.prizedList[count].tel;
-						var name2 = that.prizedList[count + 1].name ? that.prizedList[count + 1].name : that.prizedList[count + 1].tel;
+						var name1 = (that.prizedList[count].name ? that.prizedList[count].name : that.prizedList[count].tel).substring(0, 5);
+						var name2 = (that.prizedList[count + 1].name ? that.prizedList[count + 1].name : that.prizedList[count + 1].tel).substring(0, 5);
 						var str1 =
-							`恭喜<span class="redTxt">` +
+							`<p style="width: 300px;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space:nowrap;">恭喜<span class="redTxt">` +
 							name1 +
 							`</span>,获得<span class="redTxt">` +
 							that.prizedList[count].prize_name +
 							`</span>  ` +
-							that.prizedList[count].get_time;
+							that.prizedList[count].get_time;+`</p>`
 						var str2 =
-							`恭喜<span class="redTxt">` +
+						`<p style="width: 240px;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space:nowrap;">恭喜<span class="redTxt">` +
 							name2 +
 							`</span>,获得<span class="redTxt">` +
 							that.prizedList[count + 1].prize_name +
 							`</span>  ` +
-							that.prizedList[count + 1].get_time;
+							that.prizedList[count + 1].get_time;+`</p>`
 
 						$('#plane1').html(str1);
 						$('#plane2').html(str2);
@@ -506,7 +526,7 @@ export default {
 }
 
 .navTop {
-	background: url('../assets/img/ggz/wheel_bg.1223b90.png') no-repeat;
+	background: url(https://qiniustore.zmr016.com/quzhuan/imgs/wheel_bg.png) no-repeat;
 	background-size: cover;
 	position: relative;
 }
@@ -637,7 +657,7 @@ export default {
 	position: relative;
 }
 .planeContent img {
-	width: 500px;
+	width: 510px;
 }
 .normalContent {
 	position: relative;

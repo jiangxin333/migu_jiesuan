@@ -109,7 +109,7 @@ export default {
 			has_sf: 0,
 			td_list: [],
 			// ad: 'https://quzhuan.oss-cn-beijing.aliyuncs.com/img/news.png',
-			ad: require('../assets/img/news.jpg'),
+			ad: 'https://qiniustore.zmr016.com/quzhuan/imgs/news.jpg',
 			td_summary_info: {
 				user_td_count: 0,
 				user_ts_count: 0,

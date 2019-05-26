@@ -171,7 +171,7 @@ export default {
 	data() {
 		return {
 			active: 0,
-			ad: require('../assets/img/news.jpg'),
+			ad: 'https://qiniustore.zmr016.com/quzhuan/imgs/news.jpg',
 			lineWidth: window.innerWidth / 2 - 1,
 			quick_money: 19998553,
 			showAll: false,

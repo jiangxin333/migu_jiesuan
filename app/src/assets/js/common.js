@@ -168,11 +168,18 @@ export default {
 				},
 				success: success,
 				error: function() {
-					that.Toast.message = "加载失败";
-					setTimeout(function() {
-						that.Toast.clear();
-						that.$router.go(-1);
-					}, 2000);
+					that.Toast.clear();
+					that.$dialog
+						.alert({
+							title: '温馨提醒',
+							message: '加载失败',
+							confirmButtonText: '点击返回上一页'
+						})
+						.then(() => {
+							that.$dialog.close();
+							that.Toast.clear();
+							that.$router.go(-1);
+						});
 				}
 			});
 		} else {
@@ -186,8 +193,8 @@ export default {
 					withCredentials: true
 				},
 				success: success,
-				error:function(error){
-					alert('error:'+JSON.stringify(error))
+				error: function(error) {
+					// alert('error:'+JSON.stringify(error))
 				}
 			});
 		}
@@ -234,7 +241,7 @@ export default {
 			}, function(res) {
 				if (res.err_code == 2001) {
 					var regUrl = '/userlogin/bindtel?data=' + res.data.data + '&img=' + res.data.img;
-					window.localStorage.backUrl = location.protocol+'//' + location.host + "/apparticle#/my";
+					window.localStorage.backUrl = location.protocol + '//' + location.host + "/apparticle#/my";
 					// document.write(regUrl)
 					location.href = regUrl;
 				} else {
@@ -305,7 +312,7 @@ export default {
 	 */
 	loginOther() {
 		var tthat = this; //tthat.js this对象
-		var logined=false;
+		var logined = false;
 		api.addEventListener({
 			name: 'wxLogind'
 		}, function(ret, err) {
@@ -322,7 +329,7 @@ export default {
 			}, function(res) {
 				if (res.err_code == 2001) {
 					var regUrl = '/userlogin/bindtel?data=' + res.data.data + '&img=' + res.data.img;
-					window.localStorage.backUrl = location.protocol+'//' + location.host + "/apparticle#/my";
+					window.localStorage.backUrl = location.protocol + '//' + location.host + "/apparticle#/my";
 					// document.write(regUrl)
 					location.href = regUrl;
 				} else {
@@ -334,9 +341,11 @@ export default {
 									tthat.setVal('userInfo', res.data);
 									tthat.setVal('en_rank', res.data.en_rank)
 									window.localStorage.isLogin = true;
-								} else {
-								}
+								} else {}
 							} else {
+								if (res.err_code == 2000) {
+									tthat.$toast(res.err_msg);
+								};
 								window.localStorage.isLogin = false;
 							}
 						});

@@ -458,7 +458,7 @@ export default {
 }
 
 .navTop {
-	background: url('../assets/img/ggz/wheel_bg.1223b90.png') no-repeat;
+	background: url(https://qiniustore.zmr016.com/quzhuan/imgs/wheel_bg.png) no-repeat;
 	background-size: cover;
 }
 

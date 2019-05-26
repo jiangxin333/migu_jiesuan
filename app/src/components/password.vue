@@ -137,7 +137,8 @@ export default {
 					tel: that.tel,
 					old_password: that.old_pass,
 					password: that.new_pass,
-					confirm_password: that.new_pass_confirm
+					confirm_password: that.new_pass_confirm,
+					type: "password"
 				},
 				function(res) {
 					if (res.err_code != 800) {

@@ -37,6 +37,10 @@ const notice_list = resolve => require(['@/components/notice_list.vue'], resolve
 const password = resolve => require(['@/components/password.vue'], resolve)
 const vip = resolve => require(['@/components/vip'], resolve)
 const task = resolve => require(['@/components/task'], resolve)
+const account = resolve => require(['@/components/account'], resolve)
+const account_course = resolve => require(['@/components/account_course'], resolve)
+//新收徒页面
+const new_mentor = resolve => require(['@/components/new_mentor'], resolve)
 
 //方便测试，新增测试路由，指向验证码登录页面，验证码登录页面可以使用万能验证码999999进行登录。测试登录路由仅支持路由访问，没有其他入口进行这个页面。访问这个路由必须有上级页面才行。
 const test = resolve => require(['@/components/login'], resolve)
@@ -56,8 +60,8 @@ export default new Router({
 		},
 		{
 			path: '/mentor',
-			name: 'mentor',
-			component: mentor2
+			name: 'new_mentor',
+			component: new_mentor
 		},
 		{
 			path: '/article',
@@ -202,11 +206,26 @@ export default new Router({
 			name: 'task',
 			component: task
 		},
+		{
+			path: '/account',
+			name: 'account',
+			component: account
+		},
+		{
+			path: '/account_course',
+			name: 'account_course',
+			component: account_course
+		},
 		//测试用登录页
 		{
-			path:'/test',
-			name:'login',
-			component:test
+			path: '/test',
+			name: 'login',
+			component: test
+		},
+		{
+			path: '/new_mentor',
+			name: '/new_mentor',
+			component: new_mentor
 		}
 		// 		{
 		// 			path: '/mentor',
@@ -230,5 +249,4 @@ export default new Router({
 		// 		}
 
 	],
-
 })

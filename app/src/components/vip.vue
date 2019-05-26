@@ -2,7 +2,7 @@
 	<div class="navTop" :style="styleH">
 		<van-nav-bar left-arrow fixed @click-left="onClickLeft" title="VIP会员"/>
 		<div class="bgImg">
-			<img src="../assets/img/vip/bac.png" alt="">
+			<img src="https://qiniustore.zmr016.com/quzhuan/imgs/bac.png" alt="">
 			<div class="content">
 				<p class="size" style="font-size: 16px; font-weight: 700;">会员专享黑钻&nbsp;&nbsp;未来百倍价值</p>
 				<p class="size">--参与分红不清零永久持有--</p>

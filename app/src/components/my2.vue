@@ -10,10 +10,6 @@
 					<p class="top_user_img"><!-- <span class="imgBg"></span> --></p>
 					<p class="userName">{{ userInfo.name }}</p>
 				</van-col>
-				<!-- <van-col span="12">
-					<p class="top_user_name">{{ userInfo.name }}</p>
-					<p class="top_user_tel">转转号:{{ userInfo.tel }}</p>
-				</van-col> -->
 			</van-row>
 			<van-row class="row_top" v-if="isLogin">
 				<van-col span="8" style="height: 100%;">
@@ -225,7 +221,7 @@
 					<div class="border-line"></div>
 				</div>
 			</van-pull-refresh> -->
-			<van-popup v-model="adShow"><img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/ad_mentor.png" class="qr_img" alt @click="toMentor" /></van-popup>
+			<van-popup v-model="adShow"><img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/ad_mentor_migu_my.png" class="qr_img" alt @click="toMentor" /></van-popup>
 		</div>
 	</div>
 </template>
@@ -358,15 +354,20 @@ export default {
 		},
 		toAd(url) {
 			var that = this;
-			var url = 'http://' + location.host + '/adpage/adpage.html?url=' + encodeURIComponent(url);
-			// var url = 'http://migutest.zmr016.com/adpage/adpage.html?url=' + encodeURIComponent(url);
-			// window.open(url,'_blank')
-			api.sendEvent({
-				name: 'openWin',
-				extra: {
-					url: url // 需要http开头的完整url
-				}
-			});
+			if(url.indexOf('http')>=0){
+				var url = 'http://' + location.host + '/adpage/adpage.html?url=' + encodeURIComponent(url);
+				// var url = 'http://migutest.zmr016.com/adpage/adpage.html?url=' + encodeURIComponent(url);
+				// window.open(url,'_blank')
+				api.sendEvent({
+					name: 'openWin',
+					extra: {
+						url: url // 需要http开头的完整url
+					}
+				});
+			}else{
+				common.goLink(url,this)
+			}
+			
 		},
 		showAd() {
 			if (Cookie.get('isShowed') == undefined) {
@@ -376,17 +377,30 @@ export default {
 				this.adShow = false;
 			}
 		},
-		initSwiper() {
+		initSwiper(ad_info) {
 			if (this.swiper != null) return;
-			this.swiper = new Swiper('.swiper-container', {
-				loop: true,
-				speed: 900,
-				autoplay: {
-					disableOnInteraction: false,// 触碰后自动切换也不会停止
-				},
-				observer: true, //修改swiper自己或子元素时，自动初始化swiper
-				observeParents: true //修改swiper的父元素时，自动初始化swiper
-			});
+			if(ad_info.length>1){
+				this.swiper = new Swiper('.swiper-container', {
+					loop: true,
+					speed: 900,
+					autoplay: {
+						disableOnInteraction: false,// 触碰后自动切换也不会停止
+					},
+					observer: true, //修改swiper自己或子元素时，自动初始化swiper
+					observeParents: true //修改swiper的父元素时，自动初始化swiper
+				});
+			}else{
+				this.swiper = new Swiper('.swiper-container', {
+					watchOverflow:true,
+					speed: 900,
+					autoplay: {
+						disableOnInteraction: false,// 触碰后自动切换也不会停止
+					},
+					observer: true, //修改swiper自己或子元素时，自动初始化swiper
+					observeParents: true //修改swiper的父元素时，自动初始化swiper
+				});
+			}
+			
 		}
 	},
 	watch: {
@@ -419,7 +433,7 @@ export default {
 				this.adImgList = common.getVal('loginData').ad_info;
 				this.$nextTick(() => {
 					// 下一个UI帧再初始化swiper
-					this.initSwiper();
+					this.initSwiper(this.adImgList);
 				});
 			} else {
 				this.ad_show = false;
@@ -436,7 +450,7 @@ export default {
 					this.adImgList = common.getVal('loginData').ad_info;
 					this.$nextTick(() => {
 						// 下一个UI帧再初始化swiper
-						this.initSwiper();
+						this.initSwiper(this.adImgList);
 					});
 				} else {
 					this.ad_show = false;
@@ -494,23 +508,23 @@ export default {
 
 .hea_img {
 	position: absolute;
-	width: 90px;
+	width: 80px;
 	top: 0;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	border: 2px solid #fff;
 	border-radius: 50%;
-	box-shadow: 0px 0px 8px #000;
 	z-index: 4;
 }
 
 .userName {
 	position: absolute;
-	top: 55%;
+	top: 52%;
 	left: 50%;
 	transform: translateX(-50%);
 	font-size: 16px;
 	z-index: 6;
+	color: #333;
 }
 
 .img_bg {
@@ -588,7 +602,7 @@ export default {
 	line-height: 20px;
 	text-align: center;
 	color: #000;
-	padding-top: 4px;
+	padding: 8px 0;
 	overflow: hidden;
 }
 
