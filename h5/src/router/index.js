@@ -33,6 +33,9 @@ const notice_list = resolve => require(['@/components/notice_list.vue'], resolve
 const password = resolve => require(['@/components/password.vue'], resolve)
 const vip = resolve => require(['@/components/vip'], resolve)
 const task = resolve => require(['@/components/task'], resolve)
+const account = resolve => require(['@/components/account'], resolve)
+const account_course = resolve => require(['@/components/account_course'], resolve)
+const new_mentor = resolve => require(['@/components/new_mentor'], resolve)
 Vue.use(Router)
 
 export default new Router({
@@ -49,8 +52,8 @@ export default new Router({
 		},
 		{
 			path: '/mentor',
-			name: 'mentor',
-			component: mentor
+			name: 'new_mentor',
+			component: new_mentor
 		},
 		{
 			path: '/article',
@@ -194,6 +197,16 @@ export default new Router({
 			path: '/task',
 			name: 'task',
 			component: task
+		},
+		{
+			path: '/account',
+			name: 'account',
+			component: account
+		},
+		{
+			path: '/account_course',
+			name: 'account_course',
+			component: account_course
 		}
 		// 		{
 		// 			path: '/mentor',
@@ -217,5 +230,4 @@ export default new Router({
 		// 		}
 
 	],
-
 })

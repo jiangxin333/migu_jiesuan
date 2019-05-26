@@ -9,11 +9,11 @@
 			<div class="myEarnings">
 				<p class="title">我的收益</p>
 				<div class="earnings">
-					<div>
+					<div @click="toCash">
 						<p>当前余额&nbsp;&nbsp;(元)</p>
 						<span>{{balance / 100}}</span>
 					</div>
-					<div>
+					<div @click="toCash">
 						<p>今日收益&nbsp;&nbsp;(元)</p>
 						<span>{{today_money / 100}}</span>
 					</div>
@@ -51,8 +51,8 @@
 					<p style="font-size: 14px; color: #333">当前签到可获得&nbsp;&nbsp;<span style="font-weight: 700;">|</span>&nbsp;&nbsp;连续签到&nbsp;<span
 						 style="color: #B33630;font-weight: 700;">{{signDay}}</span>&nbsp;天</p>
 				</div>
-				<van-button style="height: 35px;box-shadow: 0px 0px 18px #CE1409;" round type="danger" @click="dayGet('sign')" v-if="signed == 0">签到领取</van-button>
-				<van-button style="height: 35px;box-shadow: 0px 0px 36px #d6d6d6;" round type="danger" :style="styleBtn" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
+				<van-button style="height: 35px;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
+				<van-button style="height: 35px;" round type="danger" :style="styleBtn" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
 			</div>
 		</div>
 		<!-- 新手任务 -->
@@ -69,7 +69,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item1.title[1]}}</p>
 					</template>
 					<img :src="item1.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(item1.name,item1.title[4])" v-if="item1.is == 0">{{getMst}}</van-button>
+					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(1,item1.name, item1.title[4],index)" v-if="item1.is == 0">{{getMst}}</van-button>
 					<van-button round type="danger" size="small" :id="item1.name" :style="styleBtn" v-else>已领取</van-button>
 				</van-cell>
 			</div>
@@ -88,7 +88,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item2.title[1]}}</p>
 					</template>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" @click="dayGet(item2.name,item2.value)">{{getMst}}</van-button>
+					<van-button round type="danger" size="small" @click="dayGet(2,item2.name, item2.value,index)">{{getMst}}</van-button>
 				</van-cell>
 
 			</div>
@@ -175,6 +175,9 @@
 			}
 		},
 		methods: {
+			toCash() {
+				this.$router.push('/cash_withdrawal');
+			},
 			popupMsg(name) {
 				this.msg = name;
 				this.showMsg = true;
@@ -182,14 +185,16 @@
 			hiddenPopup() {
 				this.showMsg = false;
 			},
-			getMoney(name) {
-				$("#" + name).html("已领取");
-				$("#" + name).css({
-					"border-color": "#d6d6d6",
-					"background-color": "#d6d6d6"
-				})
+			getMoney(type,index) {
+				if(type==0){
+					this.signList.signed=1;
+				}else if(type=="1"){
+					this.newTaskList[index].is=1;
+				}else{
+					this.everydayTaskList[index].is=1;
+				}
 			},
-			newGet(name, type) {
+			newGet(type1,name, type,index) {
 				var that = this;
 				if (type == 'shoutu' || type == 'article') {
 					that.$dialog.alert({
@@ -203,17 +208,38 @@
 					name: name
 				}, function(res) {
 					if (res.err_code != 2000) {
-						console.log("新手任务")
-						that.getMoney(name);
-						that.$toast(res.err_msg);
-						that.today_money = res.data.today_money;
-						that.balance = res.data.balance;
+						if (res.err_code == 1987) {
+							that.$dialog.confirm({
+									title: '温馨提醒',
+									message: res.err_msg
+								}).then(() => {
+									that.toCash();
+								})
+						} else {
+							console.log("新手任务")
+							that.getMoney(type1,index);
+							that.$toast(res.err_msg);
+							that.today_money = res.data.today_money;
+							that.balance = res.data.balance;
+							that.taskOk = res.data.isnewtask;
+							if (!that.taskOk) {
+								that.$http.get(common.host + '/article/list?type=1&page=1&task=task').then(({
+									data
+								}) => {
+									if (data.err_code == 0) {
+										that.articleList = data.data;
+									} else {
+										that.$toast(data.err_msg);
+									}
+								});
+							}
+						}
 					} else {
 						that.$toast(res.err_msg);
 					}
 				})
 			},
-			dayGet(name, value) {
+			dayGet(type,name, value,index) {
 				var that = this;
 				console.log(name);
 				if (name == "sign") {
@@ -221,7 +247,7 @@
 						name: name
 					}, function(res) {
 						if (res.err_code != 2000) {
-							that.getMoney(name);
+							that.getMoney(type,index);
 							that.$toast(res.err_msg);
 							that.today_money = res.data.today_money;
 							that.balance = res.data.balance;
@@ -267,8 +293,8 @@
 				setTimeout(function() {
 					that.$router.push('/my');
 					// common.login(that);
-					return;
 				}, 300);
+				return;
 			};
 			this.userInfo = common.getVal('userInfo');
 			this.img = this.userInfo.img;
@@ -278,6 +304,7 @@
 			console.log(this.balance, this.today_money);
 			console.log(this.userInfo, 3333);
 			common.toAjax(common.host + '/task/getlist', {}, function(res) {
+				that.$toast.clear();
 				if (res.err_code == 0) {
 					//新手任务数据
 					that.newTaskList = res.data.new;
@@ -313,7 +340,7 @@
 								confirmButtonText: '去分享'
 							})
 							.then(() => {
-								that.$router.replace('/mentor');
+								common.goLink('/mentor',that)
 							});
 					}
 					//签到列表数据
@@ -339,7 +366,7 @@
 					// 	console.log(i,1111);
 					// }
 				}
-			});
+			},that);
 		}
 	}
 </script>

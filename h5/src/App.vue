@@ -12,7 +12,7 @@
 				<img slot="icon" slot-scope="props" :src="props.active ? icon4_1 : icon4" />
 				<p class="icontxt" v-if="actived == 0 || actived == 2">领现金</p>
 			</van-tabbar-item>
-			<van-tabbar-item icon="search" to="/mentor" :replace="true">
+			<van-tabbar-item icon="search" to="/mentor" :replace="false">
 				<span>师徒</span>
 				<img slot="icon" slot-scope="props" :src="props.active ? icon2_1 : icon2" />
 			</van-tabbar-item>
@@ -61,7 +61,7 @@ export default {
 			this.$dialog.close();
 			this.$toast.clear();
 			console.log('checkRoute', this.$route.path);
-			if (this.$route.path == '/article' || this.$route.path == '/mentor' || this.$route.path == '/my' || this.$route.path == '/task' || this.$route.path == '/') {
+			if (this.$route.path == '/article' || this.$route.path == '/my' || this.$route.path == '/task' || this.$route.path == '/') {
 				this.isMain = true;
 				console.log('checkRoute', this.isMain);
 			} else {
@@ -140,12 +140,12 @@ export default {
 }
 .icontxt {
 	position: absolute;
-	width: 40px;
+	width: 43px;
 	top: -14px;
     left: 65px;
 	background-color: #fd6a57;
 	color: #fff;
-	padding: 5px;
+	padding: 5px 2px 5px 5px;
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;

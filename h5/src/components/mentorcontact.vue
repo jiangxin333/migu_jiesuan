@@ -71,6 +71,7 @@
                         img: that.img,
                         name: that.name,
                         tel: that.tel,
+						type: "userinfo"
                     },
                     function (res) {
                         if (res.err_code != 800) {

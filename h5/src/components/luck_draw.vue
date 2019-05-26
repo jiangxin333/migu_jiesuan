@@ -4,7 +4,7 @@
 		<div :class="'danmu plane' + (index + 1)" :style="{ top: item.top }" v-for="(item, index) in planeList" :key="index">
 			<div class="planeContent" v-if="index == 0">
 				<img src="https://qiniustore.zmr016.com/quzhuan/imgs/wheel-plane.gif" alt />
-				<div style="font-size:14px;color:#000000;position: absolute; left:150px;top:50%;height: 30px;margin-top: -15px;" id="plane1"></div>
+				<div style="font-size:14px;color:#000000;position: absolute; left:28%;top:50%;height: 30px;margin-top: -10px;" id="plane1"></div>
 			</div>
 			<div class="normalContent" v-if="index != 0">
 				<img src="https://qiniustore.zmr016.com/quzhuan/imgs/news.jpg" alt id="plane2Img" />
@@ -67,7 +67,7 @@
 		<img src="../assets/img/draw_rule_3.png" alt="" class="explainCard" />
 		<van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="onCancel" />
 		<!-- <van-popup v-model="ermShow">
-			<img :src="ermImg" class="qr_img" alt />
+			<img :src="ermUrl" class="qr_img" alt />
 			<input
 				type="button"
 				class="ermBtn shareBtn"
@@ -79,7 +79,7 @@
 			<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/share_tip.png" alt="" style="width: 100%;" />
 		</div>
 		<van-popup v-model="ermShow">
-			<img :src="ermImg" class="qr_img" alt />
+			<img :src="ermUrl" class="qr_img" alt />
 			<p style="text-align: center;margin-top: 5px;">
 				<input
 					type="button"
@@ -174,7 +174,7 @@ export default {
 			left_chances: 0,
 			show: false,
 			ermShow: false,
-			ermImg: '',
+			ermUrl: '',
 			actions: [
 				{
 					name: '微信分享给好友群'
@@ -279,7 +279,7 @@ export default {
 // 				name: 'share',
 // 				extra: {
 // 					type: 'image',
-// 					pic: this.ermImg // 图片地址
+// 					pic: this.ermUrl // 图片地址
 // 				}
 // 			});
 		},
@@ -323,6 +323,16 @@ export default {
 		this.tipsShow = false;
 		this.left_chances=common.getVal('userInfo').prize_chance;
 		var that = this;
+		if (that.$store.state.qrcode_img != '') {
+			that.ermUrl = that.$store.state.qrcode_img;
+		} else {
+			common.toAjax(common.host + '/user_st/st_img', { type: 'mentor' }, function(res) {
+				if(res.err_code==0){
+					that.ermUrl = res.data.qrcode_img;
+					that.$store.commit('SETIMG', res.data.qrcode_img);
+				}
+			});
+		}
 		$('#app').on('click', '#btn', function() {
 			if (click) {
 				return false;
@@ -375,7 +385,6 @@ export default {
 						if (res.err_code == 0) {
 							that.activity_id = res.data.id;
 							that.share_host = res.data.share_host;
-							that.ermImg = res.data.qrcode_img;
 							$('.ruleContent').html(res.data.activity.rule);
 							common.toAjax(common.host + '/prizes/list', { activity_id: that.activity_id }, function(res) {
 								if (res.err_code != 800) {
@@ -428,22 +437,22 @@ export default {
 					var count = 0;
 					plane();
 					function plane() {
-						var name1 = that.prizedList[count].name ? that.prizedList[count].name : that.prizedList[count].tel;
-						var name2 = that.prizedList[count + 1].name ? that.prizedList[count + 1].name : that.prizedList[count + 1].tel;
+						var name1 = (that.prizedList[count].name ? that.prizedList[count].name : that.prizedList[count].tel).substring(0, 5);
+						var name2 = (that.prizedList[count + 1].name ? that.prizedList[count + 1].name : that.prizedList[count + 1].tel).substring(0, 5);
 						var str1 =
-							`恭喜<span class="redTxt">` +
+							`<p style="width: 300px;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space:nowrap;">恭喜<span class="redTxt">` +
 							name1 +
 							`</span>,获得<span class="redTxt">` +
 							that.prizedList[count].prize_name +
 							`</span>  ` +
-							that.prizedList[count].get_time;
+							that.prizedList[count].get_time;+`</p>`
 						var str2 =
-							`恭喜<span class="redTxt">` +
-							name2 +
-							`</span>,获得<span class="redTxt">` +
-							that.prizedList[count + 1].prize_name +
-							`</span>  ` +
-							that.prizedList[count + 1].get_time;
+							`<p style="width: 240px;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space:nowrap;">恭喜<span class="redTxt">` +
+								name2 +
+								`</span>,获得<span class="redTxt">` +
+								that.prizedList[count + 1].prize_name +
+								`</span>  ` +
+								that.prizedList[count + 1].get_time;+`</p>`
 
 						$('#plane1').html(str1);
 						$('#plane2').html(str2);
@@ -457,7 +466,7 @@ export default {
 						}
 						that.time = setTimeout(function() {
 							plane();
-						}, 10000);
+						},10000);
 					}
 				} else {
 					that.$toast(res.err_msg);
@@ -479,7 +488,7 @@ export default {
 }
 
 .navTop {
-	background: url('../assets/img/ggz/wheel_bg.1223b90.png') no-repeat;
+	background: url('https://qiniustore.zmr016.com/quzhuan/imgs/wheel_bg.png') no-repeat;
 	background-size: cover;
 	position: relative;
 }
@@ -610,7 +619,7 @@ export default {
 	position: relative;
 }
 .planeContent img {
-	width: 500px;
+	width: 510px;
 }
 .normalContent {
 	position: relative;

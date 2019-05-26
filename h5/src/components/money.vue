@@ -237,7 +237,7 @@ export default {
 		}
 	},
 	beforeRouteEnter(to, from, next) {
-		if ( from.path == "/task"	 ) {
+		if ( from.path == "/task" ) {
 			next(vm => {
 				vm.listArr = [];
 				vm.onRefresh();

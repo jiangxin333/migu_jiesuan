@@ -164,11 +164,18 @@ export default {
 				},
 				success: success,
 				error: function() {
-					that.Toast.message = "加载失败";
-					setTimeout(function() {
+				that.Toast.clear();
+				that.$dialog
+					.alert({
+						title: '温馨提醒',
+						message: '加载失败',
+						confirmButtonText: '点击返回上一页'
+					})
+					.then(() => {
+						that.$dialog.close();
 						that.Toast.clear();
 						that.$router.go(-1);
-					}, 2000);
+					});
 				}
 			});
 		} else {

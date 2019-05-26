@@ -52,7 +52,7 @@
 														</van-col>
 														<van-col span="9">
 															<div class="card-right-bottom">
-																<div v-if="articleinfo.view_num > 0 || (articleinfo.income == articleinfo.share_money && articleinfo.income > 0)">
+																<!-- <div v-if="articleinfo.view_num > 0 || (articleinfo.income == articleinfo.share_money && articleinfo.income > 0)">
 																	<p class="bottom-middle top">
 																		<span>浏览：</span>
 																		<span class="greenTxt">{{ articleinfo.view_money / 100 }}元/次</span>
@@ -61,8 +61,9 @@
 																		<span>分享：</span>
 																		<span class="greenTxt">{{ articleinfo.share_money / 100 }}元</span>
 																	</p>
-																</div>
-																<div v-else>
+																</div> -->
+																<!-- 只显示浏览 不显示分享 -->
+																<div>
 																	<p class="bottom-middle">
 																		<span>浏览：</span>
 																		<span class="greenTxt">{{ articleinfo.view_money / 100 }}元/次</span>

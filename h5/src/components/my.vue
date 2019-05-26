@@ -7,7 +7,7 @@
 					<p>{{ app_download_title }}</p>
 					<p>永久收藏我们，更多福利等你拿！</p>
 				</template>
-				<img src="http://quzhuan.oss-cn-beijing.aliyuncs.com/img/icon%20200.png" slot="icon" class="iconImg" alt="" />
+				<img src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/jiesuan/images/logo_200.png" slot="icon" class="iconImg" alt="" />
 				<van-button round type="danger" size="small">立即下载</van-button>
 			</van-cell>
 		</div>
@@ -241,7 +241,7 @@
 				<div class="border-line"></div>
 			</div>
 		</van-pull-refresh> -->
-		<van-popup v-model="adShow"><img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/ad_mentor.png" class="qr_img"
+		<van-popup v-model="adShow"><img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/ad_mentor_migu_my.png" class="qr_img"
 			 alt @click="toMentor" /></van-popup>
 	</div>
 </template>
@@ -374,16 +374,21 @@
 				// common.setVal('adShow_time', new Date().getTime());
 			},
 			toAd(url) {
-				var that = this;
 				// var url="http://"+location.host+"/adpage/adpage.html?url="+encodeURIComponent(that.adUrl);
 				// var url = 'http://migutest.zmr016.com/adpage/adpage.html?url=' + encodeURIComponent(url);
-				location.href=url;
+				
 				// 			api.sendEvent({
 				// 				name: 'openWin',
 				// 				extra: {
 				// 					url: url // 需要http开头的完整url
 				// 				}
 				// 			});
+				var that = this;
+				if(url.indexOf('http')>=0){
+					location.href=url;
+				}else{
+					common.goLink(url,this)
+				}
 			},
 			download() {
 				var url = common.getVal('loginData').app_download_tpl;
@@ -397,27 +402,42 @@
 					this.adShow = false;
 				}
 			},
-			initSwiper() {
+			initSwiper(ad_info) {
 				if (this.swiper != null) return;
-				this.swiper = new Swiper('.swiper-container', {
-					loop: true,
-					speed: 900,
-					autoplay: {
-						disableOnInteraction: false,// 触碰后自动切换也不会停止
-					},
-					observer: true, //修改swiper自己或子元素时，自动初始化swiper
-					observeParents: true //修改swiper的父元素时，自动初始化swiper
-				});
+				if(ad_info.length>1){
+					this.swiper = new Swiper('.swiper-container', {
+						loop: true,
+						speed: 900,
+						autoplay: {
+							disableOnInteraction: false,// 触碰后自动切换也不会停止
+						},
+						observer: true, //修改swiper自己或子元素时，自动初始化swiper
+						observeParents: true //修改swiper的父元素时，自动初始化swiper
+					});
+				}else{
+					this.swiper = new Swiper('.swiper-container', {
+						watchOverflow:true,
+						speed: 900,
+						autoplay: {
+							disableOnInteraction: false,// 触碰后自动切换也不会停止
+						},
+						observer: true, //修改swiper自己或子元素时，自动初始化swiper
+						observeParents: true //修改swiper的父元素时，自动初始化swiper
+					});
+				}
+				
 			}
 		},
 		watch: {
 			$route() {
-				if (this.$route.path == "/my") {
-					console.log(this.swiper.autoplay.start());
-					this.swiper.autoplay.start();
-				} else {
-					this.swiper.autoplay.stop();
-					console.log(this.swiper.autoplay.stop());
+				if(this.adImgList.length>1&&this.swiper!=null){
+					if (this.$route.path == "/my") {
+						console.log(this.swiper.autoplay.start());
+						this.swiper.autoplay.start();
+					} else {
+						this.swiper.autoplay.stop();
+						console.log(this.swiper.autoplay.stop());
+					}
 				}
 			}
 		},
@@ -441,7 +461,7 @@
 					this.adImgList = common.getVal('loginData').ad_info
 					this.$nextTick(() => {
 						// 下一个UI帧再初始化swiper
-						this.initSwiper();
+						this.initSwiper(this.adImgList);
 					});
 				} else {
 					this.ad_show = false;
@@ -459,7 +479,7 @@
 						this.adImgList = common.getVal('loginData').ad_info
 						this.$nextTick(() => {
 							// 下一个UI帧再初始化swiper
-							this.initSwiper();
+							this.initSwiper(this.adImgList);
 						});
 					} else {
 						this.ad_show = false;
@@ -524,23 +544,23 @@
 	/* 更改样式 */
 	.hea_img {
 		position: absolute;
-		width: 90px;
+		width: 80px;
 		top: 0;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		border: 2px solid #fff;
 		border-radius: 50%;
-		box-shadow: 0px 0px 8px #000;
 		z-index: 4;
 	}
 
 	.userName {
 		position: absolute;
-		top: 55%;
+		top: 50%;
 		left: 50%;
 		transform: translateX(-50%);
 		font-size: 16px;
 		z-index: 6;
+		color: #333;
 	}
 
 	.img_bg {
