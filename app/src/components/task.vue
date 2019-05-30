@@ -48,17 +48,18 @@
 				<div>
 					<!-- 签到金额 -->
 					<p style="font-size: 36px;">{{ signMoney }}</p>
-					<p style="font-size: 14px; color: #333">
-						当前签到可获得&nbsp;&nbsp;
-						<span style="font-weight: 700;">|</span>
-						&nbsp;&nbsp;连续签到&nbsp;
-						<span style="color: #B33630;font-weight: 700;">{{ signDay }}</span>
-						&nbsp;天
-					</p>
+					
 				</div>
-				<van-button style="height: 35px;line-height: 35px;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
-				<van-button style="height: 35px;line-height: 35px;" round type="danger" :style="styleBtn" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
+				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
+				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;" round type="danger" v-else>已领取</van-button>
 			</div>
+			<p style="font-size: 14px; color: #333;padding: 5px 0 10px 10px;">
+				当前签到可获得&nbsp;&nbsp;
+				<span style="font-weight: 700;">|</span>
+				&nbsp;&nbsp;连续签到&nbsp;
+				<span style="color: #B33630;font-weight: 700;">{{ signDay }}</span>
+				&nbsp;天
+			</p>
 		</div>
 		<!-- 新手任务 -->
 		<div class="newTask" v-if="taskOk">
@@ -84,14 +85,14 @@
 			<p class="title" style="padding-bottom: 10px;">日常任务</p>
 			<div class="everydayTaskList">
 				<van-cell :center="true" to="" :border="false" v-for="(item2, index) in everydayTaskList" :key="index">
-					<template slot="title">
+					<div slot="title" style="width: 150px;">
 						<div style="font-weight: 700; font-size: 14px; position: relative;">
 							{{ item2.title[0] }}
 							<img @click="popupMsg(item2.title[2])" class="imgIcon" src="http://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/renwu/img/999.png"
 							 alt="" />
 						</div>
 						<p style="color: #FF3131; font-size: 12px;">{{ item2.title[1]}}</p>
-					</template>
+					</div>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
 					<van-button round type="danger" size="small" @click="dayGet(2,item2.name, item2.value,index)">{{ getMst }}</van-button>
 				</van-cell>
@@ -185,6 +186,10 @@
 				shareLink: '', //分享文章的分享初始地址
 				login_key: '', //分享文章用的login_key
 				isFrame: true, //控制新开webview个数
+				qrcode_link:'',//分享好友群地址
+				timline_qrcode_link:'',//分享朋友圈地址
+				shareData:null,//分享内容数据对象
+				
 			};
 		},
 		methods: {
@@ -406,14 +411,23 @@
 				if (that.$store.state.qrcode_img != '' && that.$store.state.timeline_qrcode_img) {
 					that.ermUrl = that.$store.state.qrcode_img;
 					that.ermUrl_timeline = that.$store.state.timeline_qrcode_img;
+					that.qrcode_link = that.$store.state.qrcode_link;
+					that.timline_qrcode_link = that.$store.state.timeline_qrcode_link;
+					that.shareData=that.$store.state.data;
 					that.mentorShare(type,name,index);
 				} else {
 					common.toAjax(common.host + '/user_st/st_img', { type: 'mentor' }, function(res) {
 						if (res.err_code == 0) {
 							that.ermUrl = res.data.qrcode_img;
 							that.ermUrl_timeline = res.data.timeline_qrcode_img;
+							that.qrcode_link = res.data.qrcode_link;
+							that.timline_qrcode_link = res.data.timeline_qrcode_link;
+							that.shareData= res.data;
 							that.$store.commit('SETIMG', res.data.qrcode_img);
 							that.$store.commit('SETIMG_TIMELINE', res.data.timeline_qrcode_img);
+							that.$store.commit('SETLINK', res.data.qrcode_link);
+							that.$store.commit('SETLINK_TIMELINE', res.data.timeline_qrcode_link);
+							that.$store.commit('SETDATA', res.data);
 							that.mentorShare(type,name,index);
 							// this.show = true;
 						} else {
@@ -425,33 +439,75 @@
 			},
 			mentorShare(type,name,index) {
 				var that = this;
+				var scene_pic,timeline_pic,scene_desc,timeline_desc,scene_title,timeline_title;
+				var st_use_type = common.getVal('loginData').st_use_type;
 				console.log('mentor share', name)
 				switch (name) {
 					case 'share_friend':
-						if (that.ermUrl != '') {
-							// 分享图片
+						scene_pic=common.getRandomData(that.shareData.share_info.img);
+						scene_title=common.getRandomData(that.shareData.share_info.title);
+						scene_desc=common.getRandomData(that.shareData.share_info.desc);
+						if (st_use_type == 'img') {
+							if (that.ermUrl != '') {
+								// 分享图片
+								api.sendEvent({
+									name: that.shareType,
+									extra: {
+										type: 'image',
+										scene: 'session',
+										timeline: false, // false表示发送给还有，true表示分享朋友圈
+										pic: that.ermUrl // 图片地址
+									}
+								});
+								that.getnewpriz(type,name,index);
+							}
+						} else {
+							// 分享网页
 							api.sendEvent({
 								name: that.shareType,
 								extra: {
-									type: 'image',
+									type: 'page',
+									pic: scene_pic, // 缩略图
+									contentUrl: encodeURI(that.qrcode_link), // 网页地址
+									description: scene_desc, // 描述
+									title: scene_title, // 标题
 									scene: 'session',
-									timeline: false, // false表示发送给还有，true表示分享朋友圈
-									pic: that.ermUrl // 图片地址
+									timeline: false // false表示发送给还有，true表示分享朋友圈
 								}
 							});
 							that.getnewpriz(type,name,index);
 						}
 						break;
 					case 'share_timeline':
-						if (that.ermUrl_timeline != '') {
-							// 分享图片
+						timeline_pic=common.getRandomData(that.shareData.timeline_share_info.img);
+						timeline_title=common.getRandomData(that.shareData.timeline_share_info.title);
+						timeline_desc=common.getRandomData(that.shareData.timeline_share_info.desc);
+						if (st_use_type == 'img') {
+							if (that.ermUrl_timeline != '') {
+								// 分享图片
+								api.sendEvent({
+									name: that.shareType,
+									extra: {
+										type: 'image',
+										scene: 'timeline',
+										timeline: true, // false表示发送给还有，true表示分享朋友圈
+										pic: that.ermUrl_timeline // 图片地址
+									}
+								});
+								that.getnewpriz(type,name,index);
+							}
+						} else {
+							// 分享网页
 							api.sendEvent({
 								name: that.shareType,
 								extra: {
-									type: 'image',
+									type: 'page',
+									pic: timeline_pic, // 缩略图
+									contentUrl: encodeURI(that.timline_qrcode_link), // 网页地址
+									description: timeline_desc, // 描述
+									title: timeline_title, // 标题
 									scene: 'timeline',
-									timeline: true, // false表示发送给还有，true表示分享朋友圈
-									pic: that.ermUrl_timeline // 图片地址
+									timeline: true // false表示发送给还有，true表示分享朋友圈
 								}
 							});
 							that.getnewpriz(type,name,index);
@@ -525,11 +581,22 @@
 			this.checkRoute();
 			this.task();
 			var that = this;
-			this.userInfo = common.getVal('userInfo');
-			this.img = this.userInfo.img;
-			this.name = this.userInfo.name;
-			this.balance = this.userInfo.balance;
-			this.today_money = this.userInfo.today_money;
+			common.toAjax(common.host + '/users/userData', {}, function(res) {
+				if (res.err_code != 800) {
+					if (res.err_code == 0) {
+						common.setVal('userInfo', res.data);
+						that.userInfo = common.getVal('userInfo');
+						that.img = that.userInfo.img;
+						that.name = that.userInfo.name;
+						that.balance = that.userInfo.balance;
+						that.today_money = that.userInfo.today_money;
+					}
+				}
+			});
+			// this.img = this.userInfo.img;
+			// this.name = this.userInfo.name;
+			// this.balance = this.userInfo.balance;
+			// this.today_money = this.userInfo.today_money;
 			console.log(this.balance, this.today_money);
 			console.log(this.userInfo, 3333);
 			common.toAjax(common.host + '/task/getlist', {}, function(res) {
@@ -660,7 +727,7 @@
 		margin-top: 30px;
 		display: flex;
 		justify-content: space-between;
-		padding: 0 10px 10px;
+		padding: 0 10px 0px;
 	}
 
 	.signDay {

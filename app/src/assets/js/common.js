@@ -596,10 +596,20 @@ export default {
 			return seconds + " 秒前"
 		}
 	},
+	/**
+	 * 从数组获取随机值
+	 * @date 2019-02-13 
+	 * @param  arr传入的数组
+	 * @return 数组随机值
+	 * @author LiuHongyuan
+	 */
+	getRandomData(arr){
+		return arr[Math.floor(Math.random()*arr.length)]
+	},
 	host: "", //打包域名
 	// host:"http://test.itbsdtbsz.cn",	
 	// host: "http://migutest.zmr016.com", //结算测试域名
-	host: "http://migu.zmr016.com", //结算测试域名
+	// host: "http://migu.zmr016.com", //结算测试域名
 	// host: "http://app.qiucool.cn",//正式域名
 	// host:"http://test.baichengiu.cn",
 	// host:"http://midd.qiucool.cn",//测试域名

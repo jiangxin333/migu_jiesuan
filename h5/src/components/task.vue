@@ -48,12 +48,17 @@
 				<div>
 					<!-- 签到金额 -->
 					<p style="font-size: 36px;">{{signMoney}}</p>
-					<p style="font-size: 14px; color: #333">当前签到可获得&nbsp;&nbsp;<span style="font-weight: 700;">|</span>&nbsp;&nbsp;连续签到&nbsp;<span
-						 style="color: #B33630;font-weight: 700;">{{signDay}}</span>&nbsp;天</p>
 				</div>
-				<van-button style="height: 35px;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
-				<van-button style="height: 35px;" round type="danger" :style="styleBtn" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
+				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
+				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;" round type="danger" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
 			</div>
+			<p style="font-size: 14px; color: #333;padding: 5px 0 10px 10px;">
+				当前签到可获得&nbsp;&nbsp;
+				<span style="font-weight: 700;">|</span>
+				&nbsp;&nbsp;连续签到&nbsp;
+				<span style="color: #B33630;font-weight: 700;">{{ signDay }}</span>
+				&nbsp;天
+			</p>
 		</div>
 		<!-- 新手任务 -->
 		<div class="newTask" v-if="taskOk">
@@ -79,14 +84,14 @@
 			<p class="title" style="padding-bottom: 10px;">日常任务</p>
 			<div class="everydayTaskList">
 				<van-cell :center="true" to="" :border="false" v-for="(item2,index) in everydayTaskList" :key="index">
-					<template slot="title">
+					<div slot="title" style="width: 150px;">
 						<div style="font-weight: 700; font-size: 14px; position: relative;">
 							{{item2.title[0]}}
 							<img @click="popupMsg(item2.title[2])" class="imgIcon" src="http://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/renwu/img/999.png"
 							 alt="">
 						</div>
 						<p style="color: #FF3131; font-size: 12px;">{{item2.title[1]}}</p>
-					</template>
+					</div>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
 					<van-button round type="danger" size="small" @click="dayGet(2,item2.name, item2.value,index)">{{getMst}}</van-button>
 				</van-cell>
@@ -296,11 +301,22 @@
 				}, 300);
 				return;
 			};
-			this.userInfo = common.getVal('userInfo');
-			this.img = this.userInfo.img;
-			this.name = this.userInfo.name;
-			this.balance = this.userInfo.balance;
-			this.today_money = this.userInfo.today_money;
+			common.toAjax(common.host + '/users/userData', {}, function(res) {
+				if (res.err_code != 800) {
+					if (res.err_code == 0) {
+						common.setVal('userInfo', res.data);
+						that.userInfo = common.getVal('userInfo');
+						that.img = that.userInfo.img;
+						that.name = that.userInfo.name;
+						that.balance = that.userInfo.balance;
+						that.today_money = that.userInfo.today_money;
+					}
+				}
+			});
+			// this.img = this.userInfo.img;
+			// this.name = this.userInfo.name;
+			// this.balance = this.userInfo.balance;
+			// this.today_money = this.userInfo.today_money;
 			console.log(this.balance, this.today_money);
 			console.log(this.userInfo, 3333);
 			common.toAjax(common.host + '/task/getlist', {}, function(res) {
@@ -433,7 +449,7 @@
 		margin-top: 30px;
 		display: flex;
 		justify-content: space-between;
-		padding: 0 10px 10px;
+		padding: 0 10px 0px;
 	}
 
 	.signDay {

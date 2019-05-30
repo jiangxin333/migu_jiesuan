@@ -117,7 +117,6 @@
 						}
 					);
 				}
-
 			},
 			submitContact() {
 				var that = this;

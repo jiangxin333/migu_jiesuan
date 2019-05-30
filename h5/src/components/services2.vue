@@ -9,13 +9,13 @@
 						<p style="color: #333333; font-size: 18px;">{{ item.name }}</p>
 						<p>客服工作时间 &nbsp;&nbsp;9:00 - 18:00</p>
 						<p>
-							QQ:
-							<span id="qqNum">{{ item.qq }}</span>
+							{{item.type == 'wechat' ? '微信' : 'QQ' }}:
+							<span id="qqNum">{{ item.code }}</span>
 						</p>
 						<p>
-							<van-button size="small" type="info" id="copyBtn">复制QQ号</van-button>
+							<van-button size="small" type="info" id="copyBtn">复制{{ item.type == 'wechat' ? '微信' : 'QQ' }}号</van-button>
 						</p>
-						<p><img class="teshuImg" :src="item.qqqrcode" alt="" /></p>
+						<p><img class="teshuImg" :src="item.qrcode" alt="" /></p>
 					</div>
 				</div>
 				<!--右箭头-->
@@ -55,12 +55,6 @@
 				new Swiper('.swiper-container', {
 					loop: true,
 					effect: 'cube',
-					cubeEffect: {
-						slideShadows: true,
-						shadow: true,
-						shadowOffset: 100,
-						shadowScale: 0.6
-					},
 					navigation: {
 						nextEl: '.swiper-button-next',
 						prevEl: '.swiper-button-prev'
@@ -68,7 +62,7 @@
 					on: {
 						click: function(e) {
 							if (e.target.id == 'copyBtn') {
-								that.copyUrl2(that.serviceList[this.realIndex].qq);
+								that.copyUrl2(that.serviceList[this.realIndex].code);
 							}
 						}
 					}
@@ -146,7 +140,7 @@
 		position: fixed;
 		top: 50%;
 		left: 50%;
-		transform: translate3d(-50%, -50%, 0);
+		transform: translate3d(-50%, -48%, 0);
 	}
 
 	.swiper-container {
@@ -155,9 +149,9 @@
 	}
 
 	.teshuImg {
-		width: 70%;
+		width: 60%;
 		border-radius: 0;
-		padding: 5% 0;
+		padding: 2% 0;
 	}
 
 	.swiper-button-prev {

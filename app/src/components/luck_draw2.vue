@@ -197,7 +197,10 @@ export default {
 			},
 			prizeIndex: '',
 			shareType: 'share',
-			ermUrl_timeline:''
+			ermUrl_timeline:'',
+			qrcode_link:'',
+			timline_qrcode_link:'',
+			shareData:null
 		};
 	},
 	methods: {
@@ -219,10 +222,17 @@ export default {
 		},
 		onSelect(item) {
 			var that = this;
-			var pic = common.getVal('userInfo').img;
-			var desc = '送你一份零花钱，每天都能领，和好友一起分享';
-			var title = '欢迎加入【趣转转】与好友一起轻松赚钱';
-			var link = that.share_host + '/wxlogin?type=luck_draw&&parent_user_id=' + common.getVal('passwd_id');
+			// var pic = common.getVal('userInfo').img;
+			// var desc = '送你一份零花钱，每天都能领，和好友一起分享';
+			// var title = '欢迎加入【趣转转】与好友一起轻松赚钱';
+			// var link = that.share_host + '/wxlogin?type=luck_draw&&parent_user_id=' + common.getVal('passwd_id');
+			var scene_pic,timeline_pic,scene_desc,timeline_desc,scene_title,timeline_title;
+			scene_pic=common.getRandomData(that.shareData.share_info.img);
+			scene_title=common.getRandomData(that.shareData.share_info.title);
+			scene_desc=common.getRandomData(that.shareData.share_info.desc);
+			timeline_pic=common.getRandomData(that.shareData.timeline_share_info.img);
+			timeline_title=common.getRandomData(that.shareData.timeline_share_info.title);
+			timeline_desc=common.getRandomData(that.shareData.timeline_share_info.desc);
 			var st_use_type = common.getVal('loginData').st_use_type;
 			switch (item.name) {
 				case '微信分享给好友群':
@@ -246,10 +256,10 @@ export default {
 							name: that.shareType,
 							extra: {
 								type: 'page',
-								pic: pic, // 缩略图
-								contentUrl: link, // 网页地址
-								description: desc, // 描述
-								title: title, // 标题
+								pic: scene_pic, // 缩略图
+								contentUrl: encodeURI(that.qrcode_link), // 网页地址
+								description: scene_desc, // 描述
+								title: scene_title, // 标题
 								scene: 'session',
 								timeline: false // false表示发送给还有，true表示分享朋友圈
 							}
@@ -278,10 +288,10 @@ export default {
 							name: that.shareType,
 							extra: {
 								type: 'page',
-								pic: pic, // 缩略图
-								contentUrl: link, // 网页地址
-								description: desc, // 描述
-								title: title, // 标题
+								pic: timeline_pic, // 缩略图
+								contentUrl: encodeURI(that.timline_qrcode_link), // 网页地址
+								description: timeline_desc, // 描述
+								title: timeline_title, // 标题
 								scene: 'timeline',
 								timeline: true // false表示发送给还有，true表示分享朋友圈
 							}
@@ -352,9 +362,12 @@ export default {
 		this.tipsShow = false;
 		this.left_chances = common.getVal('userInfo').prize_chance;
 		var that = this;
-		if (that.$store.state.qrcode_img != ''&&that.$store.state.timeline_qrcode_img) {
+		if (that.$store.state.data!='') {
 			that.ermImg = that.$store.state.qrcode_img;
 			that.ermUrl_timeline=that.$store.state.timeline_qrcode_img;
+			that.qrcode_link=that.$store.state.qrcode_link;
+			that.timline_qrcode_link=that.$store.state.timeline_qrcode_link;
+			that.shareData=that.$store.state.data;
 		} else {
 			common.toAjax(common.host + '/user_st/st_img', { type: 'mentor' }, function(res) {
 				if (res.err_code==0) {
@@ -362,9 +375,13 @@ export default {
 					that.ermUrl_timeline=res.data.timeline_qrcode_img;
 					that.$store.commit('SETIMG', res.data.qrcode_img);
 					that.$store.commit('SETIMG_TIMELINE', res.data.timeline_qrcode_img);
+					that.qrcode_link=res.data.qrcode_link;
+					that.timline_qrcode_link=res.data.timeline_qrcode_link;
+					that.shareData=res.data;
+					that.$store.commit('SETLINK', res.data.qrcode_link);
+					that.$store.commit('SETLINK_TIMELINE', res.data.timeline_qrcode_link);
+					that.$store.commit('SETDATA',res.data);
 					// this.show = true;
-				} else {
-					that.$toast(res.info);
 				}
 			});
 		}

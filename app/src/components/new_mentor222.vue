@@ -314,10 +314,10 @@
 							</span>
 						</van-col>
 						<van-col span="5" style="text-align: center;">
-							<span>{{ item.total_money / 100 }}元</span>
+							<span>{{ item.today_money / 100 }}元</span>
 						</van-col>
 						<van-col span="5" style="text-align: center;">
-							<span>{{ item.total_money / 100 + item.waite_money / 100 }}元</span>
+							<span>{{ item.today_money / 100 + item.waite_money / 100 }}元</span>
 						</van-col>
 						<van-col span="4" style="text-align: center;"><span class="friend_list_detail" @click="toDetail(item.user_id, 1)">详情</span></van-col>
 					</van-row>
@@ -571,13 +571,6 @@
 		</div>
 		<!-- 分享成功弹窗 end -->
 		<img v-lazy="mentor_bottom" alt="" style="width: 100%;margin-top: 10px;" v-if="chooseTabIndex == 0" />
-		<!-- 无伪装应用回调弹窗 -->
-		<van-dialog v-model="shareShow" :show-cancel-button="false" :show-confirm-button="false" style="text-align: center;padding-bottom: 10px;" title="温馨提醒">
-			<p>点击按钮复制分享链接在微信中打开</p>
-			<input type="hidden" v-model="shareUrl" />
-			<van-button size="small" type="primary" 　v-clipboard:copy="shareUrl" 　　v-clipboard:success="onCopy" 　　v-clipboard:error="onError">复制分享链接</van-button>
-		</van-dialog>
-		<!-- 无伪装应用回调弹窗 end -->
 	</div>
 </template>
 
@@ -1148,7 +1141,7 @@ export default {
 				}
 			], //奖励卡模拟数据
 			//宝箱参数
-			isOpen: false, //宝箱是否打开
+			isOpen: true, //宝箱是否打开
 			openIco: require('../assets/img/invite/chest-open.png'), //宝箱开
 			closeIco: require('../assets/img/invite/chest-close.png'), //宝箱关
 			countdownTime: '点我开宝箱',
@@ -1215,17 +1208,13 @@ export default {
 			share_type: true, //true：朋友或者群 false：朋友圈
 			shareType: 'share', //伪装应用
 			shareNum: 0, //分享次数
-			mentor_bottom: 'http://qiniustore.zmr016.com/invite/mentor_bottom.png', //邀请小技巧下面的其他说明
-			qrcode_link: '', //分享好友群地址
-			timline_qrcode_link: '', //分享朋友圈地址
-			shareData: null, //分享内容数据对象
-			shareUrl: '', //回调弹窗链接
-			shareShow: false //回调弹窗开关
+			mentor_bottom: 'http://qiniustore.zmr016.com/invite/mentor_bottom.png' //邀请小技巧下面的其他说明
 		};
 	},
 	watch: {
 		$route() {
 			if (this.$route.path == '/mentor') {
+				window.scrollTo(0, 0);//当路由是师徒页面时初始化页面滚动值为0；
 				console.log(this.swiper.autoplay.start());
 				this.swiper.autoplay.start();
 			} else {
@@ -1233,12 +1222,6 @@ export default {
 				console.log(this.swiper.autoplay.stop());
 			}
 		}
-	},
-	mounted() {
-		var that = this;
-		window.callBackByShare = function() {
-			that.shareShow = true;
-		};
 	},
 	computed: {
 		htmlCode() {
@@ -1501,7 +1484,7 @@ export default {
 						that.pageNum++;
 						for (var i = 0; i < res.data.td_list.length; i++) {
 							var future_money = res.data.td_list[i].total_money + res.data.td_list[i].waite_money;
-							that.list_today_money = that.list_today_money + res.data.td_list[i].total_money;
+							that.list_today_money = that.list_today_money + res.data.td_list[i].today_money;
 							that.list_future_money = that.list_future_money + future_money;
 						}
 					}
@@ -1691,7 +1674,7 @@ export default {
 			this.init_shared();
 			this.show = true;
 			this.isFailShare = true;
-			this.iscommonShare = true;
+			this.iscommonShare=true;
 		},
 		toDetail(id, type) {
 			this.confirmLeave = true;
@@ -1717,9 +1700,11 @@ export default {
 		timelineShare() {
 			this.init_shared();
 			var that = this;
-			var scene_pic, timeline_pic, scene_desc, timeline_desc, scene_title, timeline_title;
+			var pic = common.getVal('userInfo').img;
+			var desc = '送你一份零花钱，每天都能领，和好友一起分享';
+			var title = '欢迎加入【' + common.getVal('loginData').platform_name + '】与好友一起轻松赚钱';
+			var link = that.share_host + '/wxlogin?type=mentor&&parent_user_id=' + common.getVal('passwd_id');
 			var st_use_type = common.getVal('loginData').st_use_type;
-			that.shareUrl = that.timline_qrcode_link;
 			if (st_use_type == 'img') {
 				if (this.ermUrl_timeline != '') {
 					// 分享图片
@@ -1734,19 +1719,15 @@ export default {
 					});
 				}
 			} else {
-				timeline_pic = common.getRandomData(that.shareData.timeline_share_info.img);
-				timeline_title = common.getRandomData(that.shareData.timeline_share_info.title);
-				timeline_desc = common.getRandomData(that.shareData.timeline_share_info.desc);
-
 				// 分享网页
 				api.sendEvent({
 					name: that.shareType,
 					extra: {
 						type: 'page',
-						pic: timeline_pic, // 缩略图
-						contentUrl: encodeURI(that.timline_qrcode_link), // 网页地址
-						description: timeline_desc, // 描述
-						title: timeline_title, // 标题
+						pic: pic, // 缩略图
+						contentUrl: link, // 网页地址
+						description: desc, // 描述
+						title: title, // 标题
 						scene: 'timeline',
 						timeline: true // false表示发送给还有，true表示分享朋友圈
 					}
@@ -1769,20 +1750,16 @@ export default {
 					that.init_shared();
 				}, 5000);
 			}
-			var scene_pic, timeline_pic, scene_desc, timeline_desc, scene_title, timeline_title;
+			var that = this;
 			var st_use_type = common.getVal('loginData').st_use_type;
-			// if(st_use_type != 'img'){
-			// 	var pic = common.getVal('userInfo').img;
-			// 	var desc = '送你一份零花钱，每天都能领，和好友一起分享';
-			// 	var title = '欢迎加入【' + common.getVal('loginData').platform_name + '】与好友一起轻松赚钱';
-			// 	var link = that.share_host + '/wxlogin?type=mentor&&parent_user_id=' + common.getVal('passwd_id');
-			// }
+			if(st_use_type != 'img'){
+				var pic = common.getVal('userInfo').img;
+				var desc = '送你一份零花钱，每天都能领，和好友一起分享';
+				var title = '欢迎加入【' + common.getVal('loginData').platform_name + '】与好友一起轻松赚钱';
+				var link = that.share_host + '/wxlogin?type=mentor&&parent_user_id=' + common.getVal('passwd_id');
+			}
 			switch (name) {
 				case 0:
-					scene_pic = common.getRandomData(that.shareData.share_info.img);
-					scene_title = common.getRandomData(that.shareData.share_info.title);
-					scene_desc = common.getRandomData(that.shareData.share_info.desc);
-					that.shareUrl = that.qrcode_link;
 					if (st_use_type == 'img') {
 						if (this.ermUrl != '') {
 							// 分享图片
@@ -1802,10 +1779,10 @@ export default {
 							name: that.shareType,
 							extra: {
 								type: 'page',
-								pic: scene_pic, // 缩略图
-								contentUrl: encodeURI(that.qrcode_link), // 网页地址
-								description: scene_desc, // 描述
-								title: scene_title, // 标题
+								pic: pic, // 缩略图
+								contentUrl: link, // 网页地址
+								description: desc, // 描述
+								title: title, // 标题
 								scene: 'session',
 								timeline: false // false表示发送给还有，true表示分享朋友圈
 							}
@@ -1813,10 +1790,6 @@ export default {
 					}
 					break;
 				case 1:
-					timeline_pic = common.getRandomData(that.shareData.timeline_share_info.img);
-					timeline_title = common.getRandomData(that.shareData.timeline_share_info.title);
-					timeline_desc = common.getRandomData(that.shareData.timeline_share_info.desc);
-					that.shareUrl = that.timline_qrcode_link;
 					if (st_use_type == 'img') {
 						if (this.ermUrl_timeline != '') {
 							// 分享图片
@@ -1836,10 +1809,10 @@ export default {
 							name: that.shareType,
 							extra: {
 								type: 'page',
-								pic: timeline_pic, // 缩略图
-								contentUrl: encodeURI(that.timline_qrcode_link), // 网页地址
-								description: timeline_desc, // 描述
-								title: timeline_title, // 标题
+								pic: pic, // 缩略图
+								contentUrl: link, // 网页地址
+								description: desc, // 描述
+								title: title, // 标题
 								scene: 'timeline',
 								timeline: true // false表示发送给还有，true表示分享朋友圈
 							}
@@ -1893,19 +1866,18 @@ export default {
 		// 可以访问组件实例 `this`
 	},
 	beforeRouteEnter(to, from, next) {
-		if (window.localStorage.isLogin == 'false' || window.localStorage.isLogin == undefined) {
+		if (window.localStorage.isLogin == 'false'||window.localStorage.isLogin==undefined) {
 			common.toAjax(common.host + '/users/userData', {}, function(res) {
 				if (res.err_code == 0) {
 					common.setVal('userInfo', res.data);
 					next();
 				}
 			});
-		} else {
+		}else{
 			next();
 		}
 	},
 	activated() {
-		window.scrollTo(0, 0); //当前路由时初始化页面滚动值为0；
 		this.checkRoute();
 		this.mentors();
 		var that = this;
@@ -1927,11 +1899,8 @@ export default {
 			that.onLoad();
 		});
 		that.cashMoney = common.tofix2(common.getVal('userInfo').balance / 100);
-		that.ermUrl = that.$store.state.qrcode_img;
-		that.ermUrl_timeline = that.$store.state.timeline_qrcode_img;
-		that.qrcode_link = that.$store.state.qrcode_link;
-		that.timline_qrcode_link = that.$store.state.timeline_qrcode_link;
-		that.shareData = that.$store.state.data;
+			that.ermUrl = that.$store.state.qrcode_img;
+			that.ermUrl_timeline = that.$store.state.timeline_qrcode_img;
 		if (common.getVal('loginData').app_share_type != 'share') {
 			this.shareType = 'fakeShare';
 		}
@@ -1953,7 +1922,6 @@ export default {
 						that.init_countDown(res.data.boxtime);
 					} else {
 						that.isOpen = true;
-						that.countdownTime = '点我开宝箱';
 					}
 				});
 			}
@@ -2517,7 +2485,7 @@ li span {
 	border-radius: 0.3rem;
 	left: 50%;
 	top: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%,-50%);
 }
 .content1 {
 	height: 7rem;
