@@ -68,13 +68,13 @@
 				this.$router.go(-1);
 			},
 			checkPhone: function(phoneNum) {
-				if (!/^1[34578]\d{9}$/.test(phoneNum) && this.phone != '') {
+				if (!/^1[345789]\d{9}$/.test(phoneNum) && this.phone != '') {
 					this.$toast('手机号码有误，请重填');
 					this.phone = '';
 					return false;
 				} else if (
 					this.phone == '' ||
-					(!/^1[34578]\d{9}$/.test(phoneNum) && !this.isPassword)
+					(!/^1[345789]\d{9}$/.test(phoneNum) && !this.isPassword)
 				) {
 					this.$toast('手机号码有误，请重填');
 					this.phone = '';

@@ -111,11 +111,17 @@ export default {
 		var that = this;
 		common.toAjax(common.host + '/users/is_login', {}, function(res) {
 			common.setVal('tips', res.data.tool_tip);
-
 			if (res.err_code == 800) {
 				window.localStorage.isLogin = false;
 			} else {
 				window.localStorage.isLogin = true;
+				common.toAjax(common.host + '/users/userData', {}, function(res) {
+						if (res.err_code == 0) {
+							common.setVal('userInfo', res.data);
+						} else {
+							that.$toast(res.err_msg);
+						}
+				});
 			}
 		});
 		common.toAjax(common.host + '/api/app/commoninfo', {}, function(res) {

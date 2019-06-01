@@ -49,7 +49,7 @@
 					<!-- 签到金额 -->
 					<p style="font-size: 36px;">{{signMoney}}</p>
 				</div>
-				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
+				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" class="getMoney" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
 				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;" round type="danger" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
 			</div>
 			<p style="font-size: 14px; color: #333;padding: 5px 0 10px 10px;">
@@ -74,7 +74,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item1.title[1]}}</p>
 					</template>
 					<img :src="item1.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(1,item1.name, item1.title[4],index)" v-if="item1.is == 0">{{getMst}}</van-button>
+					<van-button round type="danger" size="small" :id="item1.name" class="getMoney" @click="newGet(1,item1.name, item1.title[4],index)" v-if="item1.is == 0">{{getMst}}</van-button>
 					<van-button round type="danger" size="small" :id="item1.name" :style="styleBtn" v-else>已领取</van-button>
 				</van-cell>
 			</div>
@@ -93,7 +93,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item2.title[1]}}</p>
 					</div>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" @click="dayGet(2,item2.name, item2.value,index)">{{getMst}}</van-button>
+					<van-button round type="danger" size="small" class="getMoney" @click="dayGet(2,item2.name, item2.value,index)">{{getMst}}</van-button>
 				</van-cell>
 
 			</div>
@@ -201,13 +201,11 @@
 			},
 			newGet(type1,name, type,index) {
 				var that = this;
-				if (type == 'shoutu' || type == 'article') {
-					that.$dialog.alert({
-						title: '温馨提醒',
-						message: '分享任务请在APP里完成',
-						confirmButtonText: '好的'
-					})
-					return;
+				if (type == 'shoutu') {
+					that.$router.push('/mentor')
+				}
+				if(type=="article"){
+					that.$router.push('/article')
 				}
 				common.toAjax(common.host + '/task/getnewpriz', {
 					name: name
@@ -223,7 +221,9 @@
 						} else {
 							console.log("新手任务")
 							that.getMoney(type1,index);
-							that.$toast(res.err_msg);
+							if(type!='shoutu'&&type!='article'){
+								that.$toast(res.err_msg);
+							}
 							that.today_money = res.data.today_money;
 							that.balance = res.data.balance;
 							that.taskOk = res.data.isnewtask;
@@ -294,13 +294,13 @@
 			this.task();
 			var that = this;
 			clearInterval(this.time);
-			if (!common.getVal('isLogin') != undefined && common.getVal('isLogin') == false) {
-				setTimeout(function() {
-					that.$router.push('/my');
-					// common.login(that);
-				}, 300);
-				return;
-			};
+			// if (!common.getVal('isLogin') != undefined && common.getVal('isLogin') == false) {
+			// 	setTimeout(function() {
+			// 		that.$router.push('/my');
+			// 		// common.login(that);
+			// 	}, 300);
+			// 	return;
+			// };
 			common.toAjax(common.host + '/users/userData', {}, function(res) {
 				if (res.err_code != 800) {
 					if (res.err_code == 0) {
@@ -311,6 +311,9 @@
 						that.balance = that.userInfo.balance;
 						that.today_money = that.userInfo.today_money;
 					}
+				}else{
+					common.toLogin(that);
+					return;
 				}
 			});
 			// this.img = this.userInfo.img;
@@ -392,7 +395,7 @@
 		position: relative;
 		margin-bottom: 12%;
 	}
-
+	
 	.title {
 		padding: 18px 0 18px 12px;
 		font-size: 18px;
@@ -486,6 +489,7 @@
 		margin: 5% 0 0 3%;
 		background-color: #fff;
 		border-radius: 8px;
+		padding-bottom: 10px;
 	}
 
 	.iconImg {
@@ -503,6 +507,7 @@
 		margin: 5% 0 0 3%;
 		background-color: #fff;
 		border-radius: 8px;
+		padding-bottom: 10px;
 	}
 
 	.imgIcon {
@@ -594,5 +599,102 @@
 		padding: 30px 0 10px;
 		text-align: center;
 		color: #666666;
+	}
+	.getMoney{
+		-webkit-animation: getMoney 1s infinite;
+		-o-animation: getMoney 1s infinite;
+		animation: getMoney 1s infinite;
+	}
+	@-webkit-keyframes getMoney {
+		0%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+		50%{
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+		100%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+	@-o-keyframes getMoney {
+		0%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+		50%{
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+		100%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+	@-moz-keyframes getMoney {
+		0%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+		50%{
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+		100%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+	@keyframes getMoney {
+		0%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+		50%{
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+		100%{
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
 	}
 </style>

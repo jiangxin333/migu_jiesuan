@@ -106,10 +106,10 @@
 				not_completeImg: require('../assets/img/not_complete.png'),
 				tel: '13800000000',
 				reg_time: '1900-00-00',
-				mainBody:{
+				mainBody: {
 					'position': 'relative',
-					'min-height': window.innerHeight-30+'px',
-					'overflow':'auto'
+					'min-height': window.innerHeight - 30 + 'px',
+					'overflow': 'auto'
 				}
 			};
 		},
@@ -238,8 +238,6 @@
 		height: 60px !important;
 		margin: 10px;
 		display: block;
-		-webkit-border-radius: 50%;
-		-moz-border-radius: 50%;
 		border-radius: 50%;
 	}
 

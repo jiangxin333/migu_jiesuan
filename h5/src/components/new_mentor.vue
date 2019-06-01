@@ -50,7 +50,7 @@
 			<div class="centerBox" :style="centerBox">
 				<!-- 区间信息条 -->
 				<p :style="location_p">
-					<img src="https://qiniustore.zmr016.com/invite/location.png" alt="" slot="icon" style="transform: scale(.6);display: inline-block;vertical-align: middle;" />
+					<img src="https://qiniustore.zmr016.com/invite/location.png" alt="" slot="icon" style="transform: scale(.6);-ms-transform: scale(.6);-moz-transform: scale(.6);-webkit-transform: scale(.6);-o-transform: scale(.6);display: inline-block;vertical-align: middle;" />
 					<span slot="title" :style="location_txt">当前奖励区间：{{ current_money }}元/位</span>
 				</p>
 				<!-- 区间信息条 end -->
@@ -587,6 +587,10 @@
 				//轮播条 音量图标
 				volumeIco: {
 					transform: 'scale(1.1) translateY(1px)',
+					'-ms-transform': 'scale(1.1) translateY(1px)',
+					'-moz-transform': 'scale(1.1) translateY(1px)',
+					'-webkit-transform': 'scale(1.1) translateY(1px)',
+					'-o-transform': 'scale(1.1) translateY(1px)',
 					'margin-right': (window.innerWidth * 16) / 750 + 'px'
 				},
 				//小按钮
@@ -595,6 +599,10 @@
 					top: '70%',
 					left: '50%',
 					transform: ' translateX(-50%)',
+					'-ms-transform': ' translateX(-50%)',
+					'-moz-transform': ' translateX(-50%)',
+					'-webkit-transform': ' translateX(-50%)',
+					'-o-transform': ' translateX(-50%)',
 					'font-size': '15px',
 					width: (window.innerWidth * 374) / 750 + 'px',
 					height: (window.innerHeight * 50) / 1334 + 'px',
@@ -614,7 +622,11 @@
 					position: 'absolute',
 					top: '93%',
 					left: '50%',
-					transform: ' translateX(-50%)'
+					transform: ' translateX(-50%)',
+					'-ms-transform': ' translateX(-50%)',
+					'-moz-transform': ' translateX(-50%)',
+					'-webkit-transform': ' translateX(-50%)',
+					'-o-transform': ' translateX(-50%)',
 				},
 				top_input_big_row: {
 					width: '100%',
@@ -782,7 +794,11 @@
 				tip_bottom: {
 					width: (window.innerWidth * 732) / 750 + 'px',
 					margin: '20px auto -5px',
-					transform: 'scale(1.02)'
+					transform: 'scale(1.02)',
+					'-ms-transform': 'scale(1.02)',
+					'-moz-transform': 'scale(1.02)',
+					'-webkit-transform': 'scale(1.02)',
+					'-o-transform': 'scale(1.02)',
 				},
 				//累计可赚
 				tip_bottom_txt: {
@@ -847,7 +863,11 @@
 					position: 'absolute',
 					top: '-50px',
 					left: '50%',
-					transform: 'scale(.8) translateX(-62%)'
+					transform: 'scale(.8) translateX(-62%)',
+					'-ms-transform': 'scale(.8) translateX(-62%)',
+					'-moz-transform': 'scale(.8) translateX(-62%)',
+					'-webkit-transform': 'scale(.8) translateX(-62%)',
+					'-o-transform': 'scale(.8) translateX(-62%)',
 				},
 				//奖励升级红包图
 				lastMoney: {
@@ -856,7 +876,11 @@
 					position: 'absolute',
 					top: '-' + (window.innerHeight * 90) / 1334 + 'px',
 					left: '50%',
-					transform: 'scale(0.8) translateX(-62%)'
+					transform: 'scale(0.8) translateX(-62%)',
+					'-ms-transform': 'scale(0.8) translateX(-62%)',
+					'-moz-transform': 'scale(0.8) translateX(-62%)',
+					'-webkit-transform': 'scale(0.8) translateX(-62%)',
+					'-o-transform': 'scale(0.8) translateX(-62%)',
 				},
 				//奖励升级文字提示
 				updatePrice: {
@@ -884,7 +908,11 @@
 				priceCard: {
 					width: (window.innerWidth * 170) / 750 + 'px',
 					height: (window.innerHeight * 120) / 1334 + 'px',
-					transform: 'rotate(180deg)'
+					transform: 'rotate(180deg)',
+					'-ms-transform': 'rotate(180deg)',
+					'-moz-transform': 'rotate(180deg)',
+					'-webkit-transform': 'rotate(180deg)',
+					'-o-transform': 'rotate(180deg)',
 				},
 				//最终奖励卡
 				priceCard_last: {
@@ -898,6 +926,10 @@
 					top: '-10px',
 					left: '50%',
 					transform: 'translateX(-50%)',
+					'-ms-transform': 'translateX(-50%)',
+					'-moz-transform': 'translateX(-50%)',
+					'-webkit-transform': 'translateX(-50%)',
+					'-o-transform': 'translateX(-50%)',
 					'border-radius': '16px',
 					background: '#fde68f',
 					border: '1px solid #ffffff',
@@ -914,6 +946,10 @@
 					top: '-10px',
 					left: '50%',
 					transform: 'translateX(-50%)',
+					'-ms-transform': 'translateX(-50%)',
+					'-moz-transform': 'translateX(-50%)',
+					'-webkit-transform': 'translateX(-50%)',
+					'-o-transform': 'translateX(-50%)',
 					'border-radius': '16px',
 					background: '#fde68f',
 					border: '1px solid #ffffff',
@@ -929,6 +965,10 @@
 					top: '40%',
 					left: '50%',
 					transform: 'translate3d(-50%,-50%,0)',
+					'-ms-transform': 'translate3d(-50%,-50%,0)',
+					'-moz-transform': 'translate3d(-50%,-50%,0)',
+					'-webkit-transform': 'translate3d(-50%,-50%,0)',
+					'-o-transform': 'translate3d(-50%,-50%,0)',
 					'text-align': 'center',
 					color: '#f2d7aa',
 					'font-size': '26px'
@@ -940,6 +980,10 @@
 					top: '40%',
 					left: '50%',
 					transform: 'translate3d(-50%,-50%,0)',
+					'-ms-transform': 'translate3d(-50%,-50%,0)',
+					'-moz-transform': 'translate3d(-50%,-50%,0)',
+					'-webkit-transform': 'translate3d(-50%,-50%,0)',
+					'-o-transform': 'translate3d(-50%,-50%,0)',
 					'text-align': 'center',
 					color: '#ffffff',
 					'font-size': '26px'
@@ -951,6 +995,10 @@
 					bottom: '5px',
 					left: '50%',
 					transform: 'translateX(-50%)',
+					'-ms-transform': 'translateX(-50%)',
+					'-moz-transform': 'translateX(-50%)',
+					'-webkit-transform': 'translateX(-50%)',
+					'-o-transform': 'translateX(-50%)',
 					'text-align': 'center',
 					color: '#f2d7aa'
 				},
@@ -961,6 +1009,10 @@
 					bottom: '5px',
 					left: '50%',
 					transform: 'translateX(-50%)',
+					'-ms-transform': 'translateX(-50%)',
+					'-moz-transform': 'translateX(-50%)',
+					'-webkit-transform': 'translateX(-50%)',
+					'-o-transform': 'translateX(-50%)',
 					'text-align': 'center',
 					color: '#ffffff'
 				},
@@ -985,7 +1037,11 @@
 					height: (window.innerHeight * 46) / 1334 + 'px',
 					display: 'inline-block',
 					'vertical-align': 'middle',
-					transform: 'rotate(180deg)'
+					transform: 'rotate(180deg)',
+					'-ms-transform': 'rotate(180deg)',
+					'-moz-transform': 'rotate(180deg)',
+					'-webkit-transform': 'rotate(180deg)',
+					'-o-transform': 'rotate(180deg)',
 				},
 				//垂直箭头外框
 				arrow_vertical: {
@@ -999,7 +1055,11 @@
 					height: (window.innerHeight * 46) / 1334 + 'px',
 					display: 'inline-block',
 					'vertical-align': 'middle',
-					transform: 'rotate(90deg)'
+					transform: 'rotate(90deg)',
+					'-ms-transform': 'rotate(90deg)',
+					'-moz-transform': 'rotate(90deg)',
+					'-webkit-transform': 'rotate(90deg)',
+					'-o-transform': 'rotate(90deg)',
 				},
 				//底部提示主体
 				ruleCard: {
@@ -1779,13 +1839,16 @@
 			this.checkRoute();
 			this.mentors();
 			var that = this;
-			if (!common.getVal('isLogin') != undefined && common.getVal('isLogin') == false) {
-				setTimeout(function() {
-					that.confirmLeave = true;
-					that.$router.push('/my');
-				}, 300);
-				return;
-			}
+			common.toAjax(common.host + '/users/userData', {}, function(res) {
+				if (res.err_code != 800) {
+					if (res.err_code == 0) {
+						common.setVal('userInfo', res.data);
+					}
+				}else{
+					common.toLogin(that);
+					return;
+				}
+			});
 			this.closeBtn();
 			this.enterShow = true;
 			this.confirmLeave = false;
@@ -1936,6 +1999,10 @@
 		top: 35px;
 		left: 50%;
 		transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-webkit-transform: translateX(-50%);
+		-o-transform: translateX(-50%);
 		width: 100%;
 		color: #e94a0a;
 		display: block;
@@ -1948,6 +2015,10 @@
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-webkit-transform: translateX(-50%);
+		-o-transform: translateX(-50%);
 		width: 100%;
 		color: #e94a0a;
 		display: block;
@@ -1994,6 +2065,10 @@
 		left: 50%;
 		top: 50%;
 		transform: translate3d(-50%, -50%, 0);
+		-ms-transform: translate3d(-50%, -50%, 0);
+		-moz-transform: translate3d(-50%, -50%, 0);
+		-webkit-transform: translate3d(-50%, -50%, 0);
+		-o-transform: translate3d(-50%, -50%, 0);
 	}
 
 	.drag {
@@ -2209,6 +2284,10 @@
 		right: 5px;
 		top: 5px;
 		transform: scale(0.6);
+		-ms-transform: scale(0.6);
+		-moz-transform: scale(0.6);
+		-webkit-transform: scale(0.6);
+		-o-transform: scale(0.6);
 	}
 
 	.cell_title {
@@ -2529,6 +2608,10 @@
 		margin-top: -15%;
 		left: 50%;
 		transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-webkit-transform: translateX(-50%);
+		-o-transform: translateX(-50%);
 	}
 
 	.content .dec,

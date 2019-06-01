@@ -1,5 +1,5 @@
 <template>
-	<div class="navTop" :style="styleH">
+	<div class="navTop" :style="styleH" id="navTop">
 		<van-nav-bar title="联系客服" left-arrow @click-left="onClickLeft" fixed />
 		<div class="mainContainer">
 			<div class="swiper-container">
@@ -81,8 +81,8 @@
 				);
 			}
 		},
-		activated() {
-			this.styleH.height = window.innerHeight - 45 + 'px';
+		mounted() {
+			this.styleH.height = window.innerHeight - document.getElementById('navTop').clientHeight  + 'px';
 			var that = this;
 			that.checkRoute();
 			common.toAjax(
@@ -110,6 +110,9 @@
 
 <style scoped>
 	.navTop {
+		background: -webkit-gradient(linear, left top, left bottom, from(#f29123), to(#f95806));
+		background: -webkit-linear-gradient(#f29123, #f95806);
+		background: -o-linear-gradient(#f29123, #f95806);
 		background: linear-gradient(#f29123, #f95806);
 	}
 
@@ -141,6 +144,10 @@
 		top: 50%;
 		left: 50%;
 		transform: translate3d(-50%, -48%, 0);
+		-ms-transform: translate3d(-50%, -48%, 0);
+		-moz-transform: translate3d(-50%, -48%, 0);
+		-webkit-transform: translate3d(-50%, -48%, 0);
+		-o-transform: translate3d(-50%, -48%, 0);
 	}
 
 	.swiper-container {

@@ -603,7 +603,8 @@ export default {
 	},
 	host: "", //打包域名
 	// host:"http://migutest.zmr016.com",
-	host:"http://migu.zmr016.com",
+	// host:"http://migu.zmr016.com",
+	host: "http://miguadmin.zmr016.com",
 	// host: "http://app.qiucool.cn",//正式域名
 	// host:"http://test.itbsdtbsz.cn",
 	// host: "http://apptest.qiucool.cn", //测试域名

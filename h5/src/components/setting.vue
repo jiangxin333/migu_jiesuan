@@ -73,12 +73,12 @@ export default {
 			}
 		},
 		quitLogin: function() {
-			window.localStorage.removeItem('isLogin');
 			var that = this;
 			common.toAjax(common.host + '/users/signout', {}, function(res) {
 				if (res.err_code == 0) {
 					that.$toast(res.err_msg);
-					that.$router.replace({ path: '/my' });
+					window.localStorage.removeItem('isLogin');
+					that.$router.replace({ path: '/article' });
 				} else {
 					that.$toast(res.err_msg);
 					return false;

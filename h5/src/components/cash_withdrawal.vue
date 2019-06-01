@@ -214,6 +214,19 @@
 									.then(() => {
 										that.$router.replace('/article');
 									});
+							} else if(res.err_code == 20053) {
+								that.$toast.clear();
+								that.$dialog
+									.confirm({
+										title: '温馨提示',
+										message: res.err_msg,
+										showConfirmButton: true,
+										showCancelButton: false,
+										confirmButtonText: '好的'
+									})
+									.then(() => {
+										that.$router.replace('/task');
+									});
 							} else {
 								that.$toast(res.err_msg);
 								that.bindShow = false;
@@ -384,8 +397,12 @@
 	.cashBox {
 		width: 92%;
 		margin: 0 4% 0;
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
-		justify-content: space-between;
+		-webkit-box-pack: justify;
+		    -ms-flex-pack: justify;
+		        justify-content: space-between;
 		text-align: center;
 		font-size: 16px;
 		padding: 20px 0;
@@ -395,6 +412,9 @@
 		border-radius: 8px;
 		padding: 0 5px;
 		color: #fff;
+		background: -webkit-gradient(linear, left top, right top, from(#ffbf5c), to(#ff601c));
+		background: -webkit-linear-gradient(left, #ffbf5c, #ff601c);
+		background: -o-linear-gradient(left, #ffbf5c, #ff601c);
 		background: linear-gradient(to right, #ffbf5c, #ff601c);
 		font-size: 16px;
 		font-weight: 700;
@@ -402,10 +422,13 @@
 	}
 
 	.cashMoney {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
 		width: 92%;
 		margin: 0 4%;
-		flex-wrap: wrap;
+		-ms-flex-wrap: wrap;
+		    flex-wrap: wrap;
 		padding-top: 10px;
 	}
 
@@ -426,7 +449,9 @@
 		width: 100%;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		    -ms-transform: translate(-50%, -50%);
+		        transform: translate(-50%, -50%);
 	}
 
 	.color {

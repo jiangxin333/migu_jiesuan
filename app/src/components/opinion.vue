@@ -58,6 +58,7 @@
 
 <style scoped>
     .textareaBox{
+		box-sizing: border-box;
         width: 96%;
         height: 200px;
         margin:5% 2% 0;

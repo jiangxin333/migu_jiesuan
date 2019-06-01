@@ -588,6 +588,9 @@ export default {
 }
 
 .noactive {
+	background: -webkit-gradient(linear, left top, left bottom, from(#eab360), color-stop(50%, #f5dc9f), to(#eab360));
+	background: -webkit-linear-gradient(top, #eab360 0%, #f5dc9f 50%, #eab360 100%);
+	background: -o-linear-gradient(top, #eab360 0%, #f5dc9f 50%, #eab360 100%);
 	background: linear-gradient(to bottom, #eab360 0%, #f5dc9f 50%, #eab360 100%);
 }
 
@@ -624,10 +627,12 @@ export default {
 	font-size: 24px;
 }
 .plane1 {
-	animation: danmu 10s ease-in-out infinite;
+	-webkit-animation: danmu 10s ease-in-out infinite;
+	        animation: danmu 10s ease-in-out infinite;
 }
 .plane2 {
-	animation: danmu 10s ease-in-out infinite;
+	-webkit-animation: danmu 10s ease-in-out infinite;
+	        animation: danmu 10s ease-in-out infinite;
 }
 
 .planeContent {

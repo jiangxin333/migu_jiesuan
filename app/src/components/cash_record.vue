@@ -29,100 +29,106 @@
 </template>
 
 <script>
-import common from '../assets/js/common';
+	import common from '../assets/js/common';
 
-export default {
-	inject: ['checkRoute', 'money', 'mentors', 'my'],
-	name: 'cash_record',
-	data() {
-		return {
-			list: [],
-			loading: true,
-			finished: false,
-			isLoading: false,
-			style: {
-				width: '100%',
-				height: window.innerHeight - 45 + 'px',
-				background: '#ffffff'
-			},
-			spanWidth: window.innerWidth / 3 + 'px',
-			pageNum: 1,
-			isRequest: true,
-			activeNames: [],
-			lastid: 0
-		};
-	},
-	methods: {
-		onClickLeft() {
-			this.$router.go(-1);
+	export default {
+		inject: ['checkRoute', 'money', 'mentors', 'my'],
+		name: 'cash_record',
+		data() {
+			return {
+				list: [],
+				loading: true,
+				finished: false,
+				isLoading: false,
+				style: {
+					width: '100%',
+					height: window.innerHeight - 45 + 'px',
+					background: '#ffffff'
+				},
+				spanWidth: window.innerWidth / 3 + 'px',
+				pageNum: 1,
+				isRequest: true,
+				activeNames: [],
+				lastid: 0
+			};
 		},
-		onLoad() {
-			console.log('load');
-			var that = this;
-			// 异步更新数据
-			if (that.isRequest) {
-				that.isRequest = false;
-				common.toAjax(common.host + '/getcashs/userlog', { page: that.pageNum }, function(res) {
-					// 加载状态结束
-					that.loading = false;
-					that.isRequest = true;
-					if (res.err_code != 800) {
-						if (res.err_code == 0) {
-							// 数据全部加载完成
-							if (res.data.data == '') {
-								that.finished = true;
-								console.log('finish');
+		methods: {
+			onClickLeft() {
+				this.$router.go(-1);
+			},
+			onLoad() {
+				console.log('load');
+				var that = this;
+				// 异步更新数据
+				if (that.isRequest) {
+					that.isRequest = false;
+					common.toAjax(common.host + '/getcashs/userlog', {
+						page: that.pageNum
+					}, function(res) {
+						// 加载状态结束
+						that.loading = false;
+						that.isRequest = true;
+						if (res.err_code != 800) {
+							if (res.err_code == 0) {
+								// 数据全部加载完成
+								if (res.data.data == '') {
+									that.finished = true;
+									console.log('finish');
+								} else {
+									console.log('data', res.data.data);
+									that.list = that.list.concat(res.data.data);
+									console.log('list', that.list);
+									that.pageNum++;
+								}
 							} else {
-								console.log('data', res.data.data);
-								that.list = that.list.concat(res.data.data);
-								console.log('list', that.list);
-								that.pageNum++;
+								that.$toast(res.err_msg);
 							}
 						} else {
 							that.$toast(res.err_msg);
+							window.localStorage.isLogin = false;
+							setTimeout(function() {
+								common.toLogin(that);
+							}, 1000);
 						}
-					} else {
-						that.$toast(res.err_msg);
-						window.localStorage.isLogin = false;
-						setTimeout(function() {
-							common.toLogin(that);
-						}, 1000);
-					}
-				});
+					});
+				}
+			},
+			onRefresh() {
+				console.log('refresh');
+				var that = this;
+				that.list = [];
+				that.pageNum = 1;
+				that.finished = false;
+				that.loading = false;
+				setTimeout(function() {
+					that.isLoading = false;
+					that.onLoad();
+				}, 300);
 			}
 		},
-		onRefresh() {
-			console.log('refresh');
-			var that = this;
-			that.list = [];
-			that.pageNum = 1;
-			that.finished = false;
-			that.loading = false;
-			setTimeout(function() {
-				that.isLoading = false;
-				that.onLoad();
-			}, 300);
+		activated() {
+			this.checkRoute();
+			this.pageNum = 1;
+			this.list = [];
+			this.onLoad();
+			this.activeNames = [];
+			// $('.navTop').css({
+			// 	'min-height': window.innerHeight - 60 + 'px',
+			// });
 		}
-	},
-	activated() {
-		this.checkRoute();
-		this.pageNum = 1;
-		this.list = [];
-		this.onLoad();
-		this.activeNames = [];
-		// $('.navTop').css({
-		// 	'min-height': window.innerHeight - 60 + 'px',
-		// });
-	}
-};
+	};
 </script>
 
 <style scoped>
-.cashList span {
-	height: 30px;
-	line-height: 30px;
-	font-size: 14px;
-	text-align: center;
-	display: block;
-}
+	.cashList span {
+		height: 30px;
+		line-height: 30px;
+		font-size: 14px;
+		text-align: center;
+		display: block;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-box;
+		display: -webkit-flex;
+	}
 </style>

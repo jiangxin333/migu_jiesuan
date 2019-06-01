@@ -12,7 +12,8 @@
 		</div>
 		<div style="height: 12px; background-color: #F1F1F1;"></div>
 		<div class="cashMoney">
-			<div v-for="(item,index) in moneyList" :key="index" :class="['card' + index +' card',index == 0 ? 'teshu' : '']" @click="changStyle(index,item.desc,item.money,item.name)">
+			<div v-for="(item,index) in moneyList" :key="index" :class="['card' + index +' card',index == 0 ? 'teshu' : '']"
+			 @click="changStyle(index,item.desc,item.money,item.name)">
 				<div class="box">
 					<p style="font-weight: 700; font-size: 18px;">{{item.money}} <span style="font-size: 14px;">元</span></p>
 					<p :class="['color' +index + ' color',index == 0 ? 'teshu1' : '']">{{item.title}}</p>
@@ -42,7 +43,7 @@
 				<input type="button" class="ermBtn" value="分享图片给朋友" @click="ermShare()" />
 			</p>
 		</van-popup>
-			<!-- <van-popup v-model="bindShow" :close-on-click-overlay="false">
+		<!-- <van-popup v-model="bindShow" :close-on-click-overlay="false">
 				<img :src="bindurl" class="qr_img" alt />
 				<input type="button" class="ermBtn shareBtn" style="background:#FF4444;color:#FFFFFF;top:91%;width:auto;padding:0 2%;margin:0;transform: translate3d(-50%,8%,0);"
 				 value="发送图片到微信长按识别" @click="bindShare()" />
@@ -70,7 +71,7 @@
 				chooseIndex: 0,
 				showMoney: false,
 				// 5.20
-				shareType: 'share',
+				shareType: 'fakeShare',
 				styleH: {
 					"height": window.innerHeight - 45 + "px",
 					"background-color": "#fff",
@@ -92,9 +93,9 @@
 				this.cashMoney = money;
 				this.name = name;
 				if (name == "item4") {
-					$(".cachDesc").html(desc+ "<span style='color: red;font-weight: 700;'>"+ this.share_day +"天</span>") 
+					$(".cachDesc").html(desc + "<span style='color: red;font-weight: 700;'>" + this.share_day + "天</span>")
 				} else {
-					$(".cachDesc").html(desc) 
+					$(".cachDesc").html(desc)
 				};
 			},
 			ermShare() {
@@ -109,6 +110,92 @@
 						pic: this.ermUrl // 图片地址
 					}
 				});
+			},
+			toShare(name) {
+				var that = this;
+				var scene_pic, timeline_pic, scene_desc, timeline_desc, scene_title, timeline_title;
+				var st_use_type = common.getVal('loginData').st_use_type;
+				switch (name) {
+					case 0:
+						scene_pic = common.getRandomData(that.shareData.share_info.img);
+						scene_title = common.getRandomData(that.shareData.share_info.title);
+						scene_desc = common.getRandomData(that.shareData.share_info.desc);
+						that.shareUrl = that.qrcode_link;
+						if (st_use_type == 'img') {
+							if (that.ermUrl != '') {
+								that.shareShow = false;
+								// 分享图片
+								api.sendEvent({
+									name: that.shareType,
+									extra: {
+										type: 'image',
+										scene: 'session',
+										timeline: false, // false表示发送给还有，true表示分享朋友圈
+										pic: that.ermUrl // 图片地址
+									}
+								});
+							}
+						} else {
+							that.shareShow = false;
+							// 分享网页
+							api.sendEvent({
+								name: that.shareType,
+								extra: {
+									type: 'page',
+									pic: scene_pic, // 缩略图
+									contentUrl: encodeURI(that.qrcode_link), // 网页地址
+									description: scene_desc, // 描述
+									title: scene_title, // 标题
+									scene: 'session',
+									timeline: false // false表示发送给还有，true表示分享朋友圈
+								}
+							});
+						}
+						break;
+					case 1:
+						timeline_pic = common.getRandomData(that.shareData.timeline_share_info.img);
+						timeline_title = common.getRandomData(that.shareData.timeline_share_info.title);
+						timeline_desc = common.getRandomData(that.shareData.timeline_share_info.desc);
+						that.shareUrl = that.timline_qrcode_link;
+						if (st_use_type == 'img') {
+							if (this.ermUrl_timeline != '') {
+								// 分享图片
+								that.shareShow = false;
+								api.sendEvent({
+									name: that.shareType,
+									extra: {
+										type: 'image',
+										scene: 'timeline',
+										timeline: true, // false表示发送给还有，true表示分享朋友圈
+										pic: that.ermUrl_timeline // 图片地址
+									}
+								});
+							}
+						} else {
+							// 分享网页
+							that.shareShow = false;
+							api.sendEvent({
+								name: that.shareType,
+								extra: {
+									type: 'page',
+									pic: timeline_pic, // 缩略图
+									contentUrl: encodeURI(that.timline_qrcode_link), // 网页地址
+									description: timeline_desc, // 描述
+									title: timeline_title, // 标题
+									scene: 'timeline',
+									timeline: true // false表示发送给还有，true表示分享朋友圈
+								}
+							});
+						}
+			
+						break;
+					case 2:
+						that.show = true;
+						that.ermShow = true;
+						break;
+					default:
+						break;
+				}
 			},
 			bindShare() {
 				this.bindShow = false;
@@ -139,7 +226,8 @@
 							confirmButtonText: '好的'
 						})
 						.then(() => {
-							this.ermShow = true;
+							// this.ermShow = true;
+							that.toShare(0)
 						});
 					return;
 				}
@@ -177,6 +265,19 @@
 									})
 									.then(() => {
 										that.$router.replace('/article');
+									});
+							} else if(res.err_code == 20053) {
+								that.$toast.clear();
+								that.$dialog
+									.confirm({
+										title: '温馨提示',
+										message: res.err_msg,
+										showConfirmButton: true,
+										showCancelButton: false,
+										confirmButtonText: '好的'
+									})
+									.then(() => {
+										that.$router.replace('/task');
 									});
 							} else {
 								that.bindShow = false;
@@ -246,18 +347,30 @@
 			that.cashMoney = 0;
 			that.showTool = true;
 			that.userInfo = common.getVal('userInfo');
-			if (common.getVal('loginData').app_share_type != 'share') {
-				this.shareType = 'fakeShare';
+			if (common.getVal('loginData').app_share_type != 'fakeShare') {
+				this.shareType = 'shares';
 			}
-			if (that.$store.state.qrcode_img != '') {
+			if (that.$store.state.data != '') {
 				that.ermUrl = that.$store.state.qrcode_img;
+				that.ermUrl_timeline = that.$store.state.timeline_qrcode_img;
+				that.qrcode_link = that.$store.state.qrcode_link;
+				that.timline_qrcode_link = that.$store.state.timeline_qrcode_link;
+				that.shareData = that.$store.state.data;
 			} else {
 				common.toAjax(common.host + '/user_st/st_img', {
 					type: 'mentor'
 				}, function(res) {
 					if (res.err_code == 0) {
 						that.ermUrl = res.data.qrcode_img;
+						that.ermUrl_timeline = res.data.timeline_qrcode_img;
+						that.qrcode_link = res.data.qrcode_link;
+						that.timline_qrcode_link = res.data.timeline_qrcode_link;
+						that.shareData = res.data;
 						that.$store.commit('SETIMG', res.data.qrcode_img);
+						that.$store.commit('SETIMG_TIMELINE', res.data.timeline_qrcode_img);
+						that.$store.commit('SETLINK', res.data.qrcode_link);
+						that.$store.commit('SETLINK_TIMELINE', res.data.timeline_qrcode_link);
+						that.$store.commit('SETDATA', res.data);
 					} else {
 						that.$toast(res.err_msg);
 					}
@@ -280,7 +393,7 @@
 					//默认第一个提现name
 					that.name = that.moneyList[0].name;
 					//每次进入页面默认选中第一个
-					that.changStyle(0,that.desc,that.cashMoney,that.name);
+					that.changStyle(0, that.desc, that.cashMoney, that.name);
 					//判断是否有驳回消息，并显示
 					if (res.data.apply_fail_tip != undefined && res.data.apply_fail_tip != '') {
 						that.$dialog
@@ -292,7 +405,7 @@
 								confirmButtonText: '去分享'
 							})
 							.then(() => {
-								common.goLink('/mentor',that)
+								common.goLink('/mentor', that)
 							});
 					}
 				} else {
@@ -347,7 +460,11 @@
 	.cashBox {
 		width: 92%;
 		margin: 0 4% 0;
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
+		-webkit-box-pack: justify;
+		-ms-flex-pack: justify;
 		justify-content: space-between;
 		text-align: center;
 		font-size: 16px;
@@ -358,6 +475,9 @@
 		border-radius: 8px;
 		padding: 0 5px;
 		color: #fff;
+		background: -webkit-gradient(linear, left top, right top, from(#ffbf5c), to(#ff601c));
+		background: -webkit-linear-gradient(left, #ffbf5c, #ff601c);
+		background: -o-linear-gradient(left, #ffbf5c, #ff601c);
 		background: linear-gradient(to right, #ffbf5c, #ff601c);
 		font-size: 16px;
 		font-weight: 700;
@@ -365,9 +485,12 @@
 	}
 
 	.cashMoney {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
 		width: 92%;
 		margin: 0 4%;
+		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
 		padding-top: 10px;
 	}
@@ -383,13 +506,17 @@
 		color: #333333;
 		padding: 4px 0;
 	}
+
 	.box {
 		position: absolute;
 		width: 100%;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%,-50%);
+		-webkit-transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
 	}
+
 	.color {
 		color: #666;
 	}

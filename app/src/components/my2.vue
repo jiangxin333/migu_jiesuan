@@ -382,20 +382,16 @@ export default {
 			if(ad_info.length>1){
 				this.swiper = new Swiper('.swiper-container', {
 					loop: true,
-					speed: 900,
-					autoplay: {
-						disableOnInteraction: false,// 触碰后自动切换也不会停止
-					},
+					autoplay: 1500,
+					autoplayDisableOnInteraction: false,
 					observer: true, //修改swiper自己或子元素时，自动初始化swiper
 					observeParents: true //修改swiper的父元素时，自动初始化swiper
 				});
 			}else{
 				this.swiper = new Swiper('.swiper-container', {
 					watchOverflow:true,
-					speed: 900,
-					autoplay: {
-						disableOnInteraction: false,// 触碰后自动切换也不会停止
-					},
+					autoplay: 1500,
+					autoplayDisableOnInteraction: false,
 					observer: true, //修改swiper自己或子元素时，自动初始化swiper
 					observeParents: true //修改swiper的父元素时，自动初始化swiper
 				});
@@ -406,11 +402,9 @@ export default {
 	watch: {
 		$route() {
 			if (this.$route.path == "/my") {
-				console.log(this.swiper.autoplay.start());
-				this.swiper.autoplay.start();
+				this.swiper.startAutoplay();
 			} else {
-				this.swiper.autoplay.stop();
-				console.log(this.swiper.autoplay.stop());
+				this.swiper.stopAutoplay();
 			}
 		}
 	},
@@ -512,6 +506,10 @@ export default {
 	top: 0;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
 	border: 2px solid #fff;
 	border-radius: 50%;
 	z-index: 4;
@@ -522,6 +520,10 @@ export default {
 	top: 52%;
 	left: 50%;
 	transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
 	font-size: 16px;
 	z-index: 6;
 	color: #333;
@@ -543,6 +545,10 @@ export default {
 	color: #fff;
 	z-index: 4;
 	transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
 	font-size: 18px;
 }
 
@@ -687,6 +693,10 @@ export default {
 #setting-option img,
 #contact-option img {
 	transform: scale(0.7);
+	-ms-transform: scale(0.7);
+	-moz-transform: scale(0.7);
+	-webkit-transform: scale(0.7);
+	-o-transform: scale(0.7);
 }
 
 .van-nav-bar {

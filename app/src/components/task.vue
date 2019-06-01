@@ -1,5 +1,8 @@
 <template>
-	<div class="task" :style="styleH">
+	<div id="task" class="task" :style="canScroll?styleH_enable:styleH_disable">
+		<img v-if="moneyImg" class="moneyImg" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/money.gif" alt="">
+		<audio id="audio" v-show="false" controls="controls" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/imgs/redpkg/yinpin02_01.mp3">
+		</audio>
 		<div class="bgHead">
 			<div>
 				<img class="bgImg" src="https://qiniustore.zmr016.com/task_center/bac1.png" alt="" />
@@ -48,10 +51,12 @@
 				<div>
 					<!-- 签到金额 -->
 					<p style="font-size: 36px;">{{ signMoney }}</p>
-					
+
 				</div>
-				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
-				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;" round type="danger" v-else>已领取</van-button>
+				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" @click="dayGet(0,'sign')"
+				 class="getMoney" v-if="signed == 0">签到领取</van-button>
+				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;"
+				 round type="danger" v-else>已领取</van-button>
 			</div>
 			<p style="font-size: 14px; color: #333;padding: 5px 0 10px 10px;">
 				当前签到可获得&nbsp;&nbsp;
@@ -65,7 +70,7 @@
 		<div class="newTask" v-if="taskOk">
 			<p class="title" style="padding-bottom: 10px;">新手任务</p>
 			<div class="newTaskList">
-				<van-cell :center="true" to="" :border="false" v-for="(item1, index) in newTaskList" :key="index">
+				<van-cell :center="true" to="" :border="false" v-for="(item1, index) in newTaskList" :key="index" v-show="item1.name == 'gift' ? false : true">
 					<template slot="title">
 						<div style="font-weight: 700; font-size: 14px; position: relative;">
 							{{ item1.title[0] }}
@@ -75,7 +80,8 @@
 						<p style="color: #FF3131; font-size: 12px;">{{ item1.title[1] }}</p>
 					</template>
 					<img :src="item1.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(1,item1.name, item1.title[4],index)" v-if="item1.is == 0">{{ getMst }}</van-button>
+					<van-button round type="danger" size="small" :id="item1.name" @click="newGet(1,item1.name, item1.title[4],index)"
+					 class="getMoney" v-if="item1.is == 0">{{ getMst }}</van-button>
 					<van-button round type="danger" size="small" :id="item1.name" :style="styleBtn" v-else>已领取</van-button>
 				</van-cell>
 			</div>
@@ -94,7 +100,7 @@
 						<p style="color: #FF3131; font-size: 12px;">{{ item2.title[1]}}</p>
 					</div>
 					<img :src="item2.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" @click="dayGet(2,item2.name, item2.value,index)">{{ getMst }}</van-button>
+					<van-button round type="danger" size="small" class="getMoney" @click="dayGet(2,item2.name, item2.value,index)">{{ getMst }}</van-button>
 				</van-cell>
 			</div>
 		</div>
@@ -153,10 +159,15 @@
 				msg: '',
 				getMst: '领取',
 				time: '',
-				styleH: {
-					height: window.innerHeight,
-					'padding-bottom': '60px',
-					'background-color': '#f0f0f0'
+				canScroll:true,
+				styleH_disable: {
+					'max-height': window.innerHeight+'px',
+					'background-color': '#f0f0f0',
+					'overflow':'hidden'
+				},
+				styleH_enable:{
+					'padding-bottom':'60px',
+					'background-color': '#f0f0f0',
 				},
 				styleBtn: {
 					'border-color': '#d6d6d6',
@@ -178,18 +189,21 @@
 				signMoney: 0, //签到金额
 				articleList: '', //推荐列表数据
 				ermUrl: '', //收徒-分享微信群或者朋友的图片地址
-				ermUrl_timeline:'',//收徒-分享朋友圈的图片地址
-				shareType: 'share', //伪装应用开关,
+				ermUrl_timeline: '', //收徒-分享朋友圈的图片地址
+				shareType: 'fakeShare', //伪装应用开关,
 				article_id: '', //文章id
 				shareTitle: '', //分享文章使用的标题
 				shareImg: '', //分享文章使用的图片地址
 				shareLink: '', //分享文章的分享初始地址
 				login_key: '', //分享文章用的login_key
 				isFrame: true, //控制新开webview个数
-				qrcode_link:'',//分享好友群地址
-				timline_qrcode_link:'',//分享朋友圈地址
-				shareData:null,//分享内容数据对象
-				
+				qrcode_link: '', //分享好友群地址
+				timline_qrcode_link: '', //分享朋友圈地址
+				shareData: null, //分享内容数据对象
+				moneyImg: false,
+				autoplay: '',
+				timer:null,
+				count:0,
 			};
 		},
 		methods: {
@@ -203,33 +217,33 @@
 			hiddenPopup() {
 				this.showMsg = false;
 			},
-			getMoney(type,index) {
-				if(type==0){
-					this.signList.signed=1;
-				}else if(type=="1"){
-					this.newTaskList[index].is=1;
-				}else{
-					this.everydayTaskList[index].is=1;
+			getMoney(type, index) {
+				if (type == 0) {
+					this.signList.signed = 1;
+				} else if (type == "1") {
+					this.newTaskList[index].is = 1;
+				} else {
+					this.everydayTaskList[index].is = 1;
 				}
 			},
-			newGet(type1,name, type,index) {
+			newGet(type1, name, type, index) {
 				var that = this;
 				if (type == 'shoutu' || type == 'article') {
 					switch (type) {
 						case 'shoutu':
-							that.mentorInfo(type1,name,index);
+							that.mentorInfo(type1, name, index);
 							break;
 						case 'article':
-							that.articleInfo(type1,name,index);
+							that.articleInfo(type1, name, index);
 							break;
 						default:
 							break;
 					}
 				} else {
-					that.getnewpriz(type1,name,index);
+					that.getnewpriz(type1, name, index);
 				}
 			},
-			getnewpriz(type,name,index) {
+			getnewpriz(type, name, index) {
 				var that = this;
 				common.toAjax(
 					common.host + '/task/getnewpriz', {
@@ -250,7 +264,7 @@
 										that.$dialog.alert({
 											message: res.err_msg
 										});
-										that.getMoney(type,index)
+										that.getMoney(type, index)
 									}, 5000)
 									that.today_money = res.data.today_money;
 									that.balance = res.data.balance;
@@ -268,10 +282,10 @@
 									}
 								} else {
 									that.$toast(res.err_msg);
-									that.getMoney(type,index)
+									that.getMoney(type, index)
 									that.today_money = res.data.today_money;
 									that.balance = res.data.balance;
-									console.log(res.data.isnewtask,2222);
+									console.log(res.data.isnewtask, 2222);
 									that.taskOk = res.data.isnewtask;
 									if (!that.taskOk) {
 										that.$http.get(common.host + '/article/list?type=1&page=1&task=task').then(({
@@ -292,7 +306,7 @@
 					}
 				);
 			},
-			articleInfo(type,name,index) {
+			articleInfo(type, name, index) {
 				console.log('article_info', name)
 				var that = this;
 				common.toAjax(common.host + '/article/info', {
@@ -306,12 +320,12 @@
 							that.shareDesc = res.data.desc;
 							that.login_key = res.data.login_key;
 							that.article_id = res.data.article_id;
-							that.articleShare(type,name,index)
+							that.articleShare(type, name, index)
 						});
 					}
 				});
 			},
-			articleShare(type,name,index) {
+			articleShare(type, name, index) {
 				var that = this;
 				console.log('article share', name)
 				switch (name) {
@@ -350,7 +364,7 @@
 												timeline: false // false表示发送给好友，true表示分享朋友圈
 											}
 										});
-										that.getnewpriz(type,name,index);
+										that.getnewpriz(type, name, index);
 									}
 								);
 							}
@@ -392,7 +406,7 @@
 												timeline: true // false表示发送给好友，true表示分享朋友圈
 											}
 										});
-										that.getnewpriz(type,name,index);
+										that.getnewpriz(type, name, index);
 									}
 								);
 							}
@@ -402,51 +416,53 @@
 						break;
 				}
 			},
-			mentorInfo(type,name,index) {
+			mentorInfo(type, name, index) {
 				var that = this;
 				console.log('mentor info', name)
-				if (common.getVal('loginData').app_share_type != 'share') {
-					that.shareType = 'fakeShare';
+				if (common.getVal('loginData').app_share_type != 'fakeShare') {
+					that.shareType = 'share';
 				}
 				if (that.$store.state.qrcode_img != '' && that.$store.state.timeline_qrcode_img) {
 					that.ermUrl = that.$store.state.qrcode_img;
 					that.ermUrl_timeline = that.$store.state.timeline_qrcode_img;
 					that.qrcode_link = that.$store.state.qrcode_link;
 					that.timline_qrcode_link = that.$store.state.timeline_qrcode_link;
-					that.shareData=that.$store.state.data;
-					that.mentorShare(type,name,index);
+					that.shareData = that.$store.state.data;
+					that.mentorShare(type, name, index);
 				} else {
-					common.toAjax(common.host + '/user_st/st_img', { type: 'mentor' }, function(res) {
+					common.toAjax(common.host + '/user_st/st_img', {
+						type: 'mentor'
+					}, function(res) {
 						if (res.err_code == 0) {
 							that.ermUrl = res.data.qrcode_img;
 							that.ermUrl_timeline = res.data.timeline_qrcode_img;
 							that.qrcode_link = res.data.qrcode_link;
 							that.timline_qrcode_link = res.data.timeline_qrcode_link;
-							that.shareData= res.data;
+							that.shareData = res.data;
 							that.$store.commit('SETIMG', res.data.qrcode_img);
 							that.$store.commit('SETIMG_TIMELINE', res.data.timeline_qrcode_img);
 							that.$store.commit('SETLINK', res.data.qrcode_link);
 							that.$store.commit('SETLINK_TIMELINE', res.data.timeline_qrcode_link);
 							that.$store.commit('SETDATA', res.data);
-							that.mentorShare(type,name,index);
+							that.mentorShare(type, name, index);
 							// this.show = true;
 						} else {
-							that.$toast(res.info);
+							that.$toast(res.err_msg);
 						}
 					});
 				}
-				
+
 			},
-			mentorShare(type,name,index) {
+			mentorShare(type, name, index) {
 				var that = this;
-				var scene_pic,timeline_pic,scene_desc,timeline_desc,scene_title,timeline_title;
+				var scene_pic, timeline_pic, scene_desc, timeline_desc, scene_title, timeline_title;
 				var st_use_type = common.getVal('loginData').st_use_type;
 				console.log('mentor share', name)
 				switch (name) {
 					case 'share_friend':
-						scene_pic=common.getRandomData(that.shareData.share_info.img);
-						scene_title=common.getRandomData(that.shareData.share_info.title);
-						scene_desc=common.getRandomData(that.shareData.share_info.desc);
+						scene_pic = common.getRandomData(that.shareData.share_info.img);
+						scene_title = common.getRandomData(that.shareData.share_info.title);
+						scene_desc = common.getRandomData(that.shareData.share_info.desc);
 						if (st_use_type == 'img') {
 							if (that.ermUrl != '') {
 								// 分享图片
@@ -459,7 +475,7 @@
 										pic: that.ermUrl // 图片地址
 									}
 								});
-								that.getnewpriz(type,name,index);
+								that.getnewpriz(type, name, index);
 							}
 						} else {
 							// 分享网页
@@ -475,13 +491,13 @@
 									timeline: false // false表示发送给还有，true表示分享朋友圈
 								}
 							});
-							that.getnewpriz(type,name,index);
+							that.getnewpriz(type, name, index);
 						}
 						break;
 					case 'share_timeline':
-						timeline_pic=common.getRandomData(that.shareData.timeline_share_info.img);
-						timeline_title=common.getRandomData(that.shareData.timeline_share_info.title);
-						timeline_desc=common.getRandomData(that.shareData.timeline_share_info.desc);
+						timeline_pic = common.getRandomData(that.shareData.timeline_share_info.img);
+						timeline_title = common.getRandomData(that.shareData.timeline_share_info.title);
+						timeline_desc = common.getRandomData(that.shareData.timeline_share_info.desc);
 						if (st_use_type == 'img') {
 							if (that.ermUrl_timeline != '') {
 								// 分享图片
@@ -494,7 +510,7 @@
 										pic: that.ermUrl_timeline // 图片地址
 									}
 								});
-								that.getnewpriz(type,name,index);
+								that.getnewpriz(type, name, index);
 							}
 						} else {
 							// 分享网页
@@ -510,14 +526,14 @@
 									timeline: true // false表示发送给还有，true表示分享朋友圈
 								}
 							});
-							that.getnewpriz(type,name,index);
+							that.getnewpriz(type, name, index);
 						}
 						break;
 					default:
 						break;
 				}
 			},
-			dayGet(type,name,value,index) {
+			dayGet(type, name, value, index) {
 				var that = this;
 				console.log(name);
 				if (name == 'sign') {
@@ -527,7 +543,7 @@
 						},
 						function(res) {
 							if (res.err_code != 2000) {
-								that.getMoney(type,index);
+								that.getMoney(type, index);
 								that.$toast(res.err_msg);
 								that.today_money = res.data.today_money;
 								that.balance = res.data.balance;
@@ -575,9 +591,44 @@
 			},
 			more() {
 				this.$router.push('/article');
+			},
+			setTimMoney(addMoney) {
+				console.log(addMoney, 11111222);
+				var that = this;
+				console.log(that.balance, '今日受益')
+				console.log(that.today_money, '今日余额')
+				var overall = that.balance + addMoney;
+				common.toAjax(
+					common.host + '/task/getnewpriz', {
+						name: 'gift'
+					},
+					function(res) {
+						if (res.err_code != 2000) {
+							console.log(res, '新手任务哈哈');
+							var balan = res.data.balance;
+							var today_M = res.data.today_money;
+							clearInterval(that.timer);
+							that.timer = setInterval(function() {
+								that.count++;
+								console.log('interval:'+that.count)
+								var num = addMoney / 4;
+								that.balance += num;
+								that.today_money += num;
+								if (res.data.balance <= that.balance) {
+									that.balance = balan;
+									that.today_money = today_M;
+									that.moneyImg = false;
+									that.canScroll = true;
+									clearInterval(that.timer);
+								}
+							}, 500)
+						}
+					})
+
 			}
 		},
 		activated() {
+			window.scrollTo(0, 0); //当前路由时初始化页面滚动值为0；
 			this.checkRoute();
 			this.task();
 			var that = this;
@@ -604,6 +655,22 @@
 				if (res.err_code == 0) {
 					//新手任务数据
 					that.newTaskList = res.data.new;
+					//判断新手任务是否完成，未完成显示动画加载金币
+					for (var i = 0; i < that.newTaskList.length; i++) {
+						if (that.newTaskList[i].name == 'gift') {
+							var balanceM = parseFloat(that.newTaskList[i].value) * 100;
+							if (that.newTaskList[i].is == 0) {
+								that.canScroll = false;
+								that.$nextTick(()=>{
+									that.moneyImg = true;
+									var myaudio=document.getElementById('audio')
+									myaudio.play();
+									that.setTimMoney(balanceM);
+								})
+								
+							}
+						}
+					}
 					console.log(that.newTaskList, 11111111);
 					//每日任务数据
 					that.everydayTaskList = res.data.day;
@@ -634,7 +701,7 @@
 								confirmButtonText: '去分享'
 							})
 							.then(() => {
-								common.goLink('/mentor',that)
+								common.goLink('/mentor', that)
 							});
 					}
 					//签到列表数据
@@ -763,6 +830,7 @@
 		width: 94%;
 		margin: 5% 0 0 3%;
 		background-color: #fff;
+		padding-bottom: 10px;
 		border-radius: 8px;
 	}
 
@@ -781,6 +849,7 @@
 		margin: 5% 0 0 3%;
 		background-color: #fff;
 		border-radius: 8px;
+		padding-bottom: 10px;
 	}
 
 	.imgIcon {
@@ -788,6 +857,9 @@
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
 		margin-left: 5px;
 	}
 
@@ -872,5 +944,125 @@
 		padding: 30px 0 10px;
 		text-align: center;
 		color: #666666;
+	}
+
+	.getMoney {
+		-webkit-animation: getMoney 1s infinite;
+		-o-animation: getMoney 1s infinite;
+		animation: getMoney 1s infinite;
+	}
+
+	@-webkit-keyframes getMoney {
+		0% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+
+		50% {
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@-o-keyframes getMoney {
+		0% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+
+		50% {
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@-moz-keyframes getMoney {
+		0% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+
+		50% {
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@keyframes getMoney {
+		0% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+
+		50% {
+			-webkit-transform: scale(.8);
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			-o-transform: scale(.8);
+			transform: scale(.8);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	.moneyImg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 99999;
+		background-color: rgba(0, 0, 0, .5);
 	}
 </style>

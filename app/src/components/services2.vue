@@ -1,5 +1,5 @@
 <template>
-	<div class="navTop" :style="styleH">
+	<div class="navTop" :style="styleH" id="navTop">
 		<van-nav-bar title="联系客服" left-arrow @click-left="onClickLeft" fixed />
 		<div class="mainContainer">
 			<div class="swiper-container">
@@ -52,21 +52,19 @@
 
 			initSwiper() {
 				var that = this;
-				new Swiper('.swiper-container', {
+				var MySwiper = new Swiper('.swiper-container', {
 					loop: true,
 					effect: 'cube',
-					navigation: {
-						nextEl: '.swiper-button-next',
-						prevEl: '.swiper-button-prev'
-					},
-					on: {
-						click: function(e) {
-							if (e.target.id == 'copyBtn') {
-								that.copyUrl2(that.serviceList[this.realIndex].code);
-							}
+					prevButton: '.swiper-button-prev',
+					nextButton: '.swiper-button-next',
+					onClick: function(swiper, e) {
+						console.log(MySwiper.realIndex);
+						if (e.target.id == 'copyBtn') {
+							that.copyUrl2(that.serviceList[MySwiper.realIndex].code);
 						}
 					}
 				});
+				// MySwiper.startAutoplay();
 			},
 			copyUrl2(val) {
 				var that = this;
@@ -75,14 +73,14 @@
 						that.$toast('复制成功');
 					},
 					function(e) {
-						that.$toast('复制失败');
+						that.$toast('复制失败,请截图二维码去微信扫描');
 						console.log(e);
 					}
 				);
 			}
 		},
-		activated() {
-			this.styleH.height = window.innerHeight - 45 + 'px';
+		mounted() {
+			this.styleH.height = window.innerHeight - document.getElementById('navTop').clientHeight  + 'px';
 			var that = this;
 			that.checkRoute();
 			common.toAjax(
@@ -110,6 +108,9 @@
 
 <style scoped>
 	.navTop {
+		background: -webkit-gradient(linear, left top, left bottom, from(#f29123), to(#f95806));
+		background: -webkit-linear-gradient(#f29123, #f95806);
+		background: -o-linear-gradient(#f29123, #f95806);
 		background: linear-gradient(#f29123, #f95806);
 	}
 
@@ -141,6 +142,10 @@
 		top: 50%;
 		left: 50%;
 		transform: translate3d(-50%, -48%, 0);
+		-ms-transform: translate3d(-50%, -48%, 0);
+		-moz-transform: translate3d(-50%, -48%, 0);
+		-webkit-transform: translate3d(-50%, -48%, 0);
+		-o-transform: translate3d(-50%, -48%, 0);
 	}
 
 	.swiper-container {

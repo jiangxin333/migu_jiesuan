@@ -267,6 +267,7 @@ export default {
 	font-size: 18px;
 	letter-spacing: 2px;
 	box-shadow: 2px 2px 2px #bc0b0f;
+	-webkit-box-shadow: 2px 2px 2px #bc0b0f;
 }
 .van-button--primary {
 	background: #ff5b56;

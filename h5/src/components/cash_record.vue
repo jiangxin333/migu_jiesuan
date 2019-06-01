@@ -126,5 +126,9 @@ export default {
 	font-size: 14px;
 	text-align: center;
 	display: block;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-box;
+	display: -webkit-flex;
 }
 </style>

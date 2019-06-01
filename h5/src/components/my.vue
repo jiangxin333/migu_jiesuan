@@ -446,6 +446,27 @@
 			var that = this;
 			that.checkRoute();
 			that.my();
+			console.log(window.localStorage.path)
+			common.toAjax(common.host + '/users/userData', {}, function(res) {
+				if (res.err_code != 800) {
+					if (res.err_code == 0) {
+						common.setVal('userInfo', res.data);
+						that.userInfo = common.getVal('userInfo');
+						that.isLogin = true;
+						window.localStorage.isLogin = true;
+						if (res.data.must_set_passwd == 1) {
+							common.goLink('/password/1', that);
+						} else {
+							that.showAd();
+						}
+					} else {
+						that.$toast(res.err_msg);
+					}
+				} else {
+					common.toLogin(that);
+					return;
+				}
+			});
 			if (common.getVal('userInfo') != null) {
 				this.userInfo = common.getVal('userInfo');
 			}
@@ -489,26 +510,7 @@
 			if (window.localStorage.isLogin) {
 				that.isLogin = common.getVal('isLogin');
 			}
-			common.toAjax(common.host + '/users/userData', {}, function(res) {
-				if (res.err_code != 800) {
-					if (res.err_code == 0) {
-						common.setVal('userInfo', res.data);
-						that.userInfo = common.getVal('userInfo');
-						that.isLogin = true;
-						window.localStorage.isLogin = true;
-						if (res.data.must_set_passwd == 1) {
-							common.goLink('/password/1', that);
-						} else {
-							that.showAd();
-						}
-					} else {
-						that.$toast(res.err_msg);
-					}
-				} else {
-					that.isLogin = false;
-					window.localStorage.isLogin = false;
-				}
-			});
+			
 		}
 	};
 </script>
@@ -548,6 +550,10 @@
 		top: 0;
 		left: 50%;
 		transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		-o-transform: translate(-50%, -50%);
 		border: 2px solid #fff;
 		border-radius: 50%;
 		z-index: 4;
@@ -558,6 +564,10 @@
 		top: 50%;
 		left: 50%;
 		transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-webkit-transform: translateX(-50%);
+		-o-transform: translateX(-50%);
 		font-size: 16px;
 		z-index: 6;
 		color: #333;
@@ -579,6 +589,10 @@
 		color: #fff;
 		z-index: 4;
 		transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-webkit-transform: translateX(-50%);
+		-o-transform: translateX(-50%);
 		font-size: 18px;
 	}
 
@@ -718,6 +732,10 @@
 	#setting-option img,
 	#contact-option img {
 		transform: scale(0.7);
+		-ms-transform: scale(0.7);
+		-moz-transform: scale(0.7);
+		-webkit-transform: scale(0.7);
+		-o-transform: scale(0.7);
 	}
 
 	#contact-option {

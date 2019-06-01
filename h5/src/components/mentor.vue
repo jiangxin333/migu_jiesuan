@@ -456,7 +456,8 @@
 		padding: 0 2%;
 		border: 1px solid #dddddd;
 		margin: 20px auto 10px;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 		border-radius: 10px;
 	}
 
@@ -466,7 +467,8 @@
 		padding: 0 2%;
 		border: 1px solid #dddddd;
 		margin: 10px auto;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 30px 0 rgba(0, 0, 0, 0.19);
+		-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 30px 0 rgba(0, 0, 0, 0.19);
+		        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 30px 0 rgba(0, 0, 0, 0.19);
 		border-radius: 10px;
 	}
 
@@ -491,7 +493,8 @@
 		/*超出部分隐藏*/
 		white-space: nowrap;
 		/*不换行*/
-		text-overflow: ellipsis;
+		-o-text-overflow: ellipsis;
+		   text-overflow: ellipsis;
 		/*超出部分文字以...显示*/
 	}
 
@@ -526,14 +529,14 @@
 		border-radius: 5px;
 		font-size: 18px;
 		letter-spacing: 2px;
-		box-shadow: 2px 2px 2px #bc0b0f;
+		-webkit-box-shadow: 2px 2px 2px #bc0b0f;
+		        box-shadow: 2px 2px 2px #bc0b0f;
 	}
 
 	.van-button--primary {
 		background: #ff5b56;
 		border: none;
 		-webkit-box-shadow: 1px 1px 1px #000000;
-		-moz-box-shadow: 1px 1px 1px #000000;
 		box-shadow: 1px 1px 1px #000000;
 	}
 

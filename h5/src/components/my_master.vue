@@ -143,7 +143,7 @@
 </script>
 
 <style scoped>
-	.mainBody {
+.mainBody {
 		position: relative;
 		height: 500px;
 		padding-top: 10px;

@@ -13,53 +13,64 @@
 						:offset="300"
 						:immediate-check="isImmCheck"
 					>
-						<img style="width: 100%;" src="https://qiniustore.zmr016.com/article/%E8%B5%9A%E9%92%B1.png" alt="">
+						<img style="width: 100%;" src="https://qiniustore.zmr016.com/article/%E8%B5%9A%E9%92%B1.png" alt="" />
 						<van-pull-refresh v-model="isLoading" @refresh="onRefresh" v-if="!init">
-							<div class="listCard" v-for="(listitem, listIndex) in listArr" :key="listIndex" :id="listitem.article_id"
-								 @click="goArticle(listitem.article_id, listitem.is_video)">
-									<van-row>
-										<van-col span="24">
-											<van-row type="flex" justify="space-between">
-												<van-col span="15">
-													<van-row>
-														<van-col span="24">
-															<div style="height:40px;margin-bottom: 30px;">
-																<span
-																	class="articleTitle"
-																	:style="'font-weight:' + listitem.list_title_bold + ';color:' + listitem.list_title_color + ';'"
-																>
-																	{{ listitem.title }}
-																</span>
-															</div>
-														</van-col>
-													</van-row>
-													<van-row type="flex" align="bottom">
-														<van-col span="6">
-															<img :src="listitem.icon" alt class="articleType" style="margin-right: 5px;" />
-															<span class="articleType_txt">{{ listitem.tag_name }}</span>
-														</van-col>
-														<van-col span="18">
-															<span class="redTxt" style="float: right;margin-right: 10px;">分享浏览收益{{ listitem.view_money / 100 }}元/次</span>
-															<!-- <span class="grayTxt" style="float: right;">分享所得：</span> -->
-														</van-col>
-													</van-row>
-												</van-col>
-												<van-col span="8"><img :src="listitem.img_array[0]" alt class="listitemImg" /></van-col>
-											</van-row>
-										</van-col>
-									</van-row>
-								</div>
+							<div
+								class="listCard"
+								v-for="(listitem, listIndex) in listArr"
+								:key="listIndex"
+								:id="listitem.article_id"
+								@click="goArticle(listitem.article_id, listitem.is_video)"
+							>
+								<van-row>
+									<van-col span="24">
+										<van-row type="flex" justify="space-between">
+											<van-col span="15">
+												<van-row>
+													<van-col span="24">
+														<div style="height:40px;margin-bottom: 30px;">
+															<span
+																class="articleTitle"
+																:style="'font-weight:' + listitem.list_title_bold + ';color:' + listitem.list_title_color + ';'"
+															>
+																{{ listitem.title }}
+															</span>
+														</div>
+													</van-col>
+												</van-row>
+												<van-row type="flex" align="bottom">
+													<van-col span="6">
+														<img :src="listitem.icon" alt class="articleType" style="margin-right: 5px;" />
+														<span class="articleType_txt">{{ listitem.tag_name }}</span>
+													</van-col>
+													<van-col span="18">
+														<span class="redTxt" style="float: right;margin-right: 10px;">分享浏览收益{{ listitem.view_money / 100 }}元/次</span>
+														<!-- <span class="grayTxt" style="float: right;">分享所得：</span> -->
+													</van-col>
+												</van-row>
+											</van-col>
+											<van-col span="8"><img :src="listitem.img_array[0]" alt class="listitemImg" /></van-col>
+										</van-row>
+									</van-col>
+								</van-row>
+							</div>
 						</van-pull-refresh>
 					</van-list>
 				</div>
 			</van-tab>
 		</van-tabs>
+		<van-popup v-model="adShow">
+			<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/task.png" class="qr_img" style="width: 100%!important;" alt @click="toMentor(0)" />
+		</van-popup>
+		<van-popup v-model="adShow2">
+			<img src="https://quzhuan.oss-cn-beijing.aliyuncs.com/img/ad_mentor_migu_my.png" style="width: 100%!important;" alt @click="toMentor(1)" />
+		</van-popup>
 	</div>
 </template>
 
 <script>
 import common from '../assets/js/common.js';
-
+import Cookie from 'js-cookie';
 export default {
 	inject: ['checkRoute', 'money', 'mentors', 'my'],
 	name: 'money2',
@@ -102,10 +113,37 @@ export default {
 				width: '100%',
 				height: (window.innerWidth * 135) / 229 + 'px',
 				'border-radius': '6px'
-			}
+			},
+			ad_show: false,
+			adShow: false,
+			adShow2: false
 		};
 	},
 	methods: {
+		showAd() {
+			if (Cookie.get('isShowed') == undefined) {
+				this.adReg();
+				this.adShow2 = true;
+			} else {
+				this.adShow2 = false;
+			}
+		},
+		adReg() {
+			var x = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1);
+			Cookie.set('isShowed', 1, {
+				expires: x,
+				path: ''
+			});
+			// Cookie.set('isShowed', 1, { expires: 10000, path: '' });
+			// common.setVal('adShow_time', new Date().getTime());
+		},
+		toMentor(num) {
+			if (num == 0) {
+				this.$router.push('/task');
+			} else {
+				this.$router.push('/mentor');
+			}
+		},
 		onLoad(index) {
 			if (index == undefined) {
 				index = 0;
@@ -185,7 +223,9 @@ export default {
 				var url = '/article/article_share.html?article_id=' + id;
 				location.href = url;
 			} else {
-				this.$router.push({ path: '/money_article/' + id });
+				this.$router.push({
+					path: '/money_article/' + id
+				});
 			}
 		},
 		toWeb() {
@@ -235,9 +275,14 @@ export default {
 		if (window.localStorage.index != undefined) {
 			this.changeActive(window.localStorage.index);
 		}
+		if (window.localStorage.isLogin == 'false' || window.localStorage.isLogin == undefined) {
+			this.adShow = true;
+		} else {
+			this.showAd();
+		}
 	},
 	beforeRouteEnter(to, from, next) {
-		if ( from.path == "/task" ) {
+		if (from.path == '/task') {
 			next(vm => {
 				vm.listArr = [];
 				vm.onRefresh();
@@ -256,11 +301,13 @@ export default {
 	vertical-align: middle;
 	margin: 0 2px;
 }
+
 .articleType_price {
 	font-size: 12px;
 	float: right;
 	margin-top: 2px;
 }
+
 .articleType {
 	width: 12px;
 	height: 12px;
@@ -272,11 +319,13 @@ export default {
 	font-size: 16px;
 	width: 100%;
 	overflow: hidden;
+	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
 }
+
 .listitemImg {
 	width: 100%;
 	height: 90px;
@@ -296,5 +345,9 @@ export default {
 	left: 50%;
 	margin-top: -15px;
 	margin-left: -15px;
+}
+.van-popup {
+	width: 85% !important;
+	background-color: transparent !important;
 }
 </style>

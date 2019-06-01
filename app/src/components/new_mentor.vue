@@ -50,7 +50,7 @@
 			<div class="centerBox" :style="centerBox">
 				<!-- 区间信息条 -->
 				<p :style="location_p">
-					<img src="https://qiniustore.zmr016.com/invite/location.png" alt="" slot="icon" style="transform: scale(.6);display: inline-block;vertical-align: middle;" />
+					<img src="https://qiniustore.zmr016.com/invite/location.png" alt="" slot="icon" style="transform: scale(.6);-ms-transform: scale(.6);-moz-transform: scale(.6);-webkit-transform: scale(.6);-o-transform: scale(.6);display: inline-block;vertical-align: middle;" />
 					<span slot="title" :style="location_txt">当前奖励区间：{{ current_money }}元/位</span>
 				</p>
 				<!-- 区间信息条 end -->
@@ -612,6 +612,10 @@ export default {
 			//轮播条 音量图标
 			volumeIco: {
 				transform: 'scale(1.1) translateY(1px)',
+				'-ms-transform': 'scale(1.1) translateY(1px)',
+				'-moz-transform': 'scale(1.1) translateY(1px)',
+				'-webkit-transform': 'scale(1.1) translateY(1px)',
+				'-o-transform': 'scale(1.1) translateY(1px)',
 				'margin-right': (window.innerWidth * 16) / 750 + 'px'
 			},
 			//小按钮
@@ -620,6 +624,10 @@ export default {
 				top: '70%',
 				left: '50%',
 				transform: ' translateX(-50%)',
+				'-ms-transform': ' translateX(-50%)',
+				'-moz-transform': ' translateX(-50%)',
+				'-webkit-transform': ' translateX(-50%)',
+				'-o-transform': ' translateX(-50%)',
 				'font-size': '15px',
 				width: (window.innerWidth * 374) / 750 + 'px',
 				height: (window.innerHeight * 50) / 1334 + 'px',
@@ -639,7 +647,11 @@ export default {
 				position: 'absolute',
 				top: '93%',
 				left: '50%',
-				transform: ' translateX(-50%)'
+				transform: ' translateX(-50%)',
+				'-ms-transform': ' translateX(-50%)',
+				'-moz-transform': ' translateX(-50%)',
+				'-webkit-transform': ' translateX(-50%)',
+				'-o-transform': ' translateX(-50%)',
 			},
 			top_input_big_row: {
 				width: '100%',
@@ -807,7 +819,11 @@ export default {
 			tip_bottom: {
 				width: (window.innerWidth * 732) / 750 + 'px',
 				margin: '20px auto -5px',
-				transform: 'scale(1.02)'
+				transform: 'scale(1.02)',
+				'-ms-transform': 'scale(1.02)',
+				'-moz-transform': 'scale(1.02)',
+				'-webkit-transform': 'scale(1.02)',
+				'-o-transform': 'scale(1.02)',
 			},
 			//累计可赚
 			tip_bottom_txt: {
@@ -872,7 +888,11 @@ export default {
 				position: 'absolute',
 				top: '-50px',
 				left: '50%',
-				transform: 'scale(.8) translateX(-62%)'
+				transform: 'scale(.8) translateX(-62%)',
+				'-ms-transform': 'scale(.8) translateX(-62%)',
+				'-moz-transform': 'scale(.8) translateX(-62%)',
+				'-webkit-transform': 'scale(.8) translateX(-62%)',
+				'-o-transform': 'scale(.8) translateX(-62%)',
 			},
 			//奖励升级红包图
 			lastMoney: {
@@ -881,7 +901,11 @@ export default {
 				position: 'absolute',
 				top: '-' + (window.innerHeight * 90) / 1334 + 'px',
 				left: '50%',
-				transform: 'scale(0.8) translateX(-62%)'
+				transform: 'scale(0.8) translateX(-62%)',
+				'-ms-transform': 'scale(0.8) translateX(-62%)',
+				'-moz-transform': 'scale(0.8) translateX(-62%)',
+				'-webkit-transform': 'scale(0.8) translateX(-62%)',
+				'-o-transform': 'scale(0.8) translateX(-62%)',
 			},
 			//奖励升级文字提示
 			updatePrice: {
@@ -909,7 +933,11 @@ export default {
 			priceCard: {
 				width: (window.innerWidth * 170) / 750 + 'px',
 				height: (window.innerHeight * 120) / 1334 + 'px',
-				transform: 'rotate(180deg)'
+				transform: 'rotate(180deg)',
+				'-ms-transform': 'rotate(180deg)',
+				'-moz-transform': 'rotate(180deg)',
+				'-webkit-transform': 'rotate(180deg)',
+				'-o-transform': 'rotate(180deg)',
 			},
 			//最终奖励卡
 			priceCard_last: {
@@ -923,6 +951,10 @@ export default {
 				top: '-10px',
 				left: '50%',
 				transform: 'translateX(-50%)',
+				'-ms-transform': 'translateX(-50%)',
+				'-moz-transform': 'translateX(-50%)',
+				'-webkit-transform': 'translateX(-50%)',
+				'-o-transform': 'translateX(-50%)',
 				'border-radius': '16px',
 				background: '#fde68f',
 				border: '1px solid #ffffff',
@@ -939,6 +971,10 @@ export default {
 				top: '-10px',
 				left: '50%',
 				transform: 'translateX(-50%)',
+				'-ms-transform': 'translateX(-50%)',
+				'-moz-transform': 'translateX(-50%)',
+				'-webkit-transform': 'translateX(-50%)',
+				'-o-transform': 'translateX(-50%)',
 				'border-radius': '16px',
 				background: '#fde68f',
 				border: '1px solid #ffffff',
@@ -954,6 +990,10 @@ export default {
 				top: '40%',
 				left: '50%',
 				transform: 'translate3d(-50%,-50%,0)',
+				'-ms-transform': 'translate3d(-50%,-50%,0)',
+				'-moz-transform': 'translate3d(-50%,-50%,0)',
+				'-webkit-transform': 'translate3d(-50%,-50%,0)',
+				'-o-transform': 'translate3d(-50%,-50%,0)',
 				'text-align': 'center',
 				color: '#f2d7aa',
 				'font-size': '26px'
@@ -965,6 +1005,10 @@ export default {
 				top: '40%',
 				left: '50%',
 				transform: 'translate3d(-50%,-50%,0)',
+				'-ms-transform': 'translate3d(-50%,-50%,0)',
+				'-moz-transform': 'translate3d(-50%,-50%,0)',
+				'-webkit-transform': 'translate3d(-50%,-50%,0)',
+				'-o-transform': 'translate3d(-50%,-50%,0)',
 				'text-align': 'center',
 				color: '#ffffff',
 				'font-size': '26px'
@@ -976,6 +1020,10 @@ export default {
 				bottom: '5px',
 				left: '50%',
 				transform: 'translateX(-50%)',
+				'-ms-transform': 'translateX(-50%)',
+				'-moz-transform': 'translateX(-50%)',
+				'-webkit-transform': 'translateX(-50%)',
+				'-o-transform': 'translateX(-50%)',
 				'text-align': 'center',
 				color: '#f2d7aa'
 			},
@@ -986,6 +1034,10 @@ export default {
 				bottom: '5px',
 				left: '50%',
 				transform: 'translateX(-50%)',
+				'-ms-transform': 'translateX(-50%)',
+				'-moz-transform': 'translateX(-50%)',
+				'-webkit-transform': 'translateX(-50%)',
+				'-o-transform': 'translateX(-50%)',
 				'text-align': 'center',
 				color: '#ffffff'
 			},
@@ -1010,7 +1062,11 @@ export default {
 				height: (window.innerHeight * 46) / 1334 + 'px',
 				display: 'inline-block',
 				'vertical-align': 'middle',
-				transform: 'rotate(180deg)'
+				transform: 'rotate(180deg)',
+				'-ms-transform': 'rotate(180deg)',
+				'-moz-transform': 'rotate(180deg)',
+				'-webkit-transform': 'rotate(180deg)',
+				'-o-transform': 'rotate(180deg)',
 			},
 			//垂直箭头外框
 			arrow_vertical: {
@@ -1024,7 +1080,11 @@ export default {
 				height: (window.innerHeight * 46) / 1334 + 'px',
 				display: 'inline-block',
 				'vertical-align': 'middle',
-				transform: 'rotate(90deg)'
+				transform: 'rotate(90deg)',
+				'-ms-transform': 'rotate(90deg)',
+				'-moz-transform': 'rotate(90deg)',
+				'-webkit-transform': 'rotate(90deg)',
+				'-o-transform': 'rotate(90deg)',
 			},
 			//底部提示主体
 			ruleCard: {
@@ -1213,7 +1273,7 @@ export default {
 			isRequest: false, //活动抽奖卡是否请求过
 			noData: false, //无好友
 			share_type: true, //true：朋友或者群 false：朋友圈
-			shareType: 'share', //伪装应用
+			shareType: 'fakeShare', //伪装应用
 			shareNum: 0, //分享次数
 			mentor_bottom: 'http://qiniustore.zmr016.com/invite/mentor_bottom.png', //邀请小技巧下面的其他说明
 			qrcode_link: '', //分享好友群地址
@@ -1225,12 +1285,10 @@ export default {
 	},
 	watch: {
 		$route() {
-			if (this.$route.path == '/mentor') {
-				console.log(this.swiper.autoplay.start());
-				this.swiper.autoplay.start();
+			if (this.$route.path == "/mentor") {
+				this.swiper.startAutoplay();
 			} else {
-				this.swiper.autoplay.stop();
-				console.log(this.swiper.autoplay.stop());
+				this.swiper.stopAutoplay();
 			}
 		}
 	},
@@ -1261,11 +1319,9 @@ export default {
 			console.log('init swiper');
 			this.swiper = new Swiper('.swiper-container', {
 				loop: true,
-				speed: 500,
 				direction: 'vertical',
-				autoplay: {
-					disableOnInteraction: false // 触碰后自动切换也不会停止
-				},
+				autoplay: 1500,
+				autoplayDisableOnInteraction: false,
 				observer: true, //修改swiper自己或子元素时，自动初始化swiper
 				observeParents: true //修改swiper的父元素时，自动初始化swiper
 			});
@@ -1879,7 +1935,13 @@ export default {
 			this.enterShow = false; //进入页面弹窗
 			this.isFailShare = false; //收徒失败分享弹窗
 			this.isShared = false; //分享成功弹窗
-		}
+		},
+		onCopy() {
+			this.$toast('复制成功');
+		},
+		onError() {
+			this.$toast('复制失败');
+		},
 	},
 	beforeRouteLeave(to, from, next) {
 		if (this.confirmLeave) {
@@ -1932,8 +1994,8 @@ export default {
 		that.qrcode_link = that.$store.state.qrcode_link;
 		that.timline_qrcode_link = that.$store.state.timeline_qrcode_link;
 		that.shareData = that.$store.state.data;
-		if (common.getVal('loginData').app_share_type != 'share') {
-			this.shareType = 'fakeShare';
+		if (common.getVal('loginData').app_share_type != 'fakeShare') {
+			this.shareType = 'share';
 		}
 		common.toAjax(common.host + '/user_st/income_info', {}, function(res) {
 			if (res.err_code == 0) {
@@ -2021,6 +2083,10 @@ li span {
 	top: 35px;
 	left: 50%;
 	transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
 	width: 100%;
 	color: #e94a0a;
 	display: block;
@@ -2032,6 +2098,10 @@ li span {
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
 	width: 100%;
 	color: #e94a0a;
 	display: block;
@@ -2072,6 +2142,10 @@ li span {
 	left: 50%;
 	top: 50%;
 	transform: translate3d(-50%, -50%, 0);
+	-ms-transform: translate3d(-50%, -50%, 0);
+	-moz-transform: translate3d(-50%, -50%, 0);
+	-webkit-transform: translate3d(-50%, -50%, 0);
+	-o-transform: translate3d(-50%, -50%, 0);
 }
 .drag {
 	position: fixed;
@@ -2254,6 +2328,11 @@ li span {
 	right: 5px;
 	top: 5px;
 	transform: scale(0.6);
+	-ms-transform: scale(0.6);
+	-moz-transform: scale(0.6);
+	-webkit-transform: scale(0.6);
+	-o-transform: scale(0.6);
+	
 }
 .cell_title {
 	color: #333333;
@@ -2518,6 +2597,11 @@ li span {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	
 }
 .content1 {
 	height: 7rem;
@@ -2531,6 +2615,10 @@ li span {
 	margin-top: -15%;
 	left: 50%;
 	transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
 }
 .content .dec,
 .content .title {
@@ -2820,6 +2908,11 @@ li span {
 	top: -140%;
 	color: #ffffff;
 	transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
+	
 }
 .inviteGroup .rewardMes .beanIcon {
 	width: 0.45rem;
