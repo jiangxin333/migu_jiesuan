@@ -561,6 +561,7 @@
 
 	.userName {
 		position: absolute;
+		width: 50%;
 		top: 50%;
 		left: 50%;
 		transform: translateX(-50%);
@@ -568,9 +569,13 @@
 		-moz-transform: translateX(-50%);
 		-webkit-transform: translateX(-50%);
 		-o-transform: translateX(-50%);
+		text-align: center;
 		font-size: 16px;
 		z-index: 6;
 		color: #333;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
 	}
 
 	.img_bg {

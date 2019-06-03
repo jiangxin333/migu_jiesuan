@@ -1,6 +1,6 @@
 <template>
 	<div id="task" class="task" :style="canScroll?styleH_enable:styleH_disable">
-		<img v-if="moneyImg" class="moneyImg" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/money.gif" alt="">
+		<img v-if="moneyImg" class="moneyImg" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/Money11.gif" alt="">
 		<audio id="audio" v-show="false" controls="controls" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/imgs/redpkg/yinpin02_01.mp3">
 		</audio>
 		<div class="bgHead">
@@ -159,7 +159,7 @@
 				msg: '',
 				getMst: '领取',
 				time: '',
-				canScroll:true,
+				canScroll:true,//控制task页面最外层元素取值样式style
 				styleH_disable: {
 					'max-height': window.innerHeight+'px',
 					'background-color': '#f0f0f0',
@@ -200,10 +200,10 @@
 				qrcode_link: '', //分享好友群地址
 				timline_qrcode_link: '', //分享朋友圈地址
 				shareData: null, //分享内容数据对象
-				moneyImg: false,
-				autoplay: '',
-				timer:null,
-				count:0,
+				moneyImg: true,//是否显示金币下落图片
+				autoplay: '',//初始化音频播放
+				timer:null,//定时时间函数变量
+				count: 0,//查看是否进入定时器函数，是否清楚定时器
 			};
 		},
 		methods: {
@@ -882,11 +882,15 @@
 
 	.userName {
 		position: absolute;
+		width: 50%;
 		top: 0;
 		top: 33%;
 		left: 25%;
 		color: #fff;
 		font-size: 20px;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
 	}
 
 	/*  推荐分享*/

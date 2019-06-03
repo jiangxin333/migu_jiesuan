@@ -1,5 +1,8 @@
 <template>
-	<div class="task" :style="styleH">
+	<div class="task" :style="canScroll?styleH_enable:styleH_disable">
+		<img v-if="moneyImg" class="moneyImg" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/money.gif" alt="">
+		<audio id="audio" v-show="false" controls="controls" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/imgs/redpkg/yinpin02_01.mp3">
+		</audio>
 		<div class="bgHead">
 			<div>
 				<img class="bgImg" src="https://qiniustore.zmr016.com/task_center/bac1.png" alt="">
@@ -49,8 +52,10 @@
 					<!-- 签到金额 -->
 					<p style="font-size: 36px;">{{signMoney}}</p>
 				</div>
-				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" class="getMoney" @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
-				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;" round type="danger" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
+				<van-button style="height: 35px;line-height: 35px;width: 100px;text-align: center;" round type="danger" class="getMoney"
+				 @click="dayGet(0,'sign')" v-if="signed == 0">签到领取</van-button>
+				<van-button style="height: 35px;line-height: 35px;border-color: #d6d6d6;background-color: #d6d6d6;width: 100px;text-align: center;"
+				 round type="danger" v-else>&nbsp;&nbsp;已领取&nbsp;&nbsp;</van-button>
 			</div>
 			<p style="font-size: 14px; color: #333;padding: 5px 0 10px 10px;">
 				当前签到可获得&nbsp;&nbsp;
@@ -64,7 +69,7 @@
 		<div class="newTask" v-if="taskOk">
 			<p class="title" style="padding-bottom: 10px;">新手任务</p>
 			<div class="newTaskList">
-				<van-cell :center="true" to="" :border="false" v-for="(item1,index) in newTaskList" :key="item1.index">
+				<van-cell :center="true" to="" :border="false" v-for="(item1,index) in newTaskList" :key="item1.index" v-show="item1.name == 'gift' ? false : true">
 					<template slot="title">
 						<div style="font-weight: 700; font-size: 14px; position: relative;">
 							{{item1.title[0]}}
@@ -74,7 +79,8 @@
 						<p style="color: #FF3131; font-size: 12px;">{{item1.title[1]}}</p>
 					</template>
 					<img :src="item1.title[3]" slot="icon" class="iconImg" alt="" />
-					<van-button round type="danger" size="small" :id="item1.name" class="getMoney" @click="newGet(1,item1.name, item1.title[4],index)" v-if="item1.is == 0">{{getMst}}</van-button>
+					<van-button round type="danger" size="small" :id="item1.name" class="getMoney" @click="newGet(1,item1.name, item1.title[4],index)"
+					 v-if="item1.is == 0">{{getMst}}</van-button>
 					<van-button round type="danger" size="small" :id="item1.name" :style="styleBtn" v-else>已领取</van-button>
 				</van-cell>
 			</div>
@@ -153,10 +159,15 @@
 				msg: '',
 				getMst: '领取',
 				time: '',
-				styleH: {
-					height: window.innerHeight,
-					"padding-bottom": "60px",
-					"background-color": "#f0f0f0"
+				canScroll:true,//控制task页面最外层元素取值样式style
+				styleH_disable: {
+					'max-height': window.innerHeight + 'px',
+					'background-color': '#f0f0f0',
+					'overflow': 'hidden'
+				},
+				styleH_enable: {
+					'padding-bottom': '60px',
+					'background-color': '#f0f0f0',
 				},
 				styleBtn: {
 					"border-color": "#d6d6d6",
@@ -177,6 +188,10 @@
 				signed: 0, //是否签到，
 				signMoney: 0, //签到金额
 				articleList: '', //推荐列表数据
+				moneyImg: false, //是否显示金币下落图片
+				autoplay: '', //初始化音频播放
+				timer: null, //定时时间函数变量
+				count: 0,//查看是否进入定时器函数，是否清楚定时器
 			}
 		},
 		methods: {
@@ -190,21 +205,21 @@
 			hiddenPopup() {
 				this.showMsg = false;
 			},
-			getMoney(type,index) {
-				if(type==0){
-					this.signList.signed=1;
-				}else if(type=="1"){
-					this.newTaskList[index].is=1;
-				}else{
-					this.everydayTaskList[index].is=1;
+			getMoney(type, index) {
+				if (type == 0) {
+					this.signList.signed = 1;
+				} else if (type == "1") {
+					this.newTaskList[index].is = 1;
+				} else {
+					this.everydayTaskList[index].is = 1;
 				}
 			},
-			newGet(type1,name, type,index) {
+			newGet(type1, name, type, index) {
 				var that = this;
 				if (type == 'shoutu') {
 					that.$router.push('/mentor')
 				}
-				if(type=="article"){
+				if (type == "article") {
 					that.$router.push('/article')
 				}
 				common.toAjax(common.host + '/task/getnewpriz', {
@@ -213,15 +228,15 @@
 					if (res.err_code != 2000) {
 						if (res.err_code == 1987) {
 							that.$dialog.confirm({
-									title: '温馨提醒',
-									message: res.err_msg
-								}).then(() => {
-									that.toCash();
-								})
+								title: '温馨提醒',
+								message: res.err_msg
+							}).then(() => {
+								that.toCash();
+							})
 						} else {
 							console.log("新手任务")
-							that.getMoney(type1,index);
-							if(type!='shoutu'&&type!='article'){
+							that.getMoney(type1, index);
+							if (type != 'shoutu' && type != 'article') {
 								that.$toast(res.err_msg);
 							}
 							that.today_money = res.data.today_money;
@@ -244,7 +259,7 @@
 					}
 				})
 			},
-			dayGet(type,name, value,index) {
+			dayGet(type, name, value, index) {
 				var that = this;
 				console.log(name);
 				if (name == "sign") {
@@ -252,7 +267,7 @@
 						name: name
 					}, function(res) {
 						if (res.err_code != 2000) {
-							that.getMoney(type,index);
+							that.getMoney(type, index);
 							that.$toast(res.err_msg);
 							that.today_money = res.data.today_money;
 							that.balance = res.data.balance;
@@ -287,6 +302,40 @@
 			},
 			more() {
 				this.$router.push('/article');
+			},
+			setTimMoney(addMoney) {
+				console.log(addMoney, 11111222);
+				var that = this;
+				console.log(that.balance, '今日受益')
+				console.log(that.today_money, '今日余额')
+				var overall = that.balance + addMoney;
+				common.toAjax(
+					common.host + '/task/getnewpriz', {
+						name: 'gift'
+					},
+					function(res) {
+						if (res.err_code != 2000) {
+							console.log(res.data, '新手红包');
+							var balan = res.data.balance;
+							var today_M = res.data.today_money;
+							clearInterval(that.timer);
+							that.timer = setInterval(function() {
+								that.count++;
+								console.log('interval:'+that.count)
+								var num = addMoney / 4;
+								that.balance += num;
+								that.today_money += num;
+								if (res.data.balance <= that.balance) {
+									that.balance = balan;
+									that.today_money = today_M;
+									that.moneyImg = false;
+									that.canScroll = true;
+									clearInterval(that.timer);
+								}
+							}, 500)
+						}
+					})
+			
 			}
 		},
 		activated() {
@@ -311,7 +360,7 @@
 						that.balance = that.userInfo.balance;
 						that.today_money = that.userInfo.today_money;
 					}
-				}else{
+				} else {
 					common.toLogin(that);
 					return;
 				}
@@ -327,6 +376,22 @@
 				if (res.err_code == 0) {
 					//新手任务数据
 					that.newTaskList = res.data.new;
+					//判断新手任务是否完成，未完成显示动画加载金币
+					for (var i = 0; i < that.newTaskList.length; i++) {
+						if (that.newTaskList[i].name == 'gift') {
+							var balanceM = parseFloat(that.newTaskList[i].value) * 100;
+							if (that.newTaskList[i].is == 0) {
+								that.canScroll = false;
+								that.$nextTick(()=>{
+									that.moneyImg = true;
+									var myaudio=document.getElementById('audio')
+									myaudio.play();
+									that.setTimMoney(balanceM);
+								})
+								
+							}
+						}
+					}
 					console.log(that.newTaskList, 11111111);
 					//每日任务数据
 					that.everydayTaskList = res.data.day;
@@ -359,7 +424,7 @@
 								confirmButtonText: '去分享'
 							})
 							.then(() => {
-								common.goLink('/mentor',that)
+								common.goLink('/mentor', that)
 							});
 					}
 					//签到列表数据
@@ -385,7 +450,7 @@
 					// 	console.log(i,1111);
 					// }
 				}
-			},that);
+			}, that);
 		}
 	}
 </script>
@@ -395,7 +460,7 @@
 		position: relative;
 		margin-bottom: 12%;
 	}
-	
+
 	.title {
 		padding: 18px 0 18px 12px;
 		font-size: 18px;
@@ -538,10 +603,14 @@
 	.userName {
 		position: absolute;
 		top: 0;
+		width: 50%;
 		top: 33%;
 		left: 25%;
 		color: #fff;
 		font-size: 20px;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
 	}
 
 	/*  推荐分享*/
@@ -600,27 +669,31 @@
 		text-align: center;
 		color: #666666;
 	}
-	.getMoney{
+
+	.getMoney {
 		-webkit-animation: getMoney 1s infinite;
 		-o-animation: getMoney 1s infinite;
 		animation: getMoney 1s infinite;
 	}
+
 	@-webkit-keyframes getMoney {
-		0%{
+		0% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
 			-o-transform: scale(1);
 			transform: scale(1);
 		}
-		50%{
+
+		50% {
 			-webkit-transform: scale(.8);
 			-moz-transform: scale(.8);
 			-ms-transform: scale(.8);
 			-o-transform: scale(.8);
 			transform: scale(.8);
 		}
-		100%{
+
+		100% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
@@ -628,22 +701,25 @@
 			transform: scale(1);
 		}
 	}
+
 	@-o-keyframes getMoney {
-		0%{
+		0% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
 			-o-transform: scale(1);
 			transform: scale(1);
 		}
-		50%{
+
+		50% {
 			-webkit-transform: scale(.8);
 			-moz-transform: scale(.8);
 			-ms-transform: scale(.8);
 			-o-transform: scale(.8);
 			transform: scale(.8);
 		}
-		100%{
+
+		100% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
@@ -651,22 +727,25 @@
 			transform: scale(1);
 		}
 	}
+
 	@-moz-keyframes getMoney {
-		0%{
+		0% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
 			-o-transform: scale(1);
 			transform: scale(1);
 		}
-		50%{
+
+		50% {
 			-webkit-transform: scale(.8);
 			-moz-transform: scale(.8);
 			-ms-transform: scale(.8);
 			-o-transform: scale(.8);
 			transform: scale(.8);
 		}
-		100%{
+
+		100% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
@@ -674,27 +753,39 @@
 			transform: scale(1);
 		}
 	}
+
 	@keyframes getMoney {
-		0%{
+		0% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
 			-o-transform: scale(1);
 			transform: scale(1);
 		}
-		50%{
+
+		50% {
 			-webkit-transform: scale(.8);
 			-moz-transform: scale(.8);
 			-ms-transform: scale(.8);
 			-o-transform: scale(.8);
 			transform: scale(.8);
 		}
-		100%{
+
+		100% {
 			-webkit-transform: scale(1);
 			-moz-transform: scale(1);
 			-ms-transform: scale(1);
 			-o-transform: scale(1);
 			transform: scale(1);
 		}
+	}
+	.moneyImg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 99999;
+		background-color: rgba(0, 0, 0, .5);
 	}
 </style>

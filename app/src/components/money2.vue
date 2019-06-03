@@ -310,7 +310,7 @@
 					this.$router.push('/task');
 				}
 				if(num==1){
-					this.$router.push('/task');
+					this.$router.push('/mentor');
 				}
 			},
 			adReg() {
