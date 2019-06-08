@@ -15,10 +15,10 @@
 						<van-field style="color: #333;" v-model="name" readonly clearable label="用户名 :" laceholder="请输入用户名" />
 						<van-field style="color: #333;" v-model="phone" type="number" clearable :value="phone" label="手机号码 :" placeholder="请输入手机号" @blur="checkPhone(phone)" />
 						<van-field style="color: #333;" v-model="sms" center clearable label="短信验证码 :" placeholder="请输入短信验证码">
-							<van-button v-if="isSend" slot="button" round size="small" type="info" style="background-color: #F5401D; border-color: #F5401D;"
+							<van-button v-if="isSend" slot="button" round size="small" type="info" style="background-color: #F5401D; border-color: #F5401D;width: 80px; text-align: center;"
 							 @click="getSms(phone)">发送验证码</van-button>
-							 <van-button v-else slot="button" :disabled="true" round size="small" type="info" style="background-color: #F5401D; border-color: #F5401D;"
-							 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{msg}}&nbsp;s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</van-button>
+							 <van-button v-else slot="button" :disabled="true" round size="small" type="info" style="background-color: #F5401D; border-color: #F5401D;width: 80px; text-align: center;"
+							 >{{msg}}&nbsp;s</van-button>
 						</van-field>
 						<van-field style="color: #333;" v-model="nameBox" clearable label="真实姓名 :" placeholder="请输入真实姓名" />
 					</van-cell-group>

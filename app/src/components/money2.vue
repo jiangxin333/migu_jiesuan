@@ -9,7 +9,7 @@
 					<van-pull-refresh v-model="isLoading" @refresh="onRefresh" :loading-text="refreshTxt">
 						<div :style="clickH">
 							<van-list :v-model="'loading'" :finished="finished" :finished-text="finishedTxt" :loading-text="loadingTxt"
-							 :error.sync="error" :error-text="errorTxt" :loading="checkLoading" @load="onLoad" :offset="300">
+							 :error.sync="error" :error-text="errorTxt" :loading="checkLoading" @load="onLoad" :offset="300" :immediate-check="false">
 								<!-- <div class="listCard" v-for="(listitem, listIndex) in listArr" :key="listIndex" :id="listitem.article_id"
 								 @click="goArticle(listitem.article_id, listitem.is_video)">
 									<span class="articleTitle" :style="'font-weight:' + listitem.list_title_bold + ';color:' + listitem.list_title_color + ';'">
@@ -271,6 +271,7 @@
 				this.pageNum = 1;
 				this.checkLoading = false;
 				this.isRefresh = true;
+				this.listArr = [];
 				this.onLoad();
 			},
 			goArticle(id, $video) {
@@ -333,16 +334,27 @@
 		},
 		created() {
 			var that = this;
-			this.$http.get(common.host + '/article/types').then(response => {
-				var res = response.body;
-				console.log(res);
-				this.$nextTick(() => {
-					this.menus = res.data;
-					common.setVal('menus', res.data);
-					this.listTotal = common.getVal('menus');
-					this.activeArr = common.getVal('menus');
-				});
-			});
+			console.log('load index',load_flag);
+			load_flag=false;
+			this.$nextTick(()=>{
+				this.menus = article_types.data;
+				common.setVal('menus', this.menus);
+				this.listArr = article_lists.data;
+				for (var i in this.listArr) {
+					this.listArr[i].pub_start_at = common.publishTime(common.date('Y-m-d', this.listArr[i].pub_start_at));
+				}
+				this.pageNum++;
+			})
+			// this.$http.get(common.host + '/article/types').then(response => {
+			// 	var res = response.body;
+			// 	console.log(res);
+			// 	this.$nextTick(() => {
+			// 		this.menus = res.data;
+			// 		common.setVal('menus', res.data);
+			// 		this.listTotal = common.getVal('menus');
+			// 		this.activeArr = common.getVal('menus');
+			// 	});
+			// });
 			// this.$http.get(common.host + '/article/list').then((response) => {
 			//     var res = response.body;
 			//     this.$nextTick(() => {
@@ -381,8 +393,12 @@
 		beforeRouteEnter(to, from, next) {
 			if (from.path == '/task') {
 				next(vm => {
-					vm.listArr = [];
-					vm.onRefresh();
+					vm.listArr = article_lists.data;
+					for (var i in vm.listArr) {
+						vm.listArr[i].pub_start_at = common.publishTime(common.date('Y-m-d', vm.listArr[i].pub_start_at));
+					}
+					vm.pageNum++;
+					vm.changeActive(0);
 				});
 			} else {
 				next();

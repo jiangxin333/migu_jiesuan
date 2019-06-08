@@ -82,6 +82,7 @@ export default {
 	},
 	activated() {
 		this.checkRoute();
+		this.isNodata=false;
 		this.onRefresh();
 		$('.navTop').css({
 			'min-height': window.innerHeight - 110 + 'px',

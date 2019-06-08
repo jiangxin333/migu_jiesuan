@@ -39,6 +39,8 @@ const vip = resolve => require(['@/components/vip'], resolve)
 const task = resolve => require(['@/components/task'], resolve)
 const account = resolve => require(['@/components/account'], resolve)
 const account_course = resolve => require(['@/components/account_course'], resolve)
+// 面对面收徒页面
+const face_to_face = resolve => require(['@/components/face_to_face'], resolve)
 //新收徒页面
 const new_mentor = resolve => require(['@/components/new_mentor'], resolve)
 
@@ -215,6 +217,11 @@ export default new Router({
 			path: '/account_course',
 			name: 'account_course',
 			component: account_course
+		},
+		{
+			path: '/face_to_face',
+			name: 'face_to_face',
+			component: face_to_face
 		},
 		//测试用登录页
 		{

@@ -228,20 +228,20 @@
 					<img alt="" src="https://qiniustore.zmr016.com/invite/money.png" :style="rule_step_img" />
 				</div>
 				<van-row type="flex" justify="space-between" class="rule_step_img_box" :style="rule_step_other">
-					<van-col span="5">
+					<van-col span="7">
 						<p>点击按钮</p>
 						<p>分享给好友</p>
 					</van-col>
-					<van-col span="5">
+					<van-col span="8">
 						<p>好友打开链接</p>
 						<p>下载安装</p>
 					</van-col>
-					<van-col span="5">
+					<van-col span="7">
 						<p>好友登录阅读</p>
 						<p>您获得红包</p>
 					</van-col>
 				</van-row>
-				<p style="text-align: justify;color:#FDB6BF;text-justify: ;">特别说明：好友需要在新设备上注册（之前未登录过的账号的手机），并有效阅读3元方可产生奖励</p>
+				<p style="text-align: justify;color:#FDB6BF;margin-top: 100px;">特别说明：好友需要在新设备上注册（之前未登录过的账号的手机），并有效阅读3元方可产生奖励</p>
 				<van-row :style="rule_title">
 					<van-col span="24">
 						<p><span :style="rule_title_main">邀请小技巧</span></p>
@@ -1066,7 +1066,8 @@
 					width: window.innerWidth - (window.innerWidth * 40 * 2) / 750 + 'px',
 					margin: '0 auto',
 					padding: '0 ' + (window.innerWidth * 40) / 750 + 'px',
-					'min-height': '100px'
+					'min-height': '100px',
+					'position':'relative'
 				},
 				//底部规则——标题部分
 				rule_title: {
@@ -1115,7 +1116,11 @@
 				rule_step_other: {
 					'margin-top': (window.innerHeight * 28) / 1334 + 'px',
 					'margin-bottom': (window.innerHeight * 48) / 1334 + 'px',
-					color: '#ffffff'
+					color: '#ffffff',
+					'position':'absolute',
+					'width':window.innerWidth+'px',
+					'left':'50%',
+					'transform':'translateX(-50%)',
 				},
 				//邀请小技巧
 				rule_p: {
@@ -1245,7 +1250,7 @@
 				confirmLeave: false, //确认离开
 				isRequest: false, //活动抽奖卡是否请求过
 				noData: false, //无好友
-				mentor_bottom: 'http://qiniustore.zmr016.com/invite/mentor_bottom.png', //邀请小技巧下面的其他说明
+				mentor_bottom: 'https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/mentor_bottom.png', //邀请小技巧下面的其他说明
 				qrcode_link: '', //分享好友群地址
 				timline_qrcode_link: '', //分享朋友圈地址
 				shareData: null, //分享内容数据对象

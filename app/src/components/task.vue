@@ -1,6 +1,6 @@
 <template>
 	<div id="task" class="task" :style="canScroll?styleH_enable:styleH_disable">
-		<img v-if="moneyImg" class="moneyImg" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/Money11.gif" alt="">
+		<img v-if="moneyImg" class="moneyImg" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/money.gif" alt="">
 		<audio id="audio" v-show="false" controls="controls" src="https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/imgs/redpkg/yinpin02_01.mp3">
 		</audio>
 		<div class="bgHead">
@@ -200,7 +200,7 @@
 				qrcode_link: '', //分享好友群地址
 				timline_qrcode_link: '', //分享朋友圈地址
 				shareData: null, //分享内容数据对象
-				moneyImg: true,//是否显示金币下落图片
+				moneyImg: false,//是否显示金币下落图片
 				autoplay: '',//初始化音频播放
 				timer:null,//定时时间函数变量
 				count: 0,//查看是否进入定时器函数，是否清楚定时器
@@ -611,7 +611,7 @@
 							that.timer = setInterval(function() {
 								that.count++;
 								console.log('interval:'+that.count)
-								var num = addMoney / 4;
+								var num = addMoney / 10;
 								that.balance += num;
 								that.today_money += num;
 								if (res.data.balance <= that.balance) {
@@ -621,7 +621,7 @@
 									that.canScroll = true;
 									clearInterval(that.timer);
 								}
-							}, 500)
+							}, 200)
 						}
 					})
 

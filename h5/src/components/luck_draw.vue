@@ -329,6 +329,7 @@ export default {
 		this.tipsShow = false;
 		this.left_chances=common.getVal('userInfo').prize_chance;
 		var that = this;
+		click = false;//每次进入抽奖页面初始化锁
 		if (that.$store.state.data != '') {
 			that.ermUrl = that.$store.state.qrcode_img;
 			that.qrcode_link=that.$store.state.qrcode_link;

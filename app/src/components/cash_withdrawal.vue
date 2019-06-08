@@ -83,6 +83,7 @@
 				desc: '', //提现说明
 				ermShow: false, //是否显示收徒二维码
 				name: '', //提现时传给后端
+				isquery: false,// 是否再次请求moneybtn列表数据
 			};
 		},
 		methods: {
@@ -279,6 +280,32 @@
 									.then(() => {
 										that.$router.replace('/task');
 									});
+							} else if(res.err_code == 20023) {
+								that.$toast.clear();
+								that.$dialog
+									.confirm({
+										title: '温馨提示',
+										message: res.err_msg,
+										showConfirmButton: true,
+										showCancelButton: false,
+										confirmButtonText: '好的'
+									})
+									.then(() => {
+										that.$router.replace('/task');
+									});
+							} else if(res.err_code == 20024) {
+								that.$toast.clear();
+								that.$dialog
+									.confirm({
+										title: '温馨提示',
+										message: res.err_msg,
+										showConfirmButton: true,
+										showCancelButton: false,
+										confirmButtonText: '好的'
+									})
+									.then(() => {
+										that.$router.replace('/mentor');
+									});
 							} else {
 								that.bindShow = false;
 								if (res.err_code == 0) {
@@ -287,6 +314,9 @@
 									that.userInfo.balance = res.data.balance;
 									common.setVal('userInfo', userInfo);
 									that.shareShow = true;
+									if (that.isquery) {
+										that.moneybtn();
+									}
 								}
 							}
 						} else {
@@ -339,6 +369,53 @@
 				this.columns = btnsArr;
 				this.init_chooseBtn();
 				console.log(this.columns);
+			},
+			moneybtn() {
+				var that = this;
+				common.toAjax(common.host + '/getcashs/moneybtn', {}, function(res) {
+					if (res.err_code == 0) {
+						that.isquery = false;
+						// card盒子数据
+						that.moneyList = res.data.btn_info;
+						for (var i = 0; i < that.moneyList.length; i++ ) {
+							console.log(that.moneyList[i].name);
+							if (that.moneyList[i].name == 'item1') {
+								that.isquery = true;
+							}
+						}
+						console.log(that.isquery);
+						// 提现驳回消息
+						that.apply_fail_tip = res.data.apply_fail_tip;
+						// 连续分享天数
+						that.share_day = res.data.share_day;
+						//默认显示第一个提现说明
+						that.desc = that.moneyList[0].desc;
+						//默认提现金额
+						that.cashMoney = that.moneyList[0].money;
+						//是否需要收徒才能申请，每个用户控制
+						that.shareShow = res.data.need_st;
+						//默认第一个提现name
+						that.name = that.moneyList[0].name;
+						//每次进入页面默认选中第一个
+						that.changStyle(0, that.desc, that.cashMoney, that.name);
+						//判断是否有驳回消息，并显示
+						if (res.data.apply_fail_tip != undefined && res.data.apply_fail_tip != '') {
+							that.$dialog
+								.confirm({
+									title: '温馨提示',
+									message: res.data.apply_fail_tip,
+									showConfirmButton: true,
+									showCancelButton: false,
+									confirmButtonText: '去分享'
+								})
+								.then(() => {
+									common.goLink('/mentor', that)
+								});
+						}
+					} else {
+						that.$toast(res.err_msg)
+					}
+				})
 			}
 		},
 		activated() {
@@ -346,7 +423,14 @@
 			that.checkRoute();
 			that.cashMoney = 0;
 			that.showTool = true;
-			that.userInfo = common.getVal('userInfo');
+			common.toAjax(common.host + '/users/userData', {}, function(res) {
+				if (res.err_code != 800) {
+					if (res.err_code == 0) {
+						common.setVal('userInfo', res.data);
+						that.userInfo = common.getVal('userInfo');
+					}
+				}
+			});
 			if (common.getVal('loginData').app_share_type != 'fakeShare') {
 				this.shareType = 'shares';
 			}
@@ -376,42 +460,7 @@
 					}
 				});
 			}
-			common.toAjax(common.host + '/getcashs/moneybtn', {}, function(res) {
-				if (res.err_code == 0) {
-					// card盒子数据
-					that.moneyList = res.data.btn_info;
-					// 提现驳回消息
-					that.apply_fail_tip = res.data.apply_fail_tip;
-					// 连续分享天数
-					that.share_day = res.data.share_day;
-					//默认显示第一个提现说明
-					that.desc = that.moneyList[0].desc;
-					//默认提现金额
-					that.cashMoney = that.moneyList[0].money;
-					//是否需要收徒才能申请，每个用户控制
-					that.shareShow = res.data.need_st;
-					//默认第一个提现name
-					that.name = that.moneyList[0].name;
-					//每次进入页面默认选中第一个
-					that.changStyle(0, that.desc, that.cashMoney, that.name);
-					//判断是否有驳回消息，并显示
-					if (res.data.apply_fail_tip != undefined && res.data.apply_fail_tip != '') {
-						that.$dialog
-							.confirm({
-								title: '温馨提示',
-								message: res.data.apply_fail_tip,
-								showConfirmButton: true,
-								showCancelButton: false,
-								confirmButtonText: '去分享'
-							})
-							.then(() => {
-								common.goLink('/mentor', that)
-							});
-					}
-				} else {
-					that.$toast(res.err_msg)
-				}
-			})
+			this.moneybtn();
 		}
 	};
 </script>

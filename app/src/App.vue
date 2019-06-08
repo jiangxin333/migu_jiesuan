@@ -109,9 +109,19 @@ export default {
 	},
 	created() {
 		var that = this;
+		
 		common.toAjax(common.host + '/users/is_login', {}, function(res) {
 			common.setVal('tips', res.data.tool_tip);
-
+			if (res.data.tester) {
+				common.setVal('tester',res.data.tester);
+				var script1 = document.createElement('script');
+				var script2 = document.createElement('script');
+				var tpl = `var vConsole = new VConsole();console.log(' ====== Hello VConsole ====== ');`;
+				script2.innerHTML = tpl;
+				script1.src = '//quzhuan.oss-cn-beijing.aliyuncs.com/js/vconsole.min.js'
+				document.body.appendChild(script1);
+				document.body.appendChild(script2);
+			};
 			if (res.err_code == 800) {
 				window.localStorage.isLogin = false;
 				window.localStorage.removeItem('userInfo');

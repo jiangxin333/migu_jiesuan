@@ -322,7 +322,7 @@
 							that.timer = setInterval(function() {
 								that.count++;
 								console.log('interval:'+that.count)
-								var num = addMoney / 4;
+								var num = addMoney / 10;
 								that.balance += num;
 								that.today_money += num;
 								if (res.data.balance <= that.balance) {
@@ -332,7 +332,7 @@
 									that.canScroll = true;
 									clearInterval(that.timer);
 								}
-							}, 500)
+							}, 200)
 						}
 					})
 			

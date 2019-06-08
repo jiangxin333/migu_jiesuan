@@ -6,6 +6,21 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum=1.0,user-scalable=no">
 		<link rel="icon" href="<%= BASE_URL %>favicon.ico">
 		<title>...</title>
+		<script type="text/javascript">
+			var load_flag = true;
+			window.addEventListener("error", function(e) {
+				e.stopImmediatePropagation();
+				const srcElement = e.srcElement;
+				if ((srcElement === 'script' || srcElement === 'link') && load_flag) {
+					alert('页面加载失败，点击确定后重载页面');
+					window.loaction.reload()
+				}
+			}, true);
+		</script>
+
+		<script> document.write( "<script type='text/javascript' src='https://wechatadszmr.oss-cn-shenzhen.aliyuncs.com/jsquzhuan/js/migu_article_types.js?v=" + Date.now() + "'><\/script>"); document.write( "<script type='text/javascript' src='https://wechatadszmr.oss-cn-shenzhen.aliyuncs.com/jsquzhuan/js/migu_article_lists1.js?v=" + Date.now() + "'><\/script>"); </script>
+		<!-- <script type="text/javascript" src="https://wechatadszmr.oss-cn-shenzhen.aliyuncs.com/jsquzhuan/js/article_types.js"></script> -->
+		<!-- <script type="text/javascript" src="https://wechatadszmr.oss-cn-shenzhen.aliyuncs.com/jsquzhuan/js/article_lists1.js"></script> -->
 	</head>
 	<body>
 		<noscript>
@@ -13,18 +28,6 @@
 				continue.</strong>
 		</noscript>
 		<div id="app"></div>
-		@if(isset($tester) && $tester)
 		<script src="//quzhuan.oss-cn-beijing.aliyuncs.com/js/vconsole.min.js"></script>
-		<script>
-			var vConsole = new VConsole();
-			console.log(' ====== Hello VConsole ====== ');
-			window.localStorage.is_vConsole = true;
-		</script>
-		@else
-		<script>
-			if (window.localStorage.getItem('is_vConsole') != null) window.localStorage.removeItem('is_vConsole');
-		</script>
-		@endif
-		<!-- built files will be auto injected -->
 	</body>
 </html>

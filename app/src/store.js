@@ -7,7 +7,8 @@ const state = {
 	timeline_qrcode_img:'',
 	qrcode_link:'',
 	timeline_qrcode_link:'',
-	data:''
+	data:'',
+	data2: ''
 }
 const mutations = {
 	SETIMG(state, n) {
@@ -25,6 +26,9 @@ const mutations = {
 	SETDATA(state, n) {
 		state.data = n;
 	},
+	SETDATA2(state, n) {
+		state.data2 = n;
+	}
 
 }
 const getters = {

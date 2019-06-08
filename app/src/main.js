@@ -6,7 +6,7 @@ import 'lib-flexible/flexible.js';
 import 'vant/lib/index.css';
 import './assets/css/index.css';
 import './assets/js/jquery-1.11.1.min.js';
-import common from './assets/js/common.js'
+import common from './assets/js/common.js';
 import {
 	List,
 	Tab,

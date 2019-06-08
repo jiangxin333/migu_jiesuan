@@ -226,20 +226,20 @@
 					<img alt="" src="https://qiniustore.zmr016.com/invite/money.png" :style="rule_step_img" />
 				</div>
 				<van-row type="flex" justify="space-between" class="rule_step_img_box" :style="rule_step_other">
-					<van-col span="5">
+					<van-col span="7">
 						<p>点击按钮</p>
 						<p>分享给好友</p>
 					</van-col>
-					<van-col span="5">
+					<van-col span="8">
 						<p>好友打开链接</p>
 						<p>下载安装</p>
 					</van-col>
-					<van-col span="5">
+					<van-col span="7">
 						<p>好友登录阅读</p>
 						<p>您获得红包</p>
 					</van-col>
 				</van-row>
-				<p style="text-align: justify;color:#FDB6BF;text-justify: ;">特别说明：好友需要在新设备上注册（之前未登录过的账号的手机），并有效阅读3元方可产生奖励</p>
+				<p style="text-align: justify;color:#FDB6BF;margin-top: 100px;">特别说明：好友需要在新设备上注册（之前未登录过的账号的手机），并有效阅读3元方可产生奖励</p>
 				<van-row :style="rule_title">
 					<van-col span="24">
 						<p><span :style="rule_title_main">邀请小技巧</span></p>
@@ -506,28 +506,28 @@
 		</van-popup>
 		<!-- 底部分享条 -->
 		<van-row class="inviteGroup">
-			<van-col span="12" style="position: relative;">
+			<van-col span="8" style="position: relative;">
 				<div id="rewardMes" class="rewardMes">
 					<div class="beanIcon"></div>
 					<p>每邀请一位可赚9-12元</p>
 				</div>
 				<div @click="commonShare">
 					<p><img src="../assets/img/invite-weixin.png" alt="" class="inviteImg" /></p>
-					<p>分享到微信群或朋友收徒</p>
+					<p style="padding: 0 10px;">分享微信群或朋友收徒</p>
 				</div>
 			</van-col>
-			<van-col span="12">
+			<van-col span="8">
 				<div @click="timelineShare">
 					<p><img src="../assets/img/invite-pengyouquan.png" alt="" class="inviteImg" /></p>
-					<p>分享到朋友圈收徒</p>
+					<p>分享朋友圈收徒</p>
 				</div>
 			</van-col>
-			<!-- <van-col span="8">
+			<van-col span="8">
 				<div @click="toShare(2)">
 					<p><img src="../assets/img/invite-erm.png" alt="" class="inviteImg" /></p>
-					<p>面对面收徒</p>
+					<p>二维码推广</p>
 				</div>
-			</van-col> -->
+			</van-col>
 		</van-row>
 		<!-- 底部分享条 end -->
 		<!-- 进入弹窗 -->
@@ -572,7 +572,7 @@
 		<!-- 分享成功弹窗 end -->
 		<img v-lazy="mentor_bottom" alt="" style="width: 100%;margin-top: 10px;" v-if="chooseTabIndex == 0" />
 		<!-- 无伪装应用回调弹窗 -->
-		<van-dialog v-model="shareShow" :show-cancel-button="false" :show-confirm-button="false" style="text-align: center;padding-bottom: 10px;" title="温馨提醒">
+		<van-dialog v-model="shareShow" :closeOnClickOverlay="true" :show-cancel-button="false" :show-confirm-button="false" style="text-align: center;padding-bottom: 10px;" title="温馨提醒">
 			<p>点击按钮复制分享链接在微信中打开</p>
 			<input type="hidden" v-model="shareUrl" />
 			<van-button size="small" type="primary" 　v-clipboard:copy="shareUrl" 　　v-clipboard:success="onCopy" 　　v-clipboard:error="onError">复制分享链接</van-button>
@@ -1091,7 +1091,8 @@ export default {
 				width: window.innerWidth - (window.innerWidth * 40 * 2) / 750 + 'px',
 				margin: '0 auto',
 				padding: '0 ' + (window.innerWidth * 40) / 750 + 'px',
-				'min-height': '100px'
+				'min-height': '100px',
+				'position':'relative'
 			},
 			//底部规则——标题部分
 			rule_title: {
@@ -1140,7 +1141,11 @@ export default {
 			rule_step_other: {
 				'margin-top': (window.innerHeight * 28) / 1334 + 'px',
 				'margin-bottom': (window.innerHeight * 48) / 1334 + 'px',
-				color: '#ffffff'
+				'color': '#ffffff',
+				'position':'absolute',
+				'width':window.innerWidth+'px',
+				'left':'50%',
+				'transform':'translateX(-50%)',
 			},
 			//邀请小技巧
 			rule_p: {
@@ -1275,7 +1280,7 @@ export default {
 			share_type: true, //true：朋友或者群 false：朋友圈
 			shareType: 'fakeShare', //伪装应用
 			shareNum: 0, //分享次数
-			mentor_bottom: 'http://qiniustore.zmr016.com/invite/mentor_bottom.png', //邀请小技巧下面的其他说明
+			mentor_bottom: 'https://qzjiesuan.oss-cn-hangzhou.aliyuncs.com/front/img/mentor_bottom.png', //邀请小技巧下面的其他说明
 			qrcode_link: '', //分享好友群地址
 			timline_qrcode_link: '', //分享朋友圈地址
 			shareData: null, //分享内容数据对象
@@ -1472,6 +1477,10 @@ export default {
 		getCoin() {
 			this.closeAll();
 			var that = this;
+			if(this.isOpen==false){
+				that.$toast('每2小时开启一次，邀请好友越多，奖励越多');
+				return;
+			}
 			common.toAjax(
 				common.host + '/prizes/get_prize',
 				{
@@ -1488,8 +1497,6 @@ export default {
 							that.show = true;
 							that.isCoinShow = true;
 						});
-					} else {
-						that.$toast('每2小时开启一次，邀请好友越多，奖励越多');
 					}
 				}
 			);
@@ -1811,6 +1818,11 @@ export default {
 		},
 		toShare(name) {
 			var that = this;
+			if (name == 2) {
+				this.confirmLeave = true;
+				that.$router.push('/face_to_face');
+				return;
+			}
 			this.closeAll();
 			this.shareNum++;
 			this.share_type = !this.share_type;
@@ -2018,6 +2030,14 @@ export default {
 						that.countdownTime = '点我开宝箱';
 					}
 				});
+			}
+		});
+		common.toAjax(common.host + '/user_st/st_img', {
+			qrcode: 1,
+			type: 'mentor'
+		}, function(res) {
+			if (res.err_code == 0) {
+				that.$store.commit('SETDATA2',res.data);
 			}
 		});
 	}
