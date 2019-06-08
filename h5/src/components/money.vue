@@ -206,14 +206,12 @@ export default {
 				this.active = index;
 				this.activeIndex = index;
 				this.finished = true;
-				this.listArr = [];
 				this.init = true;
 				this.onRefresh();
 			}
 			if (index == 0) {
 				this.activeIndex = 0;
 				this.finished = true;
-				this.listArr = [];
 				this.init = true;
 				this.onRefresh();
 			}
@@ -284,8 +282,7 @@ export default {
 	beforeRouteEnter(to, from, next) {
 		if (from.path == '/task') {
 			next(vm => {
-				vm.listArr = [];
-				vm.onRefresh();
+				window.scrollTo(0, 0); //当前路由时初始化页面滚动值为0；
 			});
 		} else {
 			next();

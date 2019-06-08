@@ -342,6 +342,7 @@
 			this.checkRoute();
 			this.task();
 			var that = this;
+			window.scrollTo(0, 0); //当前路由时初始化页面滚动值为0；
 			clearInterval(this.time);
 			// if (!common.getVal('isLogin') != undefined && common.getVal('isLogin') == false) {
 			// 	setTimeout(function() {

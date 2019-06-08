@@ -271,7 +271,6 @@
 				this.pageNum = 1;
 				this.checkLoading = false;
 				this.isRefresh = true;
-				this.listArr = [];
 				this.onLoad();
 			},
 			goArticle(id, $video) {
@@ -392,13 +391,15 @@
 		//  }
 		beforeRouteEnter(to, from, next) {
 			if (from.path == '/task') {
+				window.scrollTo(0, 0); //当前路由时初始化页面滚动值为0；
 				next(vm => {
-					vm.listArr = article_lists.data;
+					console.log(vm.listArr);
 					for (var i in vm.listArr) {
 						vm.listArr[i].pub_start_at = common.publishTime(common.date('Y-m-d', vm.listArr[i].pub_start_at));
 					}
 					vm.pageNum++;
-					vm.changeActive(0);
+					vm.changeActive(vm.activeIndex);
+					console.log(vm.activeIndex,'文章索引列表');
 				});
 			} else {
 				next();
